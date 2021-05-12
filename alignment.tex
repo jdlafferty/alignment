@@ -1,0 +1,37 @@
+\section{Alignment of Parameters to Random Backpropagation Weights: Linear Case}
+
+In this section we consider the process of training a two-layer linear network with random backpropagation weights on linear regression; we analyze its rate of convergence, and more importantly, the alignment of the feed-forward weights $\beta$ with the backward weights $b$ as a result of the training, which is one of the defining characteristics of feedback alignment \citep{lillicrap2016random}. In particular, we will show that regularization is a vital factor that leads to alignment, and replacing the backpropagation weights alone is not able to achieve alignment for large $p$.
+
+Setting the activation function $\psi$ to be identity function, we recover the two-layer linear network: 
+\begin{align}\label{eqn:linear-network}
+    f(X) = \frac{1}{\sqrt p}XW\transpose\beta
+\end{align}
+Given the training data $(X,y)$, we consider in this section a squared loss with an ever changing regularization on $\beta$:
+\begin{equation}\label{eqn:loss-with-reg}
+    L_t(X) = \frac{1}{2}\|f_t(X) - y\|^2 + \frac{\lambda_t}{2}\|\beta_t\|^2,
+\end{equation}
+where $f_t(X)$ denotes the output of the network at time $t$, and $\{\lambda_t\}_{t=0}^\infty$ forms a changing series of regularization rate $\lambda_t$ that controls the regularization on weight parameter $\beta_t$ throughout time. The series of $\lambda_t$ thus defines a series of loss functions that governs the learning process. Due to the lack of non-linear activation, the output $f(X)$ of the network is always going to fall into the range of $X$, and anything orthogonal to $\range(X)$ cannot be fitted by the model. Without loss of generality, we assume $y$ lying in the column space of $X$ when considering the convergence on prediction error.
+Notice that the loss $L_t$ can be decomposed into $L_t(X) = \frac{1}{2}\|f_t(X) - \bar y\|^2 + \frac{1}{2}\|y - \bar y\|^2 + \frac{\lambda_t}{2}\|\beta_t\|^2$, where $\bar y$ denotes the projection of $y$ onto the column space of $X$ and $y-\bar y$ is the component orthogonal to the column space. Since $\|y - \bar y\|^2$ remains constant during training, we consider instead $L_t(X) = \frac{1}{2}\|f_t(X) - \bar y\|^2 + \frac{\lambda_t}{2}\|\beta_t\|^2$.
+% In a teacher-student model, we assume a teacher function $f_*(X)$ with $W_*$ and $\beta_*$ as its first- and second-layer weights, respectively. In this manuscript, we further assume $W_*$ to be a random Gaussian matrix fixed in advance, where $(W_*)_{ij}\sim\calN(0,1)$ independently for all $i\in[p]$ and $j\in[d]$. Similarly, $\beta_*$ is also considered to be a random Gaussian vector with independent Gaussian entries. Therefore, for any training data $X$, the teacher function $f_*$ provides the corresponding training labels $y = f_*(X)\in\Rn$ to the student.
+For linear networks, the feedback alignment updates on $W$ and $\beta$ with respect to loss \eqref{eqn:loss-with-reg} can be presented as
+\begin{align}\label{eqn:update-reg}
+    W_{t+1} = W_t - \frac{\eta}{\sqrt p}b e_t\transpose X, \qquad \beta_{t+1} = (1-\eta\lambda_t)\beta_t - \frac{\eta}{\sqrt p} W_tX\transpose e_t, 
+\end{align}
+where the contraction of $\beta_t$ at each step is due to the regularization term $\frac{\lambda_t}{2}\|\beta_t\|^2$ in \eqref{eqn:loss-with-reg}. This regularized version of the algorithm is summarized in \cref{algo:fa-reg}, and we consider only the linear case in our theoretical analysis.
+% Under these assumptions, we are trying to show the convergence of the prediction error $\|f_t(X) - y\|^2$. 
+
+We show the convergence of feedback alignment when $\sum_{t=1}^\infty \lambda_t$ converges. 
+\begin{theorem}[informal]
+    If we assume $p$ and $\frac{n}{d}$ are sufficiently large and $\sum_{t=1}^\infty \lambda_t$ is bounded, then the error $\|f_t(X) - y\|^2$ under feedback alignment based on loss function \eqref{eqn:loss-with-reg} achieves an $O(1/t)$ convergence rate.
+\end{theorem}
+In particular, if there is no regularization, \ie, $\lambda_t=0$ for all $t\geq 0$, then we show a linear convergence rate for the error $\|f_t(X) - y\|^2$.
+\begin{corollary}[informal]
+    If we assume $p$ and $\frac{n}{d}$ are sufficiently large and $\lambda_t = 0$ for all $t\geq 0$, the error $\|f_t(X) - y\|^2$ under feedback alignment on \eqref{eqn:loss-with-reg} achieves linear convergence rate. In particular, $\|f_t(X) - y\| \leq \frac{1+\eps}{1-\eps}(1-\frac{n\eta}{2d})^t \|f_0(X) - y\|$.
+\end{corollary}
+Finally, we show that under a simple regularization strategy where a constant regularization is adopted until a cutoff time $T$, feedback alignment under loss function \eqref{eqn:loss-with-reg} achieves alignment asymptotically.
+\begin{theorem}[informal]
+    If we assume $p$ and $\frac{n}{d}$ are sufficiently large and $\sum_{t=1}^\infty \lambda_t$ is bounded and the regularization $\lambda_t = \lambda$ for $t\leq T$ and $\lambda_t = 0$ for $t>T$, where $T = \lfloor \frac{\sqrt{d}}{4\eta n}\sqrt{p} \rfloor$ and $\lambda \geq \frac{12n}{d}$,
+    then feedback alignment on \eqref{eqn:loss-with-reg} achieves alignment.
+\end{theorem}
+
+

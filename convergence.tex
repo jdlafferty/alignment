@@ -1,0 +1,36 @@
+\section{Convergence of Gradient Descent With Random Backpropagation Weights}
+
+Even though feedback alignment with random backpropagation weights $b$ is no longer a gradient descent on $L$, we will show in this section the convergence of squared loss $L$ in linear rate. In particular, for any sample $x_\ell$, the difference between $f_{t+1}(x_\ell)$ and $f_t(x_\ell)$ can be characterized as
+\begin{align}
+    \begin{split}
+        f_{t+1}(x_\ell) - f_t(x_\ell) & = \frac{1}{\sqrt p} \beta_{t+1}\transpose\psi(W_{t+1}x_\ell) - \frac{1}{\sqrt p} \beta_t\transpose\psi(W_t x_\ell) \\
+        & = \frac{1}{\sqrt p} \beta_{t+1}\transpose(\psi(W_{t+1}x_\ell) - \psi(W_t x_\ell)) + \frac{1}{\sqrt p} (\beta_{t+1} - \beta_t)\transpose\psi(W_t x_\ell) \\
+        & = -\sum_{i=1}^n \frac{\eta}{p} (f_t(x_i) - y_i) x_i\transpose x_\ell (\beta_{t+1}\circ \psi'(W_t x_\ell))\transpose (b\circ \psi'(W_t x_i)) \\
+        & \qquad -\sum_{i=1}^n \frac{\eta}{p} (f_t(x_i) - y_i) \psi(W_t x_\ell)\transpose \psi(W_t x_i) + \frac{1}{2\sqrt{p}} \beta_{t+1}\transpose r_t,
+    \end{split}
+\end{align}
+where $\psi(W_{t+1}x_\ell) - \psi(W_t x_\ell) = \psi'(W_t x_\ell)\circ(W_{t+1} x_\ell - W_t x_\ell) + \frac{1}{2}\psi''(\xi_t) (W_{t+1} x_\ell - W_t x_\ell)^{2\circ}$ and we give the second term a shorthand $r_t \defeq \frac{1}{2}\psi''(\xi_t) (W_{t+1} x_\ell - W_t x_\ell)^{2\circ}$.
+\begin{align}\label{eqn:f-dynamics}
+    \begin{split}
+        \frac{\diff f(x_\ell)}{\diff t} & = \sum_{r=1}^p \inner[\Big]{\frac{\partial f(x_\ell)}{\partial w_r(t)}}{\frac{\diff w_r(t)}{\diff t}} + \sum_{r=1}^p \inner[\Big]{\frac{\diff f(x_\ell)}{\diff \beta_r(t)}}{\frac{\diff \beta_r(t)}{\diff t}} \\
+        % & = \sum_{r=1}^p \inner[\Big]{\frac{\beta_r(t)}{\sqrt{p}} \II\{w_r(t)\transpose x_\ell\geq 0\}\cdot x_\ell}{\frac{b_r}{\sqrt{p}}\sum_{i=1}^n (y_i - f(x_i)) \II\{w_r(t)\transpose x_i\geq 0\}\cdot x_i} \\
+        % & \qquad + \sum_{r=1}^p \inner[\Big]{\frac{1}{\sqrt{p}}\psi(w_r(t)\transpose x_\ell)}{\frac{1}{\sqrt{p}}\sum_{i=1}^n (y_i - f(x_i))\psi(w_r(t)\transpose x_i)} \\
+        & = \sum_{i=1}^n \frac{1}{p} (y_i - f(x_i)) x_i\transpose x_\ell \sum_{r=1}^p b_r\beta_r(t)\psi'(w_r(t)\transpose x_\ell) \psi'(w_r(t)\transpose x_i) \\
+        & \qquad + \sum_{i=1}^n \frac{1}{p}(y_i - f(x_i)) \sum_{r=1}^p \psi(w_r(t)\transpose x_\ell)\psi(w_r(t)\transpose x_i)
+    \end{split}
+\end{align}
+where $\frac{\partial f(x_\ell)}{\partial w_r(t)} = \frac{b_r}{\sqrt{p}}\sum_{i=1}^n (y_i - f(x_i)) \psi'(w_r(t)\transpose x_i)\cdot x_i$ and $\frac{\diff f(x_\ell)}{\diff \beta_r(t)} = \frac{1}{\sqrt{p}}\sum_{i=1}^n (y_i - f(x_i))\psi(w_r(t)\transpose x_i)$. 
+To lift the burden on notation, we define Gram matrices $G(t), K(t)\in\Rnn$ where 
+\begin{align}\label{eqn:gram1-def}
+    G_{ij}(t) \defeq \frac{1}{p} x_i\transpose x_j \sum_{r=1}^p b_r\beta_r(t)\psi'(w_r(t)\transpose x_i) \psi'(w_r(t)\transpose x_j),
+\end{align}
+and 
+\begin{align}\label{eqn:gram2-def}
+    K_{ij}(t) \defeq \frac{1}{p} \sum_{r=1}^p \psi(w_r(t)\transpose x_i)\psi(w_r(t)\transpose x_j).
+\end{align}
+Recall that the Gram matrix $G$ with normal backpropagation has its $(i,j)$-th entry evaluated to $\frac{1}{p} x_i\transpose x_j \sum_{r=1}^p \beta_r(t)^2\psi'(w_r(t)\transpose x_i) \psi'(w_r(t)\transpose x_j)$, and the difference between the two Gram matrices boils down to the replacement of the ever changing model parameter $\beta(t)$ by a fixed random backpropagation weights $b$ \citep{du2018gradient}.
+Combined with the dynamics of prediction \eqref{eqn:f-dynamics}, the dynamics of the loss $L$ can be put in a compact form:
+\begin{align}\label{eqn:ode}
+    \frac{\diff L(t)}{\diff t} = -2 (y - f(t))\transpose \frac{\diff f(t)}{\diff t} = -2 (y - f(t))\transpose(G(t) + K(t))(y - f(t)).
+\end{align}
+
