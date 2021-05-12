@@ -37,19 +37,19 @@
     \definecolor{YaleGreen}{RGB}{95, 113, 45}
     \definecolor{YaleOrange}{RGB}{189, 83, 25}
 \usepackage[all]{hypcap}
-\usepackage[color]{showkeys}
-    \definecolor{refkey}{RGB}{137,89,168}
-    \definecolor{labelkey}{RGB}{137,89,168}
+%\usepackage[color]{showkeys}
+%    \definecolor{refkey}{RGB}{137,89,168}
+%    \definecolor{labelkey}{RGB}{137,89,168}
 \usepackage{seqsplit}
-\usepackage{showkeys}
+%\usepackage{showkeys}
 \usepackage{xstring}
 
-\renewcommand*\showkeyslabelformat[1]{%
-\noexpandarg%
-% instead of \textvisiblespace you can also put in ~
-% if you want to keep a plain space at space characters
-\StrSubstitute{\(\)#1\(\)}{ }{\textvisiblespace}[\TEMP]%
-\fbox{\parbox[t]{.80\marginparwidth}{\raggedright\normalfont\small\ttfamily\expandafter\seqsplit\expandafter{\TEMP}}}}
+%\renewcommand*\showkeyslabelformat[1]{%
+%\noexpandarg%
+%% instead of \textvisiblespace you can also put in ~
+%% if you want to keep a plain space at space characters
+%\StrSubstitute{\(\)#1\(\)}{ }{\textvisiblespace}[\TEMP]%
+%\fbox{\parbox[t]{.80\marginparwidth}{\raggedright\normalfont\small\ttfamily\expandafter\seqsplit\%expandafter{\TEMP}}}}
 
 \usepackage{graphicx}
 
@@ -57,13 +57,13 @@
 \crefname{ineqn}{Ineq.}{Ineqs.}
 \creflabelformat{ineqn}{(#2{\upshape#1}#3)}
 
-\makeatletter
-  \SK@def\Cref#1{\SK@\SK@@ref{#1}\SK@Cref{#1}}%
-\makeatother
-
-\makeatletter
-  \SK@def\cref#1{\SK@\SK@@ref{#1}\SK@cref{#1}}%
-\makeatother
+%\makeatletter
+%  \SK@def\Cref#1{\SK@\SK@@ref{#1}\SK@Cref{#1}}%
+%\makeatother
+%
+%\makeatletter
+%\SK@def\cref#1{\SK@\SK@@ref{#1}\SK@cref{#1}}%
+%\makeatother
 
 \newcommand{\cf}{\emph{cf.}\!\xspace}
 \newcommand{\ie}{\emph{i.e.}\xspace}
