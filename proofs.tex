@@ -131,7 +131,7 @@ Consequently, \cref{eqn:theta-tlam-ordinary} admits a more concise representatio
         & \qquad + \Big( 1-\tlam_T - \frac{n\eta}{d} \Big)\theta_T + \tlam_T \theta_\ast,
     \end{split}
 \end{align*}
-and triangular inequality and Cauchy-Schwarz inequality give an upper bound on $\|\theta_{T+1}\|$, \ie,
+and triangular inequality and Cauchy-Schwarz inequality give us an upper bound on $\|\theta_{T+1}\|$, \ie,
 \begin{align}\label[ineqn]{ineqn:theta-upper-bound}
     \begin{split}
         \|\theta_{T+1}\| & \leq \left\| \Big( \frac{\eta}{\sqrt p}\Xi_T - \eta\Delta_T - \prod_{k=0}^T(1-\tlam_k)\frac{\eta}{p}b\transpose\beta_0 \Sigma^2 + \frac{n\eta}{d}I_d - \frac{\eta}{p}\Sigma^2 W_0\transpose W_0 \Big)\theta_T \right\| \\
@@ -163,7 +163,7 @@ Similarly, if $p\geq 96(1+\eps)^2 d\sqrt{8\log\frac{2d}{\delta}}(1 + \sqrt{8\log
     \begin{split}
         \frac{1}{\sqrt p}\|\Xi_T\| & \leq \frac{3(1+\eps)n\eta}{dp} \|u\|\|s_T\| \\
         & \leq \frac{6(1+\eps)}{p} \sqrt{8d\log\frac{2d}{\delta}} (\|\theta_0\|+ \eta S_\lambda\|\theta_\ast\|) \\
-        & \leq \frac{n}{16d} + \frac{n}{16d}
+        & \leq \frac{n}{16d} + \frac{n}{16d}.
     \end{split}
 \end{align}
 Further, following the assumptions that $\eps \leq \min\{C,\frac{1}{8}\}$ and $p\geq 128\log\frac{2}{\delta}\geq 64(1+\eps)^2\log\frac{2}{\delta}$, we have
@@ -178,7 +178,7 @@ and
         \Big\| \frac{n}{d}I_d - \frac{1}{p}\Sigma^2 W_0\transpose W_0 \Big\| \leq \frac{n}{d}\eps\leq \frac{n}{8d}.
     \end{split}
 \end{align}
-Combine \cref{ineqn:small-term-bound,ineqn:bound-delta-ordinary,ineqn:bound-uS-ordinary,ineqn:bound_b_beta_ordinary,ineqn:bound-XW-ordinary} to get the desired upper bound 
+Combine \cref{ineqn:theta-upper-bound,ineqn:bound-delta-ordinary,ineqn:bound-uS-ordinary,ineqn:bound_b_beta_ordinary,ineqn:bound-XW-ordinary} to get the desired upper bound 
 \begin{align*}
     \|\theta_{T+1}\| & \leq \Big( 1-\tlam_T - \frac{n\eta}{d} \Big) \|\theta_T\| + \eta \Big(  \frac{n}{8d}+ \frac{n}{8d}+ \frac{n}{8d}+ \frac{n}{8d}\Big) \|\theta_T\|+ \tlam_T\|\theta_\ast\| \\
     & = (1-\frac{n\eta}{2d}-\tlam_T)\|\theta_T\|+ \tlam_T\|\theta_\ast\|.
