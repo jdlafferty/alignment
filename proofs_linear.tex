@@ -1,0 +1,842 @@
+
+% \subsection{Convergence on Two-Layer Networks}
+
+% \begin{lemma}
+%     If $p = \Omega\big( \frac{n^2\log(2n^2/\delta)}{\lambda_0^2} \big)$, then with probability at least $1-\delta$ we have $\|G(0)-G^\infty\| \leq \frac{\lambda_0}{4}$ and $\lambdamin(G(0)) > \frac{3}{4}\lambda_0$.
+% \end{lemma}
+
+% \begin{proof}
+%     Recall that the $(i,j)$-th entry of $G(0)$ is
+%     \begin{align*}
+%         G_{ij}(0) = \frac{1}{p} x_i\transpose x_j \sum_{r=1}^p b_r\beta_r(0)\II\{w_r(0)\transpose x_i\geq 0, w_r(0)\transpose x_j\geq 0\},
+%     \end{align*}
+%     where $b_r\beta_r(0)\II\{w_r(0)\transpose x_i\geq 0, w_r(0)\transpose x_j\geq 0\}$ are independent from each index $r\in [p]$. By Hoeffding's inequality and the fact that $b_r\beta_r(0)\II\{w_r(0)\transpose x_i\geq 0, w_r(0)\transpose x_j\geq 0\}$ is bounded from $-1$ to $1$ and $|\inner{x_i}{x_j}|\leq 1$ under our assumption,
+%     \begin{align*}
+%         \prob[ |G_{ij}(0) - G^\infty_{ij}| \geq t ] \leq 2 \exp\left( -\frac{2p^2t^2}{2p} \right) = 2 e^{-pt^2}.
+%     \end{align*} 
+%     Further, take union bound to get
+%     \begin{align*}
+%         \prob[ \exists (i,j) \st |G_{ij}(0) - G^\infty_{ij}| \geq t ] \leq 2n^2 e^{-pt^2}.
+%     \end{align*}
+%     Hence, with probability at least $1-\delta$ it holds for every $(i,j)$-th entry $|G_{ij}(0) - G^\infty_{ij}| \leq \sqrt{\frac{\log(2n^2/\delta)}{p}}$. Consequently, we have with probability at least $1-\delta$ the discrepancy term represented by the spectral norm is bounded by
+%     \begin{align*}
+%         \|G(0)-G^\infty\|^2 \leq \|G(0)-G^\infty\|_F^2 \leq \frac{n^2\log(2n^2/\delta)}{p},
+%     \end{align*}
+%     which gives $\|G(0)-G^\infty\| \leq \frac{\lambda_0}{4}$ for any $p \geq \frac{16n^2\log(2n^2/\delta)}{\lambda_0^2}$. By matrix perturbation theory, we have
+%     \begin{align*}
+%         \lambdamin(G(0)) \geq \lambdamin(G^\infty) - \|G(0)-G^\infty\| \geq \frac{3}{4}\lambda_0.
+%     \end{align*}
+% \end{proof}
+
+\subsection{Convergence on Two-Layer Linear Networks}
+
+We will provide in this section the proof for the convergence of regularized feedback alignment on two-layer linear networks. We first introduce some notation that will facilitate the proofs.
+
+If $X$ is full rank, the singular value decomposition of $X$ writes $X = U\Sigma V\transpose$, where $\Sigma \in \R^{d\times d}$ is a diagonal matrix with positive diagonal entries. Given the rotational invariant property of Gaussian vectors, we can absorb $V$ into $W$ and, without loss of generality, assume $V = I_d$. 
+Moreover, instead of working explicitly on $e(t) = f(t) - y$, we consider the updates on $\theta(t) \defeq X\transpose e(t) = \Sigma U\transpose e(t)$, and similarly we write $\theta_\ast \defeq -X\transpose y$. We start by showing how $\theta(t)$ are updated following the regularized feedback alignment.
+
+\begin{lemma}\label{lem:theta-updates}
+    Suppose the network \eqref{eqn:linear-network} is trained on data $(X,y)$ with regularized feedback alignment. Define $s_{t} = \sum_{i=0}^{t} \theta(i)$, $\tilde s_{t} = \sum_{i=0}^{t} \prod_{k=i+1}^t (1-\eta\lambda(k))\theta(i)$ and $u = \frac{1}{\sqrt{p}} W(0)\transpose b$, then $\theta(t)$ follows the iteration update
+    \begin{align}\label{eqn:theta-tlam-ordinary}
+        \begin{split}
+            \theta(t+1) & = \Big((1-\eta\lambda(t))I_d - \prod_{k=0}^t(1-\eta\lambda(k))\frac{\eta}{p}b\transpose\beta(0) \Sigma^2 - \frac{\eta}{p}\Sigma^2 W(0)\transpose W(0) + \frac{\eta^2}{p}\big(u\transpose \tilde{s}(t) \Sigma^2 + \Sigma^2 u s(t-1)\transpose \\
+            & \qquad + \Sigma^2 s(t-1)u\transpose\big) - \frac{\eta^3}{p^2}\|b\|^2\big(\sum_{i=0}^t\sum_{j=0}^{i-1} \prod_{k=i+1}^t(1-\eta\lambda(k))\theta(j)\transpose \theta(i) \Sigma^2 + \Sigma^2 s(T)s(t-1)\transpose \big) \Big)\theta(t) + \eta\lambda(t) \theta_\ast.
+        \end{split}
+    \end{align}
+\end{lemma}
+
+\begin{proof}
+    With the notation $\theta(t) = X\transpose e(t) = \Sigma U\transpose e(t)$, we replace $X\transpose e(t)$ with $\theta(t)$ and rewrite the updates on $W(t)$ and $\beta(t)$ into 
+    \begin{align}\label{eqn:parameter-update-reg}
+        W(t+1) = W(t) - \frac{\eta}{\sqrt p}b \theta(t)\transpose, \qquad \beta(t+1) = (1-\eta\lambda(t))\beta(t) - \frac{\eta}{\sqrt p} W(t)\theta(t). 
+    \end{align}
+    Provided the recursive nature of \cref{eqn:parameter-update-reg}, we represent $W(t)$ with only $W(0)$ and $\theta(i)$ for $i\leq t-1$, \ie,
+    \begin{align}\label{eqn:Wt}
+        W(t) = W(0) - \frac{\eta}{\sqrt p} \sum_{i=0}^{t-1} b\theta(i)\transpose.
+    \end{align}
+    Similarly, we can also apply the same argument to $\beta(t)$ and present it as
+    \begin{align}\label{eqn:betat}
+        \beta(t) &= \prod_{k=0}^{t-1}(1-\eta\lambda(k))\beta(0) - \frac{\eta}{\sqrt p}\sum_{i=0}^{t-1} \prod_{k=i+1}^{t-1}(1-\eta\lambda(k))W(i)\theta(i) \\
+        & = \prod_{k=0}^{t-1}(1-\eta\lambda(k))\beta(0) - \frac{\eta}{\sqrt p}\sum_{i=0}^{t-1} \prod_{k=i+1}^{t-1}(1-\eta\lambda(k))\Big( W(0) - \frac{\eta}{\sqrt p} \sum_{j=0}^{i-1} b\theta(j)\transpose\Big) \theta(i) \\
+        & = \prod_{k=0}^{t-1}(1-\eta\lambda(k))\beta(0) - \frac{\eta}{\sqrt p}\sum_{i=0}^{t-1} \prod_{k=i+1}^{t-1}(1-\eta\lambda(k))W(0)\theta(i) + \frac{\eta^2}{p}b\sum_{i=0}^{t-1}\sum_{j=0}^{i-1} \prod_{k=i+1}^{t-1}(1-\eta\lambda(k))\theta(j)\transpose\theta(i),
+    \end{align}
+    where the second equality is due to rewriting $W(i) = W(0) - \frac{\eta}{\sqrt p} \sum_{j=0}^{i-1} b\theta(j)\transpose$. By plugging in \cref{eqn:parameter-update-reg} into the presentation of $e(t+1)$, we can get the iteration updates for all $e(t)$ as 
+    \begin{align}\label{eqn:error-iterate}
+        \begin{split}
+            e(t+1) 
+            &=\frac{1}{\sqrt p}X W(t+1)\transpose \beta(t+1) - y \\
+            &=\frac{1}{\sqrt p}X (W(t) - \frac{\eta}{\sqrt p}b e(t)\transpose X)\transpose((1-\eta\lambda(t))\beta(t)-\frac{\eta}{\sqrt p} W(t)X\transpose e(t)) - y \\ 
+            &=(1-\eta\lambda(t))e(t) - (1-\eta\lambda(t)) \frac{\eta}{p}b\transpose\beta(t) XX\transpose e(t) - \frac{\eta}{p}XW(t)\transpose W(t)X\transpose e(t) \\
+            & \qquad + \frac{\eta^2}{p^{3/2}}XX\transpose e(t) b\transpose W(t) X\transpose e(t) - \eta\lambda(t) y, 
+        \end{split}
+    \end{align}
+    where the first equality follows the definition of $e(t+1)$, the second equality follows from \cref{eqn:parameter-update-reg}, and the last equality is due to the fact that $y = (1-\eta\lambda(t))y + \eta\lambda(t) y$. Notice that if we multiply both sides of \cref{eqn:error-iterate} by $X\transpose$, it gives the corresponding iteration updates
+    \begin{align}\label{eqn:theta-iterate}
+        \theta(t+1) = (1-\eta\lambda(t))\theta(t) - (1-\eta\lambda(t)) \frac{\eta}{p} b\transpose\beta(t) \Sigma^2\theta(t) - \frac{\eta}{p} \Sigma^2 W(t)\transpose W(t)\theta(t) + \frac{\eta^2}{p^{3/2}}\Sigma^2\theta(t) b\transpose W(t) \theta(t) + \eta\lambda(t) \theta_\ast, 
+    \end{align}
+    where $X = U\Sigma$ and $\theta_\ast = -X\transpose y$. Due to the cleaner form of \cref{eqn:theta-iterate}, we are going to focus primarily on the analysis of $\theta(t)$. Further combining \cref{eqn:Wt,eqn:betat} into \cref{eqn:theta-iterate}, we get
+    \begin{align*}
+        \theta(t+1) & = (1-\eta\lambda(t))\theta(t) - (1-\eta\lambda(t))\frac{\eta}{p}b\transpose\beta(t) \Sigma^2\theta(t) - \frac{\eta}{p}\Sigma^2 W(t)\transpose W(t)\theta(t) + \frac{\eta^2}{p^{3/2}}\Sigma^2\theta(t) b\transpose W(t) \theta(t) + \eta\lambda(t) \theta_\ast \\
+        & = (1-\eta\lambda(t))\theta(t) - \frac{\eta}{p}\Big(\prod_{k=0}^t(1-\eta\lambda(k))b\transpose \beta(0) - \frac{\eta}{\sqrt p} b\transpose W(0)\sum_{i=0}^{t-1}\prod_{k=i+1}^t(1-\eta\lambda(k))\theta(i) \\
+        & \qquad  + \frac{\eta^2}{p}\|b\|^2\sum_{i=0}^{t-1}\sum_{j=0}^{i-1}\prod_{k=i+1}^t(1-\eta\lambda(k))\theta(j)\transpose\theta(i) \Big)\Sigma^2\theta(t) \\
+        & \qquad - \frac{\eta}{p}\Sigma^2\Big( W(0)\transpose W(0) - \frac{\eta}{\sqrt p}W(0)\transpose b\sum_{i=0}^{t-1}\theta(i)\transpose -\frac{\eta}{\sqrt p}\big(\sum_{i=0}^{t-1}\theta(i)\big)b\transpose W(0) + \frac{\eta^2}{p}\|b\|^2 \big(\sum_{i=0}^{t-1}\theta(i)\big)\big(\sum_{i=0}^{t-1}\theta(i)\big)\transpose\Big)\theta(t) \\
+        & \qquad + \frac{\eta^2}{p^{3/2}}\Sigma^2\theta(t)\Big(b\transpose W(0) - \frac{\eta}{\sqrt p}\|b\|^2 \sum_{i=0}^{t-1}\theta(i)\transpose\Big)\theta(t) + \eta\lambda(t) \theta_\ast.
+    \end{align*}
+    Replacing the corresponding quantities with shorthand $s_{t} = \sum_{i=0}^{t} \theta(i)$, $\tilde s_{t} = \sum_{i=0}^{t} \prod_{k=i+1}^t (1-\eta\lambda(k))\theta(i)$ and $u = \frac{1}{\sqrt{p}} W(0)\transpose b$ to get \cref{eqn:theta-tlam-ordinary}.
+\end{proof}
+
+Notice that $\lambda(t)$ almost always appears together with $\eta$ in \cref{eqn:theta-tlam-ordinary}, we write $\tilde{\lambda}_t \defeq \eta\lambda(t)$ to lift the burden on our notation. With \cref{eqn:theta-tlam-ordinary} at hand, we show in \cref{thm:convergence} a recursive inequality that characterizes an upper bound on $\|\theta(t)\|$ and how it is related to the regularization $\lambda(t)$.
+ 
+\begin{theorem}\label{thm:convergence}
+    Define $S_\lambda\defeq\sum_{t=0}^\infty\lambda(t)$. If $n \geq \frac{1}{\eps\gamma} (d\log\frac{C}{\eps} + \log\frac{1}{\delta})$, $\eps \leq \min\{C,\frac{1}{8}\}$, $\eta\leq \min\{1/(\max_t\lambda(t) + \frac{n}{d}),\frac{1}{2}\}$, $S_\lambda\leq \frac{1}{\eta\sqrt{d}}\sqrt{p}$, and
+    \begin{align*}
+        p \geq \max\left\{2\log\frac{2d}{\delta},\frac{1}{\eps\gamma} \Big(d\log\frac{C}{\eps} - \log\frac{\delta}{2}\Big),1280(1+\eps)^3d \Big(1+\sqrt{8\log\frac{2d}{\delta}}\Big)^2\right\},
+    \end{align*}
+    then the following inequality holds for all $t\geq 0$ with probability at least $1-5\delta$:
+        \begin{align}\label[ineqn]{ineqn:norm-theta-bound-ordinary}
+            \|\theta(t+1)\| \leq \Big(1-\frac{n\eta}{2d}-\tlam(t) \Big)\|\theta(t)\| + \tlam(t)\|\theta_\ast\|. 
+        \end{align}
+\end{theorem}
+
+\begin{proof}
+    We show \cref{ineqn:norm-theta-bound-ordinary} by induction. Assume that \eqref{ineqn:norm-theta-bound-ordinary} holds for all $t=0,\ldots,T$, then for any $t\leq T$, we apply \cref{ineqn:norm-theta-bound-ordinary} repeatedly on the right hand side of itself to get
+\begin{align}\label[ineqn]{ineqn:norm-theta-bound-recursive}
+    \|\theta(t)\|\leq \prod_{i=0}^{t-1}\Big(1-\frac{n\eta}{2d}-\tlam(i)\Big)\|\theta(0)\| + \sum_{i=0}^{t-1}\tlam(i)\Big(1-\frac{n\eta}{2d}-\tlam(i+1)\Big)\dots \Big(1-\frac{n\eta}{2d}-\tlam(i-1)\Big)\|\theta_\ast\|.
+\end{align}
+Notice that $\|s(T)\| \leq \sum_{i=0}^T \|\theta(t)\|$, and $\sum_{i=0}^T \|\theta(t)\|$ can be bounded by summing up both sides of \cref{ineqn:norm-theta-bound-recursive}:
+\begin{align}
+    \sum_{t=0}^T \|\theta(t)\|
+    &\leq  \sum_{t=0}^T\prod_{i=0}^{t-1}\Big(1-\frac{n\eta}{2d}-\tlam(i)\Big)\|\theta(0)\| + \sum_{t=0}^T\sum_{i=0}^{t-1}\tlam(i)\Big(1-\frac{n\eta}{2d}-\tlam(i+1)\Big) \cdots \Big(1-\frac{n\eta}{2d}-\tlam(i-1)\Big)\|\theta_\ast\| \nonumber \\
+    &\leq \sum_{t=0}^T\prod_{i=0}^{t-1}\Big(1-\frac{n\eta}{2d}\Big)\|\theta(0)\|+\sum_{t=0}^T\sum_{i=0}^{t-1}\tlam(i)\Big(1-\frac{n\eta}{2d}\Big)^{t-i-1}\|\theta_\ast\| \nonumber \\
+    &\leq \sum_{t=0}^T\Big(1-\frac{n\eta}{2d}\Big)^{t-1}\|\theta(0)\| + \|\theta_\ast\|\sum_{i=0}^{t-1}\tlam(i)\sum_{t=i+1}^T \Big(1-\frac{n\eta}{2d}\Big)^{t-i-1} \nonumber \\
+    &\leq \frac{2d}{n\eta}\|\theta(0)\| + \frac{2d}{n} S_\lambda\|\theta_\ast\|, \label[ineqn]{ineqn:sum-theta-norm}
+\end{align}
+where the second inequality follows from $0\leq \tlam(i) = \eta\lambda(i) \leq 1-\frac{n\eta}{d} < 1-\frac{n\eta}{2d}$ for all $i\in[T]$, the third inequality is due to switching the order of summations on running indices $t$ and $i$, and the last inequality is due to $\sum_{t=i+1}^T (1-\frac{n\eta}{2d})^{t-i-1} \leq \sum_{t=0}^T(1-\frac{n\eta}{2d})^{t-1} \leq \sum_{t=0}^\infty (1-\frac{n\eta}{2d})^{t-1} \leq \frac{2d}{n\eta}$ and $\frac{1}{\eta}\sum_{i=0}^{t-1}\tlam(i) \leq S_\lambda$.
+
+Recall that $\theta(t)$ evolves following \cref{eqn:theta-iterate}.
+To lift some burden on our notation, we define the following matrices
+\begin{align*}
+    \Delta(t) \defeq \frac{\eta^2}{p^2} \|b\|^2\big(\sum_{i=0}^t\sum_{j=0}^i \prod_{k=i+1}^t(1-\eta\lambda(k))\theta(j)\transpose \theta(i) \Sigma^2 + \Sigma^2 s(T) s(t-1)\transpose \big)
+\end{align*}
+and
+\begin{align*}
+    \Xi(t) \defeq \frac{\eta}{\sqrt p}\big(u\transpose \tilde{s}(t) \Sigma^2 + \Sigma^2 u s(t-1)\transpose + \Sigma^2 s(t-1)u\transpose\big).
+\end{align*}
+Consequently, \cref{eqn:theta-tlam-ordinary} admits a more concise representation
+\begin{align*}
+    \begin{split}
+        \theta(t+1) & = \Big((1-\tlam(t))I_d -\prod_{k=0}^T(1-\tlam(k))\frac{\eta}{p}b\transpose\beta(0) \Sigma^2 - \frac{\eta}{p}\Sigma^2 W(0)\transpose W(0) + \frac{\eta}{\sqrt p}\Xi(t) - \eta\Delta(t) \Big)\theta(t) + \tlam(t) \theta_\ast \\
+        & = \Big( \frac{\eta}{\sqrt p}\Xi(t) - \eta\Delta(t) - \prod_{k=0}^T (1-\tlam(k)) \frac{\eta}{p} b\transpose\beta(0) \Sigma^2 + \frac{n\eta}{d}I_d - \frac{\eta}{p}\Sigma^2 W(0)\transpose W(0) \Big)\theta(t) \\
+        & \qquad + \Big( 1-\tlam(t) - \frac{n\eta}{d} \Big)\theta(t) + \tlam(t) \theta_\ast,
+    \end{split}
+\end{align*}
+and triangular inequality and Cauchy-Schwarz inequality give us an upper bound on $\|\theta(t+1)\|$, \ie,
+\begin{align}\label[ineqn]{ineqn:theta-upper-bound}
+    \begin{split}
+        \|\theta(t+1)\| & \leq \left\| \Big( \frac{\eta}{\sqrt p}\Xi(t) - \eta\Delta(t) - \prod_{k=0}^T(1-\tlam(k))\frac{\eta}{p}b\transpose\beta(0) \Sigma^2 + \frac{n\eta}{d}I_d - \frac{\eta}{p}\Sigma^2 W(0)\transpose W(0) \Big)\theta(t) \right\| \\
+        & \qquad + \Big( 1-\tlam(t) - \frac{n\eta}{d} \Big)\|\theta(t)\| + \tlam(t) \|\theta_\ast\| \\
+        & \leq \eta \Big( \|\Delta(t)\| + \frac{1}{\sqrt p}\|\Xi(t)\| + \frac{1}{p}|b\transpose\beta(0)| \|\Sigma^2\| + \Big\| \frac{n}{d}I_d - \frac{1}{p}\Sigma^2 W(0)\transpose W(0) \Big\| \Big) \|\theta(t)\| \\
+        & \qquad + \Big( 1-\tlam(t) - \frac{n\eta}{d} \Big)\|\theta(t)\| + \tlam(t) \|\theta_\ast\|.
+    \end{split}
+\end{align}
+By \cref{cor:b-norm-concentration,cor:W0-b-tail,cor:W0-tail,lem:inner-product-tail}, for any $\eps \leq C$, $n \geq \frac{1}{\eps\gamma} (d\log\frac{C}{\eps} + \log\frac{1}{\delta})$, and
+\begin{align*}
+    p \geq \max\left\{128\log\frac{2}{\delta},2\log\frac{2d}{\delta},\frac{1}{\eps\gamma} \Big(d\log\frac{C}{\eps} - \log\frac{1}{\delta}\Big)\right\},
+\end{align*}
+the following inequalities hold with probability at least $1-4\delta$:
+\begin{gather*}
+    \|b\|^2 \leq \left(1 + \frac{4}{\sqrt p}\sqrt{\log\frac{2}{\delta}}\right) p, \quad \|u\| \leq \sqrt{8d\log\frac{2d}{\delta}}, \quad \frac{|\inner{b}{\beta(0)}|}{\sqrt{p}} \leq \sqrt{8\log\frac{2}{\delta}}, \\ 
+    \Big\| \frac{d}{np}X\transpose XW(0)\transpose W(0) - I_d \Big\| \leq \varepsilon, \quad \|\theta(0)\|\leq (1+\eps)\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right)\frac{n}{\sqrt{d}}, \quad \|\theta_*\|\leq (1+\eps)\frac{n}{\sqrt{d}}.
+\end{gather*}
+In particular, we use them to upper bound the right-hand side of \cref{ineqn:theta-upper-bound}. Note that if $p\geq 1280(1+\eps)^3d(1+\sqrt{8\log\frac{2d}{\delta}})^2$ and $S_\lambda\leq \frac{1}{\eta\sqrt{d}}\sqrt{p}$, it holds that
+\begin{align}\label[ineqn]{ineqn:bound-delta-ordinary}
+    \begin{split}
+        \|\Delta(t)\| & \leq \frac{2(1+\eps)n\eta^2}{dp} \left(1 + \frac{4}{\sqrt p}\sqrt{\log\frac{2}{\delta}}\right) \Big(\sum_{t=0}^T\|\theta(t)\|\Big)^2 \\
+        & \leq \frac{8(1+\eps)d}{np} \left(1 + \frac{4}{\sqrt p}\sqrt{\log\frac{2}{\delta}}\right) (\|\theta(0)\|+ \eta S_\lambda\|\theta_\ast\|)^2 \\
+        & \leq  \frac{16(1+\eps)d}{np} \left(1 + \frac{4}{\sqrt p}\sqrt{\log\frac{2}{\delta}}\right) (\|\theta(0)\|^2 + \eta^2 S_\lambda^2\|\theta_\ast\|^2) \\
+        & \leq \frac{n}{16d} + \frac{n}{16d}.
+    \end{split}
+\end{align}
+Similarly, if $p\geq 96(1+\eps)^2 d\sqrt{8\log\frac{2d}{\delta}}(1 + \sqrt{8\log\frac{2d}{\delta}})$ and $S_\lambda\leq \frac{1}{\eta d\sqrt{8\log\frac{2d}{\delta}}}p$, it holds that
+\begin{align}\label[ineqn]{ineqn:bound-uS-ordinary}
+    \begin{split}
+        \frac{1}{\sqrt p}\|\Xi(t)\| & \leq \frac{3(1+\eps)n\eta}{dp} \|u\|\|s(T)\| \\
+        & \leq \frac{6(1+\eps)}{p} \sqrt{8d\log\frac{2d}{\delta}} (\|\theta(0)\|+ \eta S_\lambda\|\theta_\ast\|) \\
+        & \leq \frac{n}{16d} + \frac{n}{16d}.
+    \end{split}
+\end{align}
+Further, following the assumptions that $\eps \leq \min\{C,\frac{1}{8}\}$ and $p\geq 128\log\frac{2}{\delta}\geq 64(1+\eps)^2\log\frac{2}{\delta}$, we have
+\begin{align}\label[ineqn]{ineqn:bound_b_beta_ordinary}
+    \begin{split}
+        \frac{1}{p}|b\transpose\beta(0)| \|\Sigma^2\| & \leq \frac{(1+\eps)n}{d\sqrt p}\sqrt{8\log\frac{2}{\delta}} \leq \frac{(1+\eps)}{\sqrt p}\sqrt{8\log\frac{2}{\delta}} \cdot \frac{n}{d} \leq \frac{n}{8d}
+    \end{split}
+\end{align}
+and
+\begin{align}\label[ineqn]{ineqn:bound-XW-ordinary}
+    \begin{split}
+        \Big\| \frac{n}{d}I_d - \frac{1}{p}\Sigma^2 W(0)\transpose W(0) \Big\| \leq \frac{n}{d}\eps\leq \frac{n}{8d}.
+    \end{split}
+\end{align}
+Combine \cref{ineqn:theta-upper-bound,ineqn:bound-delta-ordinary,ineqn:bound-uS-ordinary,ineqn:bound_b_beta_ordinary,ineqn:bound-XW-ordinary} to get the desired upper bound 
+\begin{align*}
+    \|\theta(t+1)\| & \leq \Big( 1-\tlam(t) - \frac{n\eta}{d} \Big) \|\theta(t)\| + \eta \Big(  \frac{n}{8d}+ \frac{n}{8d}+ \frac{n}{8d}+ \frac{n}{8d}\Big) \|\theta(t)\|+ \tlam(t)\|\theta_\ast\| \\
+    & = (1-\frac{n\eta}{2d}-\tlam(t))\|\theta(t)\|+ \tlam(t)\|\theta_\ast\|.
+\end{align*}
+\end{proof}
+
+\begin{corollary}\label{cor:convergence}
+    If we assume all the conditions from \cref{thm:convergence}, the prediction error $\|e(t)\|^2$ under feedback alignment based on loss function \eqref{eqn:loss-with-reg} achieves an $O(1/t)$ convergence rate. In particular, with probability at least $1-5\delta$ that 
+    \begin{align*}
+        \min_{t\leq T}\|\theta(t)\| \leq \frac{2(1+\eps)\sqrt{d}}{(T+1)\eta} \Big( \Big(1 + \sqrt{8\log\frac{2d}{\delta}}\Big) + \frac{1}{\sqrt{d}}\sqrt{p} \Big).
+    \end{align*}
+\end{corollary}
+
+\begin{proof}
+    From \cref{thm:convergence}, we have $\|\theta(t+1)\| \leq (1-\frac{n\eta}{2d}-\tlam(t))\|\theta(t)\| + \tlam(t)\|\theta_\ast\|$ for all $t\geq 0$. Sum up both sides of the inequality from $0$ to $T$ and rearrange the terms to get
+    \begin{align*}
+        \min_{t\leq T} \|\theta(t)\|\sum_{t=0}^T \Big(\frac{n\eta}{2d}+\tlam(t)\Big) \leq \sum_{t=0}^T \Big(\frac{n\eta}{2d}+\tlam(t)\Big)\|\theta(t)\| \leq \sum_{t=0}^T (\|\theta(t)\|- \|\theta(t+1)\|) + \sum_{t=0}^T \tlam(t)\|\theta_\ast\|.
+    \end{align*}
+    Divide the sum $\sum_{t=0}^T (\frac{n\eta}{2d}+\tlam(t))$ on both sides and simplify the telescope sum on the right-hand side, we conclude that
+    \begin{align*}
+        \min_{t\leq T}\|\theta(t)\| & \leq \frac{\|\theta(0)\| - \|\theta(t+1)\|}{\sum_{t=0}^T (\frac{n\eta}{2d}+\tlam(t))} + \frac{\sum_{t=0}^T \tlam(t)\|\theta_\ast\|}{\sum_{t=0}^T (\frac{n\eta}{2d}+\tlam(t))} \\
+        & \leq \frac{2d\|\theta(0)\|}{(T+1)n\eta} + \frac{2d\sum_{t=0}^T \tlam(t)\|\theta_\ast\|}{(T+1)n\eta} \\
+        & \leq \frac{2d\|\theta(0)\|}{(T+1)n\eta} + \frac{2d S_\lambda\|\theta_\ast\|}{(T+1)n} \\
+        & \leq \frac{2(1+\eps)\sqrt{d}}{(T+1)\eta} \Big( \Big(1 + \sqrt{8\log\frac{2d}{\delta}}\Big) + \frac{1}{\sqrt{d}}\sqrt{p} \Big),
+    \end{align*}
+    where the second inequality is due to $\|\theta(0)\| - \|\theta(t+1)\| \leq \|\theta(0)\|$ and $(T+1)\frac{n\eta}{2d} \leq \sum_{t=0}^T (\frac{n\eta}{2d}+\tlam(t))$, and the second inequality is due to $\eta S_\lambda = \sum_{t=0}^T \tlam(t)$, and the last inequality is due to the conditions from \cref{thm:convergence}.
+\end{proof}
+
+\begin{corollary}\label{cor:convergence-without-reg}
+    If we assume all conditions from \cref{thm:convergence}, the prediction error $\|e(t)\|$ under feedback alignment on \eqref{eqn:loss-with-reg} without regularization, \ie, $\lambda(t) = 0$, achieves linear convergence rate. In particular, $\|e(t)\| \leq \frac{1+\eps}{1-\eps}(1-\frac{n\eta}{2d})^t \|e_0\|$.
+\end{corollary}
+
+\begin{proof}
+    Without regularization, \cref{ineqn:norm-theta-bound-ordinary} can be reduced to $\|\theta(t+1)\| \leq (1-\frac{n\eta}{2d}) \|\theta(t)\|$, and consequently we have
+    \begin{align*}
+        \|\theta(t)\| \leq \Big(1-\frac{n\eta}{2d}\Big)^t \|\theta(0)\|.
+    \end{align*}
+    Recall that $\theta(t) = X\transpose e(t) = \Sigma U\transpose e(t)$ and $1-\eps\leq \lambda_\mmin(\Sigma)\leq \lambda_\mmax(\Sigma)\leq 1+\eps$ with probability at least $1-\delta$. Hence, we have $\|e(t)\|$ also converging at linear rate for any $e_0$ in the column space of $X$.
+\end{proof}
+
+\begin{corollary}\label{cor:convergence-with-decreasing-reg}
+    If we assume all conditions from \cref{thm:convergence}, the prediction error $\|e(t)\|$ under feedback alignment on \eqref{eqn:loss-with-reg} with regularization $\lambda(t) = \left(1-\frac{\eta\sqrt{d}}{\sqrt{p}}\right)^t$ and $p \geq \frac{8d^2\sqrt{d}}{n^2\eta}$ achieves linear convergence rate. In particular, for $t\geq \icomment{TODO}$, $\|e(t)\| \leq \icomment{TODO}$.
+\end{corollary}
+
+\begin{proof}
+    Recall from \cref{thm:convergence} that 
+    \begin{align*}
+        \|\theta(t+1)\| \leq \Big(1-\frac{n\eta}{2d}- \lambda(t)\eta \Big)\|\theta(t)\| + \lambda(t)\eta\|\theta_\ast\| \leq \Big(1-\frac{n\eta}{2d} \Big)\|\theta(t)\| + \lambda(t)\eta\|\theta_\ast\|,
+    \end{align*}
+    where the second inequality follows from $\lambda(t)\geq 0$. Equivalently, we can obtain the following upper bound for $\|\theta(t+1)\|$ by recursion:
+    \begin{align*}
+        \|\theta(t+1)\| \leq \lambda(t)\eta \|\theta_*\| + \sum_{i=1}^t \Big( 1-\frac{n}{2d}\eta \Big)^{t-i} \lambda(i)\eta \|\theta_*\| + \Big( 1-\frac{n}{2d}\eta \Big)^t \|\theta(0)\|,
+    \end{align*}
+    where the last term on the right-hand side goes to zero as $t\to\infty$. In particular, if $p \geq \frac{8d^2\sqrt{d}}{n^2\eta}$, then it holds that $\left( 1-\frac{n}{2d}\eta \right)^t \|\theta(0)\| \leq \frac{1}{2} \left( 1-\frac{\eta\sqrt{d}}{\sqrt{p}} \right)^t \eta \|\theta_*\| = \frac{1}{2}\lambda(t)\eta \|\theta_*\|$ for any 
+    \begin{align*}
+        t \geq \log\frac{2\|\theta(0)\|}{\eta\|\theta_*\|} / \log \frac{1-\frac{\eta\sqrt{d}}{\sqrt{p}}}{1 - \frac{n}{2d}\eta}.
+    \end{align*}
+    Further, note that 
+    \begin{align*}
+        \sum_{i=1}^t \Big( 1-\frac{n}{2d}\eta \Big)^{t-i} \lambda(i)\eta \|\theta_*\| & = \sum_{i=1}^t \Big( 1-\frac{n}{2d}\eta \Big)^{t-i} \left(1-\frac{\eta\sqrt{d}}{\sqrt{p}}\right)^i \eta \|\theta_*\| \\
+        & \leq (t-1) \left(1-\frac{\eta\sqrt{d}}{\sqrt{p}}\right)^t \eta \|\theta_*\| \\
+        & = (t-1)\lambda(t)\eta \|\theta_*\|,
+    \end{align*}
+    where the inequality is due to $\frac{\eta\sqrt{d}}{\sqrt{p}} \leq \frac{1}{2}\frac{n}{2d}\eta$. Combining the inequalities above to get
+    \begin{align*}
+        \|\theta(t)\| & \leq  \lambda(t)\eta \|\theta_*\| + (t-1)\lambda(t)\eta \|\theta_*\| + \frac{1}{2}\lambda(t)\eta \|\theta_*\| \\
+        & \leq 2(t-1) \left(1-\frac{\eta\sqrt{d}}{\sqrt{p}}\right)^{t-1} \eta \|\theta_*\| \\
+        & \leq 
+    \end{align*}
+\end{proof}
+
+\begin{lemma}\label{lem:series}
+    If a number series $\{x_t\}_{t=0}^\infty$ is subjected to $x_{t+1} = (1-a)x_t + b$, where $x_t > 0$ and $a\in(0,1)$, it holds $x_{t+1} - \frac{b}{a} = (1-a) (x_t - \frac{b}{a})$, and $x_n$ converges to $x_\infty = \frac{b}{a}$ exponentially fast. In particular, for any $\eps >0$, we have $|x_t-x_\infty|<\eps$ for any $t = \Omega(\frac{1}{a}\log\frac{1}{\eps})$.
+\end{lemma}
+
+\begin{lemma}\label{lem:series-bound}
+   For orthogonal decomposition $\theta(t) = a(t) \hat\theta_\ast + \Xi(t)$, where $\hat\theta_\ast = \theta_\ast/\|\theta_\ast\|$ and $\Xi(t) \perp \theta_\ast$, if we assume the conditions of \cref{cor:W0-tail} with regularization $\lambda(t) = \lambda$ for the first $T$ steps and $\lambda \geq \frac{4n}{d}$, then if it holds $\eps\leq \frac{1}{40}$,
+   \begin{align*}
+       p\geq \max\left\{2048\log\frac{2}{\delta},2560(1+\eps)^3d(1+\sqrt{8\log\frac{2d}{\delta}})^2\right\}
+   \end{align*}
+   and $S_\lambda = T\lambda\leq \frac{1}{\eta\sqrt{d}}\sqrt{p}$, then for any $\delta>0$, there exists
+   \begin{align*}
+       \tau & = \Bigg[\log\left(\frac{\lambda+\frac{n}{2d}}{\frac{n}{2d}\|\theta_*\|} \left(\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right)\frac{(1+\eps)n}{\sqrt{d}} - \frac{(1+\eps)\lambda}{\lambda + \frac{n}{2d}}\frac{n}{\sqrt{d}}\right)\right) + \log\frac{\lambda}{\frac{n}{2d}} + \log\frac{\lambda-\frac{n}{d}}{\frac{n}{d}}\Bigg]/\log\frac{1}{1 - (\lambda+\frac{n}{2d})\eta},
+   \end{align*}
+   such that for any $t>\tau$, we have $a(t)\geq \frac{(\lambda - \frac{2n}{d})\|\theta_*\|}{\lambda + \frac{n}{d}}$ and $\|\Xi(t)\|\leq \frac{\frac{n}{d}\|\theta_*\|}{\lambda + \frac{n}{2d}}$ with probability at least $1-5\delta$.
+\end{lemma}
+
+\begin{proof}
+    Multiply $\hat\theta_\ast$ on both sides of \cref{eqn:theta-tlam-ordinary} to get the iterate for $a(t)$:
+    \begin{align}\label{eqn:a(t)lam-ordinary}
+        \begin{split}
+            a(t+1) & = \Big((1-\tlam(t))I_d -\prod_{k=0}^t(1-\tlam(k))\frac{n\eta}{dp}b\transpose\beta(0) I_d -\frac{n\eta}{d} I_d - \frac{n\eta^3}{dp^2}\|b\|^2\big(\sum_{i=0}^t\sum_{j=0}^i\prod_{k=i+1}^t(1-\tlam(k))\theta(j)\transpose \theta(i) I_d \big)\Big) a(t) \\
+            & \qquad + \hat\theta_\ast\transpose\Big( \frac{\eta^2}{p}\big(u\transpose \tilde{s}(t) \Sigma^2 + \Sigma^2 u s(t-1)\transpose + \Sigma^2 s(t-1)u\transpose\big) + \eta\Big(\frac{n}{d}I_d - \frac{1}{p}\Sigma^2 W(0)\transpose W(0)\Big) \\
+            & \qquad + \prod_{k=0}^t (1-\tilde\lambda(k))\frac{\eta}{p}b\transpose\beta(0) \Big(\frac{n}{d}I_d - \Sigma^2\Big) + \frac{\eta^3}{p^2}\|b\|^2\sum_{i=0}^t\sum_{j=0}^i\prod_{k=i+1}^t(1-\tilde\lambda(k))\theta(j)\transpose \theta(i) \Big(\frac{n}{d}I_d-\Sigma^2\Big) \Big)\theta(t) \\
+            & \qquad -\frac{\eta^3}{p^2}\|b\|^2 \hat\theta_\ast\transpose \Sigma^2 s_{t}s(t-1)\transpose \theta(t) + \tlam(t)\|\theta_*\|.
+        \end{split}
+    \end{align}
+    For any $n,d,p$ satisfy the condition of \cref{cor:W0-tail}, if $p\geq \max\{512\log\frac{2}{\delta},1280(1+\eps)^3d(1+\sqrt{8\log\frac{2d}{\delta}})^2\}$ and $S_\lambda\leq \frac{1}{\eta\sqrt{d}}\sqrt{p}$, it holds with probability at least $1-4\delta$ that $\prod_{k=0}^t (1-\tlam(k))\frac{n\eta}{dp} b\transpose\beta(0) \leq \frac{n\eta}{dp}b\transpose\beta(0) \leq \frac{n\eta}{8d}$,
+    \begin{align*}
+        \frac{n\eta^3}{dp^2}\|b\|^2 \sum_{i=0}^t\sum_{j=0}^i\prod_{k=i+1}^t(1-\tlam(k))\theta(j)\transpose \theta(i) \leq \frac{n\eta}{16d}, \qquad
+        \frac{\eta^3}{p^2}\|b\|^2 \Sigma^2 s_{t}s(t-1)\transpose \leq \frac{n\eta}{16d}.
+    \end{align*}
+    For any $n,d,p$ satisfy the condition of \cref{cor:W0-tail}, if $\eps\leq \frac{1}{20}$ and $p\geq \max\{512\log\frac{2}{\delta},1280(1+\eps)^3d(1+\sqrt{8\log\frac{2d}{\delta}})^2\}$ and $S_\lambda\leq \frac{1}{\eta\sqrt{d}}\sqrt{p}$, it holds with probability at least $1-5\delta$ that
+    \begin{align*}
+        \frac{\eta^2}{p}\big(u\transpose \tilde{s}(t) \Sigma^2 + \Sigma^2 u s(t-1)\transpose + \Sigma^2 s(t-1)u\transpose\big) \leq \frac{n\eta}{8d},& \qquad \eta\Big(\frac{n}{d}I_d - \frac{1}{p}\Sigma^2 W(0)\transpose W(0)\Big) \leq \frac{n\eta}{8d}, \\
+         \prod_{k=0}^t (1-\tilde\lambda(k))\frac{\eta}{p}b\transpose\beta(0) \Big(\frac{n}{d}I_d - \Sigma^2\Big) \leq \frac{n\eta}{8d},& \qquad \frac{\eta^3}{p^2}\|b\|^2\sum_{i=0}^t\sum_{j=0}^i\prod_{k=i+1}^t(1-\tilde\lambda(k))\theta(j)\transpose \theta(i) \Big(\frac{n}{d}I_d-\Sigma^2\Big) \leq \frac{n\eta}{16d}.
+    \end{align*}
+    Consequently, it holds for all $t\geq 0$ that 
+    \begin{align*}
+        a(t+1)\geq \Big(1-\Big(\lambda(t)+\frac{2n}{d}\Big)\eta\Big)a(t)+\lambda(t)\eta\|\theta_*\| - \frac{n\eta}{2d} (|a(t)| + \|\Xi(t)\|)
+    \end{align*}
+    Similarly, we multiply $\xi_{t+1}$ on both sides of \cref{eqn:theta-tlam-ordinary} to obtain a corresponding upper bound
+    \begin{align}\label{eqn:xi_tlam-ordinary}
+        \begin{split}
+            \|\xi_{t+1}\|^2 & = \Big((1-\tlam(t))I_d -\prod_{k=0}^t(1-\tlam(k))\frac{n\eta}{dp}b\transpose\beta(0) I_d - \frac{n\eta}{d} I_d - \frac{n\eta^3}{dp^2}\|b\|^2\big(\sum_{i=0}^t\sum_{j=0}^i\prod_{k=i+1}^t(1-\tlam(k))\theta(j)\transpose \theta(i) I_d \big)\Big) \xi_{t+1}\transpose \Xi(t) \\
+            & \qquad + \xi_{t+1}\transpose\Big(\frac{\eta^2}{p}\big(u\transpose \tilde{s}(t) \Sigma^2 + \Sigma^2 u s(t-1)\transpose + \Sigma^2 s(t-1)u\transpose\big) + \eta\Big(\frac{n}{d}I_d - \frac{1}{p}\Sigma^2 W(0)\transpose W(0)\Big)  \\
+            & \qquad + \prod_{k=0}^t(1-\eta\lambda(k))\frac{\eta}{p}b\transpose\beta(0) \Big(\frac{n}{d}I_d - \Sigma^2\Big) + \frac{\eta^3}{p^2}\|b\|^2\sum_{i=0}^t\sum_{j=0}^i\prod_{k=i+1}^t(1-\eta\lambda(k))\theta(j)\transpose \theta(i) \Big(\frac{n}{d}I_d-\Sigma^2\Big) \Big)\theta(t) \\
+            & \qquad -\frac{\eta^3}{p^2}\|b\|^2 \xi_{t+1}\transpose \Sigma^2 s(T)s(t-1)\transpose \theta(t) \\
+            & \leq \Big(1-\tlam(t)-\frac{3}{4}\frac{n\eta}{d}\Big)\|\xi_{t+1}\| \|\Xi(t)\| - \frac{n\eta}{8d}\|\xi_{t+1}\|\|\theta(t)\| + \frac{n\eta}{32d} \|\xi_{t+1}\|\|\theta(t)\|,
+        \end{split}
+    \end{align}
+    where for any $n,d,p$ satisfy the condition of \cref{cor:W0-tail}, if $\eps\leq \frac{1}{40}$ and $p\geq \max\{2048\log\frac{2}{\delta},2560(1+\eps)^3d(1+\sqrt{8\log\frac{2d}{\delta}})^2\}$ and $S_\lambda\leq \frac{1}{\eta\sqrt{d}}\sqrt{p}$, it holds with probability at least $1-5\delta$ that
+    \begin{align*}
+        \frac{\eta^2}{p}\big(u\transpose \tilde{s}(t) \Sigma^2 + \Sigma^2 u s(t-1)\transpose + \Sigma^2 s(t-1)u\transpose\big) \leq \frac{n\eta}{16d},& \qquad \eta\Big(\frac{n}{d}I_d - \frac{1}{p}\Sigma^2 W(0)\transpose W(0)\Big) \leq \frac{n\eta}{16d}, \\
+        \frac{\eta^3}{p^2}\|b\|^2 \Sigma^2 s_{t}s(t-1)\transpose \leq \frac{n\eta}{32d},& \qquad \frac{\eta^3}{p^2}\|b\|^2\sum_{i=0}^t\sum_{j=0}^i\prod_{k=i+1}^t(1-\tilde\lambda(k))\theta(j)\transpose \theta(i) \Big(\frac{n}{d}I_d-\Sigma^2\Big) \leq \frac{n\eta}{32d},
+    \end{align*}
+    and 
+    \begin{align*}
+        \prod_{k=0}^t (1-\tilde\lambda(k))\frac{\eta}{p}b\transpose\beta(0) \Big(\frac{n}{d}I_d - \Sigma^2\Big) \leq \frac{n\eta}{16d}.
+    \end{align*}
+    In other words, we have $\|\xi_{t+1}\| \leq \big(1-\tlam(t) - \frac{n\eta}{2d})\|\Xi(t)\| + \frac{n\eta}{2d}|a(t)|$ for all $t\geq 0$. Under the assumption that $\lambda > \|\theta(0)\|\geq (1+\eps)(1 + \sqrt{8\log\frac{2d}{\delta}}) \frac{n}{\sqrt{d}}$ with probability at least $1-\delta$, we can rewrite the bounds above for the first $T$ steps into
+    \begin{align*}
+        \begin{cases}
+            a(t+1)\geq (1-(\lambda+\frac{2n}{d})\eta)a(t)+\lambda\eta\|\theta_*\| - \frac{n\eta}{2d} (|a(t)| + \|\Xi(t)\|), \\
+            \|\xi_{t+1}\| \leq (1-(\lambda+\frac{n}{2d})\eta)\|\Xi(t)\| + \frac{n\eta}{2d} |a(t)|.
+        \end{cases}
+    \end{align*}
+    Recall that from \cref{thm:convergence} we have $\|\theta(t+1)\| \leq (1-(\lambda + \frac{n}{2d})\eta )\|\theta(t)\| + \lambda\eta\|\theta_\ast\|$, and we rearrange the terms to get
+    \begin{align*}
+        \Big(\|\theta(t+1)\| - \frac{\lambda\|\theta_*\|}{\lambda + \frac{n}{2d}}\Big) \leq \Big(1-\Big(\lambda + \frac{n}{2d}\Big)\eta \Big) \Big(\|\theta(t)\|  - \frac{\lambda\|\theta_*\|}{\lambda + \frac{n}{2d}}\Big),
+    \end{align*}
+    where $\|\theta(t)\|$ converges to $\frac{\lambda\|\theta_*\|}{\lambda + \frac{n}{2d}}$ from above exponentially fast. 
+    In particular, for any initialization $\|\theta(0)\| \geq \frac{\lambda\|\theta_*\|}{\lambda + \frac{n}{2d}}$ we have $\|\theta(t)\|\leq \|\theta_*\|$ with probability at least $1-3\delta$ for all $t$ greater than
+    \begin{align*}
+        \tau_1 & \defeq \log\left(\frac{\lambda+\frac{n}{2d}}{\frac{n}{2d}\|\theta_*\|} \left(\|\theta(0)\| - \frac{\lambda\|\theta_*\|}{\lambda + \frac{n}{2d}}\right)\right)/\log\frac{1}{1 - (\lambda+\frac{n}{2d})\eta} \\
+        & \leq \log\left(\frac{\lambda+\frac{n}{2d}}{\frac{n}{2d}\|\theta_*\|} \left(\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right)\frac{(1+\eps)n}{\sqrt{d}} - \frac{(1+\eps)\lambda}{\lambda + \frac{n}{2d}}\frac{n}{\sqrt{d}}\right)\right)/\log\frac{1}{1 - (\lambda+\frac{n}{2d})\eta}.
+    \end{align*}
+    Because $|a(t)|\leq \|\theta(t)\|$ for all $t\geq 0$, we further upper bound 
+    \begin{align*}
+        \|\xi_{t+1}\| \leq \Big(1-\Big(\lambda + \frac{n}{2d}\Big)\eta \Big)\|\Xi(t)\| + \frac{n\eta}{2d}|a(t)| \leq \Big(1-\Big(\lambda + \frac{n}{2d}\Big)\eta \Big)\|\Xi(t)\| + \frac{n\eta}{2d}\|\theta_*\|
+    \end{align*}
+    for all $t>\tau_1$. 
+    Similarly, rearrange the terms to get
+    \begin{align*}
+        \Big(\|\xi_{t+1}\| - \frac{\frac{n}{2d}\|\theta_*\|}{\lambda + \frac{n}{2d}}\Big) \leq \Big(1-\Big(\lambda + \frac{n}{2d}\Big)\eta \Big) \Big(\|\Xi(t)\| - \frac{\frac{n}{2d}\|\theta_*\|}{\lambda + \frac{n}{2d}}\Big)
+    \end{align*}
+    where $\|\Xi(t)\|$ converges to $\frac{\frac{n}{2d}\|\theta_*\|}{\lambda + \frac{n}{2d}}$ from above exponentially fast. 
+    In particular, if $\lambda\geq \frac{n}{2d}$ we have $\|\Xi(t)\| \leq \frac{\frac{n}{d}\|\theta_*\|}{\lambda + \frac{n}{2d}}$ with probability at least $1-3\delta$ for all $t>\tau_1+\tau_2$ where 
+    \begin{align*}
+        \tau_2 & \defeq \log \left( \frac{\lambda+\frac{n}{2d}}{\frac{n}{2d}\|\theta_*\|} \frac{\lambda\|\theta_*\|}{(\lambda + \frac{n}{2d})} \right)/\log\frac{1}{1 - (\lambda+\frac{n}{2d})\eta} \\
+        & \leq \log\frac{\lambda}{\frac{n}{2d}}/\log\frac{1}{1 - (\lambda+\frac{n}{2d})\eta}.
+    \end{align*}
+    Finally, for any $t>\tau_1+\tau_2$, it holds $|a(t)|+\|\Xi(t)\|\leq 2\|\theta(t)\|\leq 2\|\theta_*\|$ so that 
+    \begin{align*}
+        a(t+1)\geq \Big(1-\Big(\lambda + \frac{2n}{d}\Big)\eta \Big)a(t)+\lambda\eta\|\theta_*\| - \frac{n\eta}{2d} \big(|a(t)| + \|\Xi(t)\|\big)
+        \geq  \Big(1-\Big(\lambda + \frac{2n}{d}\Big)\eta \Big)a(t)+\lambda\eta\|\theta_*\| - \frac{n\eta}{d}\|\theta_*\|,
+    \end{align*}
+    and by similar argument we obtain
+    \begin{align*}
+        \Big(a(t+1) - \frac{(\lambda - \frac{n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}}\Big) \geq  \Big(1-\Big(\lambda + \frac{2n}{d}\Big)\eta \Big) \Big(a(t) - \frac{(\lambda - \frac{n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}}\Big),
+    \end{align*}
+    where $a(t)$ converges to $\frac{(\lambda - \frac{n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}}$ from below exponentially fast. 
+    As long as we have $\lambda\geq \frac{4n}{d}$, it holds with probability at least $1-3\delta$ for any $t>\tau_1+\tau_2+\tau_3$ that $a(t) \geq \frac{(\lambda - \frac{2n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}} \geq \|\Xi(t)\|$, where 
+    \begin{align*}
+        \tau_3 & \defeq \log\left(\frac{\lambda+\frac{2n}{d}}{\frac{n}{d}\|\theta_*\|} \left(\frac{(\lambda - \frac{n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}} - a_{\tau_1+\tau_2}\right)\right)/\log\frac{1}{1 - (\lambda+\frac{n}{2d})\eta} \\
+        & \leq \log\frac{\lambda-\frac{n}{d}}{\frac{n}{d}}/\log\frac{1}{1 - (\lambda+\frac{n}{2d})\eta}.
+    \end{align*}
+\end{proof}
+
+\subsection{Alignment on Two-Layer Linear Networks}
+
+In this section, we will show the proofs for the alignment between $\beta(t)$ and $b$ under the regularized feedback alignment with cutoff regularization.
+
+\begin{theorem}\label{thm:alignment}
+    If we assume all conditions from \cref{lem:series-bound} \icomment{TODO: some extra conditions here} and the regularization term
+    \begin{align*}
+        \lambda(t) = 
+        \begin{cases}
+            \lambda, \quad t\leq T,\\
+            0, \quad t > T,
+        \end{cases}
+    \end{align*}
+    where $T = \lfloor \frac{\sqrt{d}}{4\eta n}\sqrt{p} \rfloor$ and $\lambda \geq \frac{12n}{d}$,
+    then feedback alignment on \eqref{eqn:loss-with-reg} achieves alignment. In particular, $\lim_{t\to\infty} \cos\angle(b, \beta(t)) = \Theta(1)$.
+\end{theorem}
+
+\begin{proof}
+    Recall that
+    \begin{align*}
+        \beta(t) &= \prod_{k=0}^{t-1}(1-\tlam(k))\beta(0) - \frac{\eta}{\sqrt p}\sum_{i=0}^{t-1} \prod_{k=i+1}^{t-1}(1-\tlam(k))W(0)\theta(i) + \frac{\eta^2}{p}b\sum_{i=0}^{t-1}\sum_{j=0}^i\prod_{k=i+1}^{t-1}(1-\tlam(k))\theta(j)\transpose\theta(i)
+    \end{align*}
+    is composed of three parts, where the first part is a multiple of $\beta(0)$ that is almost orthogonal against $b$ upon random initialization and the third part is a multiple of $b$ that contributes positively to the alignment. To simplify the notation, we define $\phi_{1}(t) \defeq \prod_{k=0}^{t-1}(1-\tlam(k))\beta(0)$, $\phi_{2}(t) \defeq \eta\sum_{i=0}^{t-1} \prod_{k=i+1}^{t-1} (1-\tlam(k))\theta(i)$, and $\phi_{3}(t) \defeq \frac{\eta^2}{\sqrt p} \frac{b}{\|b\|} \sum_{i=0}^{t-1} \sum_{j=0}^i \prod_{k=i+1}^{t-1}(1-\tlam(k)) \theta(j)\transpose\theta(i)$, so that we can rewrite 
+    \begin{align*}
+        \beta(t) = \phi_{1}(t) + \frac{1}{\sqrt p}W(0) \phi_{2}(t) + \frac{\|b\|}{\sqrt p}\phi_{3}(t).
+    \end{align*}
+    From \cref{cor:W0-tail} we have $1-\eps\leq \frac{1}{\sqrt p} \|W(0)\| \leq 1+\eps$ and from \cref{cor:b-norm-concentration} that $1-\eps \leq \frac{\|b\|}{\sqrt p} \leq 1+\eps$ with probability at least $1-2\delta$. The cosine value of the angle between $b$ and $\beta(t)$ is given by the normalized inner-product between them, which can be lower bounded through
+    \begin{align*}
+        \cos\angle(b, \beta(t)) 
+        = \frac{b\transpose \beta(t)}{\|b\|\|\beta(t)\|}  = \frac{\big(\frac{b}{\|b\|}\big)\transpose \beta(t)}{\|\beta(t)\|} & \geq \frac{\frac{\|b\|}{\sqrt p}\|\phi_{3}(t)\|-\frac{\|b\transpose W(0)\|}{\|b\|\sqrt p}\|\phi_{2}(t)\| - \|\phi_{1}(t)\|}{\|\phi_{1}(t)\|+\frac{\|W(0)\|}{\sqrt p}\|\phi_{2}(t)\|+\frac{\|b\|}{\sqrt p}\|\phi_{3}(t)\|} \\
+        & \geq \frac{(1-\eps)\|\phi_{3}(t)\|-\frac{1}{(1-\eps)\sqrt{p}} \sqrt{8d\log\frac{2d}{\delta}} \|\phi_{2}(t)\| - \|\phi_{1}(t)\|}{\|\phi_{1}(t)\|+(1+\eps)\|\phi_{2}(t)\|+(1+\eps)\|\phi_{3}(t)\|}.
+    \end{align*}
+
+    Let us write $\theta(t) = a(t) \hat\theta_\ast + \Xi(t)$, where $\Xi(t)\perp\theta_\ast$ and $\hat\theta_* = \theta_*/\|\theta_*\|$. Notice that $\|\phi_{1}(t)\|$ converges to zero exponentially fast for $t\leq T$. In particular, it holds that $1-\eps \leq \frac{\|b\|^2}{p} \leq 1+\eps$ with probability at least $1-\delta$ and thus
+    \begin{align*}
+        \|\phi_{1}(t)\| & \leq 2\sqrt p \prod_{k=0}^{t-1}(1-\tlam(k)) \leq 2\sqrt p \exp\Big(-\sum_{k=0}^{t-1}\tlam(k)\Big).
+    \end{align*} 
+    In large $t$ limit, we have $\lim_{t\to\infty}\|\phi_{1}(t)\| \leq 2\sqrt p \exp(-\eta T\lambda)$. Recall that from \cref{lem:series-bound} we require $S_\lambda\leq \frac{1}{\eta\sqrt{d}}\sqrt{p}$ and $\lambda\geq \frac{4n}{d}$ at the same time, and consequently, it is required that $T\leq \frac{\sqrt{d}}{4\eta n}\sqrt{p}$. To achieve the maximum alignment, we take $T=\lfloor \frac{\sqrt{d}}{4\eta n}\sqrt{p} \rfloor$ for the rest of the proof.
+    For the other two terms, we also have the following bounds available:
+    \begin{align*}
+        \|\phi_{2}(t)\| &\leq \eta\sum_{i=0}^{t-1}\prod_{k=i+1}^{t-1}(1-\tlam(k))\|\theta(i)\| 
+        \leq \eta\sum_{i=0}^{t-1}\prod_{k=i+1}^{t-1}(1-\tlam(k))(|a(i)|+\|\xi(i)\|), \\
+        \|\phi_{2}(t)\| &\geq \eta\left|\sum_{i=0}^{t-1}\prod_{k=i+1}^{t-1}(1-\tlam(k))a(i)\right|, \\
+        \|\phi_{3}(t)\| &= \frac{\eta^2}{\sqrt p}\sum_{i=0}^{t-1}\sum_{j=0}^i\prod_{k=i+1}^{t-1}(1-\tlam(k))\theta(i)\transpose \theta(j) \geq \frac{\eta^2}{\sqrt p}\sum_{i=0}^{t-1}\sum_{j=0}^i\prod_{k=i+1}^{t-1}(1-\tlam(k))(a(i)a(j)-\|\xi(i)\|\|\xi(j)\|).
+    \end{align*}
+    \cref{lem:series-bound} tells us that for $\tau \leq t \leq T$ and $\lambda \geq \frac{4n}{d}$, it holds that $a(t)\geq \frac{(\lambda - \frac{2n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}} \geq \frac{\frac{2n}{d}\|\theta_*\|}{\lambda + \frac{2n}{d}}$ and $\|\Xi(t)\|\leq \frac{\frac{n}{d}\|\theta_*\|}{\lambda + \frac{n}{2d}}$.
+    For any $T = \lfloor \frac{\sqrt{d}}{4\eta n}\sqrt{p} \rfloor$ and $t>T$, it holds
+    \begin{align*}
+        \|\phi_{3}(t)\| 
+        & = \frac{\eta^2}{\sqrt p}\sum_{i=0}^{\frac{T}{K}-1}\sum_{j=0}^i\prod_{k=i+1}^{\frac{T}{K}-1}(1-\tlam(k))\theta(i)\transpose\theta(j) + \frac{\eta^2}{\sqrt p}\sum_{i=\frac{T}{K}}^{T}\prod_{k=i+1}^{T-1}(1-\tlam(k))\theta(i)\transpose\sum_{j=0}^{i-1} \theta(j) \\
+        & \qquad + \frac{\eta^2}{\sqrt p}\sum_{i=T+1}^{t-1}\sum_{j=0}^i\prod_{k=i+1}^{t-1}(1-\tlam(k))\theta(i)\transpose\theta(j) \\
+        & \geq \frac{\eta^2}{\sqrt p}\sum_{i=\frac{T}{K}}^{T}\prod_{k=i+1}^{T-1}(1-\lambda\eta)\theta(i)\transpose\sum_{j=0}^{i-1} \theta(j) - \frac{\eta^2}{\sqrt p}\sum_{i=0}^{\frac{T}{K}-1}\sum_{j=0}^i\prod_{k=i+1}^{\frac{T}{K}-1}(1-\tlam(k)) \|\theta(i)\|\|\theta(j)\| \\
+        & \qquad + \frac{\eta^2}{\sqrt p}\sum_{i=T+1}^{t-1}\sum_{j=0}^i\prod_{k=i+1}^{t-1}(1-\tlam(k)) \theta(i)\transpose \theta(j),
+    \end{align*}
+    where the inequality follows from $\theta(i)\transpose\theta(j) \leq \|\theta(i)\|\|\theta(j)\|$. We lower bound $\|\phi_{3}(t)\|$ with three parts, where the last two will turn out to be bounded by quantities independent of $p$. In particular, for the first term we have 
+    \begin{align*}
+        \frac{\eta^2}{\sqrt p}\sum_{i=\frac{T}{K}}^{T-1}\prod_{k=i+1}^{t-1}(1-\tlam(k))\theta(i)\transpose\sum_{j=0}^{i-1} \theta(j) & = \frac{\eta^2}{\sqrt p} \sum_{i=\frac{T}{K}}^{T-1} (1-\lambda\eta)^{t-i-2} \theta(i)\transpose \cdot \Big( \sum_{j=0}^{\tau-1} \theta(j) + \sum_{j=\tau}^{i-1} \theta(j) \Big),
+    \end{align*}
+    where the equality follows from $\prod_{k=i+1}^{t-1}(1-\tlam(k)) = (1-\lambda\eta)^{t-i-2}$ and splitting the sum of $\theta(j)$ into two parts at $\tau\leq \frac{T}{K}$ if $\sqrt{p} \geq 8Kn\eta\tau/\sqrt{d}$. 
+    Similarly, for any $t>T$ we have the following upper bound
+    \begin{align*}
+        \|\phi_{2}(t)\| 
+        &\leq  \eta\sum_{i=\frac{T}{K}}^{T-1} (1-\lambda\eta)^{T-i-2} \|\theta(i)\| + \eta\sum_{i=0}^{\frac{T}{K}-1}\prod_{k=i+1}^{\frac{T}{K}-1}(1-\tlam(k)) \|\theta(i)\| + \eta\sum_{i=T}^{t-1} \prod_{k=T+1}^{t-1}(1-\tlam(k)) \|\theta(i)\|,
+    \end{align*}
+    where the inequality follows from the triangular inequality. Here we also chop the sum into three parts, and we will show that the first part dominates. 
+    
+    In the rest part of this proof, we are going to show that $\|\phi_{2}(t)\|$ can be bounded by a constant multiple of $\|\phi_{3}(t)\|$. Notice that for any $i\geq \frac{T}{K} > \tau$ it holds that 
+    \begin{align*}
+        \theta(i)\transpose\sum_{j=0}^{i-1} \theta(j) & = \theta(i)\transpose \cdot \Big( \sum_{j=0}^{\tau-1} \theta(j) + \sum_{j=\tau}^{i-1} \theta(j) \Big) \\
+        & = (a(i)\hat\theta(i)\transpose + \xi(i))\transpose \cdot \Big( \sum_{j=0}^{\tau-1} (a(j)\hat\theta(j)\transpose + \xi(j)) + \sum_{j=\tau}^{i-1} (a(j)\hat\theta(j)\transpose + \xi(j)) \Big) \\
+        & = a(i) \Big( \sum_{j=0}^{\tau-1} a(j) + \sum_{j=\tau}^{i-1} a(j) \Big) + \xi(i)\transpose \Big( \sum_{j=0}^{\tau-1} \xi(j) + \sum_{j=\tau}^{i-1} \xi(j) \Big) \\
+        & \geq a(i) \Big( (i-\tau) \frac{(\lambda-\frac{2n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}} - \tau M \Big) - \|\xi(i)\| \Big( \sum_{j=0}^{\tau-1} \|\xi(j)\| + \sum_{j=\tau}^{i-1} \|\xi(j)\| \Big) \\
+        & \geq a(i) \Big( (i-\tau) \frac{(\lambda-\frac{2n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}} - \tau M \Big) - \|\xi(i)\| \Big( \tau M + (i-\tau) \frac{\frac{n}{d}\|\theta_*\|}{\lambda + \frac{n}{2d}} \Big),
+    \end{align*}
+    where the first inequality follows from $a(j) \geq \frac{(\lambda-\frac{2n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}}$ for any $\tau\leq j\leq T$ and Cauchy-Schwarz inequality, and the second inequality follows from $\|\xi(j)\|\leq \frac{\frac{n}{d}\|\theta_*\|}{\lambda + \frac{n}{2d}}$ for any $\tau\leq j\leq T$. Here $M \defeq \max\left\{\|\theta(0)\|,\frac{\lambda\|\theta_*\|}{\lambda + \frac{n}{2d}}\right\}$, and for any $j\geq 0$, both $a(j)$ and $\|\xi(j)\|$ are dominated by $M$. In particular, with probability at least $1-3\delta$ it holds that 
+    \begin{align*}
+        \max\left\{\|\theta(0)\|,\frac{\lambda\|\theta_*\|}{\lambda + \frac{n}{2d}}\right\} \leq (1+\eps)\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right)\frac{n}{\sqrt{d}}, \qquad \|\theta_*\| \geq (1-\eps)\|y\|.
+    \end{align*}
+    If $\lambda\geq \frac{12n}{d}$ and 
+    \begin{align*}
+        \sqrt{p} \geq 16\eta K\frac{n^2}{d}(1+\eps) \left(1 + \sqrt{8\log\frac{2d}{\delta}}\right) \max\left\{ \frac{\lambda + \frac{n}{2d}}{\frac{n}{d}\|\theta_*\|}, \frac{2(\lambda + \frac{2n}{d})}{(\lambda-\frac{2n}{d})\|\theta_*\|} \right\} \cdot \tau,
+    \end{align*}
+    we have 
+    \begin{align*}
+        (i-\tau) \frac{(\lambda-\frac{2n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}} - \tau M \geq \frac{i}{2} \frac{(\lambda-\frac{2n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}}, \qquad \tau M + (i-\tau) \frac{\frac{n}{d}\|\theta_*\|}{\lambda + \frac{n}{2d}} \leq 2i \frac{\frac{n}{d}\|\theta_*\|}{\lambda + \frac{n}{2d}},
+    \end{align*}
+    and consequently it holds
+    \begin{align*}
+        \theta(i)\transpose\sum_{j=0}^{i-1} \theta(j) & \geq \frac{i}{2} \frac{(\lambda-\frac{2n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}} a(i) - 2i \frac{\frac{n}{d}\|\theta_*\|}{\lambda + \frac{n}{2d}} \frac{1}{2}a(i) \\
+        & \geq \frac{T}{K} \frac{(\lambda-\frac{10n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}} a(i) \\
+        & \geq \frac{\|\theta_*\|}{7} \frac{\sqrt{d}}{16\eta n}\sqrt{p} \cdot \frac{2\sqrt{5}}{5}\|\theta(i)\|,
+    \end{align*}
+    where the first inequality follows from $\|\xi(i)\|\leq \frac{1}{2}a(i)$ for $\tau\leq i\leq T$, the second inequality is due to $\frac{\frac{n}{2d}\|\theta_*\|}{\lambda + \frac{n}{2d}} \leq \frac{\frac{2n}{d}\|\theta_*\|}{\lambda + \frac{2n}{d}}$ and $i\geq \frac{T}{K}$, and the last inequality is due to $T\geq \frac{\sqrt{d}}{8\eta n}\sqrt{p}$, $\lambda\geq \frac{12n}{d}$, and $\|\theta(i)\|\leq \frac{\sqrt{5}}{2}a(i)$ due to the condition $a(i)\geq 2\|\xi(i)\|$ holding for $\tau\leq i\leq T$. Hence, we sum up along the index $i$ to get
+    \begin{align*}
+        \frac{\eta^2}{\sqrt p}\sum_{i=\frac{T}{K}}^{T-1}\prod_{k=i+1}^{T-1}(1-\tlam(k))\theta(i)\transpose\sum_{j=0}^{i-1} \theta(j) & \geq \frac{\eta^2}{\sqrt p}\sum_{i=\frac{T}{K}}^{T-1}\prod_{k=i+1}^{T-1}(1-\tlam(k)) \frac{\|\theta_*\|}{7} \frac{\sqrt{d}}{16\eta n}\sqrt{p} \cdot \frac{2\sqrt{5}}{5}\|\theta(i)\| \\
+        & \geq \eta \frac{\sqrt{5}\|\theta_*\|}{280}\frac{\sqrt{d}}{n} \sum_{i=\frac{T}{K}}^{T-1}\prod_{k=i+1}^{T-1}(1-\tlam(k)) \|\theta(i)\| \\
+        & \geq \frac{\sqrt{5}(1-\eps)\|y\|}{280}\frac{\sqrt{d}}{n} \cdot \eta\sum_{i=\frac{T}{K}}^{T-1}(1-\lambda\eta)^{T-i-2} \|\theta(i)\| \\
+        & \geq \frac{\sqrt{5}(1-\eps)}{560} \cdot \eta\sum_{i=\frac{T}{K}}^{T-1}(1-\lambda\eta)^{T-i-2} \|\theta(i)\|. \icomment{Require lower bound on $\|\theta_*\|$}
+    \end{align*}
+    
+    Moreover, we could upper bound
+    \begin{align*}
+        \eta\sum_{i=0}^{\frac{T}{K}-1}\prod_{k=i+1}^{\frac{T}{K}-1}(1-\tlam(k)) \|\theta(i)\| & = \eta\sum_{i=0}^{\tau-1}\prod_{k=i+1}^{\tau-1}(1-\tlam(k)) \|\theta(i)\| + \eta\sum_{i=\tau}^{\frac{T}{K}-1}\prod_{k=i+1}^{\frac{T}{K}-1}(1-\tlam(k)) \|\theta(i)\| \\
+        & \leq \eta\tau M + \eta\sum_{i=\tau}^{\frac{T}{K}-1}(1 - \lambda\eta)^{\frac{T}{K}-i-2} \|\theta_*\| \\
+        & \leq \eta\tau M + \frac{1}{\lambda} \|\theta_*\|,
+    \end{align*}
+    where the first inequality follows from $\|\theta(i)\|\leq M$ for all $i\geq 0$ and $\|\theta(i)\|\leq \|\theta_*\|$ for all $\tau\leq i\leq T$, and the second inequality follows from an infinite sum of a geometric series. Similarly, we have
+    \begin{align*}
+        \eta\sum_{i=T}^{t-1} \prod_{k=T+1}^{t-1}(1-\tlam(k)) \|\theta(i)\| & = \eta\sum_{i=T}^{t-1} \|\theta(i)\| \\
+        & \leq \eta \sum_{i=T}^{t-1} \left( 1-\frac{n\eta}{2d} \right)^{i-T} \|\theta(t)\| \\
+        & \leq \frac{2d}{n} \|\theta(t)\|,
+    \end{align*}
+    where the equality is due to $\lambda(k) = 0$ for all $k > T$, the first inequality is due to \cref{cor:convergence}, and the last inequality follows from an infinite sum of geometric series. For the components of $\|\phi_{3}(t)\|$, we also have upper bound 
+    \begin{align*}
+        & \frac{\eta^2}{\sqrt p}\sum_{i=0}^{\frac{T}{K}-1}\sum_{j=0}^i\prod_{k=i+1}^{\frac{T}{K}-1}(1-\tlam(k)) \|\theta(i)\|\|\theta(j)\| \\
+        & = \frac{\eta^2}{\sqrt p}\sum_{i=0}^{\frac{T}{K}-1}(1 - \lambda\eta)^{\frac{T}{K}-i-2} \|\theta(i)\| \sum_{j=0}^i \|\theta(j)\| \\
+        & = \frac{\eta^2}{\sqrt p}\sum_{i=0}^{\tau-1}(1 - \lambda\eta)^{\tau-i-2} \|\theta(i)\| \sum_{j=0}^i \|\theta(j)\| + \frac{\eta^2}{\sqrt p}\sum_{i=\tau}^{\frac{T}{K}-1}(1 - \lambda\eta)^{\frac{T}{K}-i-2} \|\theta(i)\| \sum_{j=0}^i \|\theta(j)\| \\
+        & \leq \frac{\eta^2}{\sqrt p} \tau^2 M^2 + \frac{\eta^2}{\sqrt p}\sum_{i=\tau}^{\frac{T}{K}-1}(1 - \lambda\eta)^{\frac{T}{K}-i-2} \|\theta(i)\| \Big( \sum_{j=0}^{\tau-1} M + \sum_{j=\tau}^{i} \|\theta_*\| \Big) \\
+        & \leq \frac{\eta^2}{\sqrt p} \tau^2 M^2 + \frac{\eta^2}{\sqrt p} \Big( \tau M + \frac{T}{K} \|\theta_*\| \Big) \sum_{i=\tau}^{\frac{T}{K}-1}(1 - \lambda\eta)^{\frac{T}{K}-i-2} \|\theta(i)\|,
+    \end{align*}
+    where the first inequality follows from $\|\theta(i)\|\leq M$ for all $i\geq 0$ and $\|\theta(i)\|\leq \|\theta_*\|$ for all $\tau\leq i\leq T$. Further, 
+    \begin{align*}
+        & \frac{\eta^2}{\sqrt p}\sum_{i=T+1}^{t-1}\sum_{j=0}^i\prod_{k=i+1}^{t-1}(1-\tlam(k)) \|\theta(i)\|\|\theta(j)\| \\
+        & = \frac{\eta^2}{\sqrt p}\sum_{i=T+1}^{t-1} \|\theta(i)\| \sum_{j=0}^T \|\theta(j)\| + \frac{\eta^2}{\sqrt p}\sum_{i=T+1}^{t-1} \|\theta(i)\| \sum_{j=T}^i\|\theta(j)\| \\
+        & \leq \frac{\eta^2}{\sqrt p}\sum_{i=T+1}^{t-1} \|\theta(i)\| \Big( \tau M + T\|\theta_*\| + \sum_{j=T}^i \left( 1-\frac{n\eta}{2d} \right)^{j-T} \|\theta(t)\| \Big) \\
+        & \leq \frac{\eta^2}{\sqrt p} \Big( \tau M + T\|\theta_*\| + \frac{2d}{n\eta} \|\theta_*\| \Big) \sum_{i=T+1}^{t-1} \left( 1-\frac{n\eta}{2d} \right)^{i-T-1} \|\theta(t)\| \\
+        & \leq \frac{\eta}{\sqrt p} \Big( \tau M + T\|\theta_*\| + \frac{2d}{n\eta} \|\theta_*\| \Big) \frac{2d}{n} \|\theta_*\|,
+    \end{align*}
+    where the first inequality follows from $\|\theta(i)\|\leq M$ for all $i\geq 0$, $\|\theta(i)\|\leq \|\theta_*\|$ for all $\tau\leq i\leq T$, and $\|\theta(i)\|$ decays exponentially fast at rate $1-\frac{n\eta}{2d}$. The second and third inequalities are due to a sum of geometric series.
+    
+    On the other hand, 
+    \begin{align*}
+        & \frac{\eta^2}{\sqrt p}\sum_{i=T+1}^{t-1}\sum_{j=0}^i\prod_{k=i+1}^{t-1}(1-\tlam(k)) \theta(i)\transpose\theta(j) \\
+        & = \frac{\eta^2}{\sqrt p}\sum_{i=T+1}^{t-1}\sum_{j=0}^i (a(i) a(j) - \|\xi(i)\|\|\xi(j)\|) \\
+        & = \frac{\eta^2}{\sqrt p}\sum_{j=0}^T \sum_{i=T+1}^{t-1} (a(i) a(j) - \|\xi(i)\|\|\xi(j)\|) + \frac{\eta^2}{\sqrt p} \sum_{j=T+1}^{t-1} \sum_{i=j+1}^{t-1} (a(i) a(j) - \|\xi(i)\|\|\xi(j)\|) \\
+        & \geq \frac{\eta^2}{\sqrt p}\sum_{j=0}^T \sum_{i=T+1}^{t-1} \theta(i)\transpose\theta(j) - \frac{\eta^2}{\sqrt p} \sum_{j=T+1}^{t-1} \sum_{i=j+1}^{t-1} \|\theta(i)\|\|\theta(j)\|,
+    \end{align*}
+    where
+    \begin{align*}
+        \frac{\eta^2}{\sqrt p} \sum_{j=T+1}^{t-1} \sum_{i=j+1}^{t-1} \|\theta(i)\|\|\theta(j)\| & \leq \frac{\eta^2}{\sqrt p} \sum_{j=T+1}^{t-1} \|\theta(j)\| \sum_{i=j+1}^{t-1} \left( 1-\frac{n\eta}{2d} \right)^{i-j-1} \|\theta_{j+1}\| \\
+        & \leq \frac{\eta^2}{\sqrt p} \sum_{j=T+1}^{t-1} \left( 1-\frac{n\eta}{2d} \right)^{j-T-1} \|\theta(t+1)\| \frac{2d}{n\eta} \|\theta_*\| \\
+        & \leq \frac{4d^2}{n^2\sqrt{p}} \|\theta_*\|^2,
+    \end{align*}
+    % and 
+    % \begin{align*}
+    %     \frac{\eta^2}{\sqrt p}\sum_{j=0}^T \sum_{i=T+1}^{t-1} \theta(i)\transpose\theta(j) & \geq \frac{\eta^2}{\sqrt p}\sum_{j=\tau}^T \sum_{i=T+1}^{t-1} \theta(i)\transpose\theta(j) - \frac{\eta^2}{\sqrt p}\sum_{j=0}^{\tau-1} \sum_{i=T+1}^{t-1} \|\theta(i)\|\|\theta(j)\| \\
+    %     & \geq \frac{\eta^2}{\sqrt p}\sum_{j=\tau}^T \theta(j)\transpose \sum_{i=T+1}^{t-1} \theta(i) - \frac{\eta^2}{\sqrt p} \tau M \frac{2d}{n\eta} \|\theta_*\|,
+    % \end{align*}
+    where the second and third inequalities are due to taking the limit of geometric series.
+    
+    Recall that we define $s(T) = \sum_{j=0}^T \theta(j)$, and we can write $\frac{\eta^2}{\sqrt p}\sum_{j=0}^T \theta(j)\transpose \sum_{i=T+1}^{t-1} \theta(i) = \frac{\eta^2}{\sqrt p} \sum_{i=T+1}^{t-1} s(T)\transpose \theta(i)$. As long as $s(T)\transpose \theta(t)$ is large enough compared to $\|\theta(t)\|$ and further perturbations on $\theta(t)$ quickly fade away for all $t > T$, we can lower bound $\frac{\eta^2}{\sqrt p}\sum_{j=0}^T \theta(j)\transpose \sum_{i=T+1}^{t-1} \theta(i)$ with $\eta C\sum_{i=T}^{t-1} \|\theta(i)\|$ for some $C>0$. In particular, because $a(t) \geq \frac{(\lambda - \frac{2n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}}$ and $\|\Xi(t)\| \leq \frac{\frac{n}{d}\|\theta_*\|}{\lambda + \frac{n}{2d}}$ with $\lambda\geq \frac{12n}{d}$, we have $a(t) \geq 2\|\Xi(t)\|$. Let us denote $s(T) = a_{s(T)}\hat\theta_* + \xi_{s(T)}$ using an orthogonal decomposition, where $a_{s(T)}$ is the amount of contribution in the direction of $\theta_*$ and $\xi_{s(T)}$ represents its orthogonal complement. Since $a(t)\leq \|\theta(t)\|$ for any $t\leq \tau$ and $a(t) \geq \frac{(\lambda - \frac{2n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}}$ and $\|\Xi(t)\| \leq \frac{\frac{n}{d}\|\theta_*\|}{\lambda + \frac{n}{2d}}$ for any $\tau\leq t\leq T$, it holds
+    \begin{align*}
+        a_{s(T)} \geq (T-\tau) \frac{(\lambda - \frac{2n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}} - \tau M, \qquad \|\xi_{s(T)}\| \leq (T-\tau) \frac{\frac{n}{d}\|\theta_*\|}{\lambda + \frac{n}{2d}} + \tau M.
+    \end{align*}
+    We can also get $a_{s(T)} \geq 2 \|\xi_{s(T)}\|$ if $T \geq 2\tau$ under the condition that $\sqrt{p} \geq 16n\eta\tau/\sqrt{d}$ and 
+    \begin{align*}
+        \sqrt{p} \geq 96\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right)\frac{\eta n^2}{d}\tau \frac{\frac{2n}{d}}{\lambda + \frac{n}{2d}}\frac{1}{\|\theta_*\|}.
+    \end{align*}
+    Let us denote $\alpha(t) \defeq \frac{1}{\sqrt{p}}\theta(t)\transpose s(T)$ for all $t\geq T$, and we have $\alpha(t) = \frac{1}{\sqrt{p}}\theta(t)\transpose s(T) \geq \frac{1}{\sqrt{p}}(a(t) a_{s(T)} - \|\Xi(t)\|\|\xi_{s(T)}\|) \geq \frac{3}{4\sqrt{p}} a(t) a_{s(T)}$, where $a(t) \geq \frac{(\lambda - \frac{2n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}} \geq \frac{1}{2}\|\theta_*\|$ and 
+    \begin{align*}
+        \frac{1}{\sqrt{p}} a_{s(T)} & \geq \frac{T-\tau}{\sqrt{p}} \frac{(\lambda - \frac{2n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}} - \frac{\tau}{\sqrt{p}} M \geq \frac{T}{4\sqrt{p}} \|\theta_*\| - \frac{\tau}{\sqrt{p}} M \geq \frac{\sqrt{d}}{64\eta n} \|\theta_*\|
+    \end{align*}
+    if $\tau M \leq \frac{T}{8}$ under the condition that $\sqrt{p}\geq 128 \left(1 + \sqrt{8\log(d/\delta)}\right) \frac{n^2\eta\tau}{d}$. Combine them together to get $\alpha(t) \geq \frac{3}{8}\frac{\sqrt{d}}{64\eta n} \|\theta_*\|^2 \geq \frac{3\sqrt{d}}{512n\eta} \|\theta(t)\|^2 \geq \frac{3\sqrt{d}}{512n\eta} \|\theta(t)\|$ \icomment{Require lower bound on $\|\theta_*\|$}.
+    
+    Remember that for any $t>T$, the update rule on $\theta(t)$ writes
+    \begin{align*}
+        \theta(t+1) & = \Big( I_d - \frac{n\eta}{d} I_d - \eta\Delta(t) + \frac{\eta}{\sqrt p}\Xi(t)  - (1-\lambda\eta)^{T+1} \frac{\eta}{p} b\transpose\beta(0) \Sigma^2 + \frac{n\eta}{d}I_d - \frac{\eta}{p}\Sigma^2 W(0)\transpose W(0) \Big)\theta(t) \\
+        & = \Big( I_d - \frac{n\eta}{d} I_d - \frac{\eta^3}{p^2} \|b\|^2 \Sigma^2 s(T) s(t-1)\transpose \Big)\theta(t) \\
+        & \qquad + \Big( \frac{\eta}{\sqrt{p}} \Phi_t + \frac{\eta}{\sqrt p}\Xi(t)  - (1-\lambda\eta)^{T+1} \frac{\eta}{p} b\transpose\beta(0) \Sigma^2 + \frac{n\eta}{d}I_d - \frac{\eta}{p}\Sigma^2 W(0)\transpose W(0) \Big)\theta(t),
+    \end{align*}
+    where $\Delta(t) = \frac{\eta^2}{p^2} \|b\|^2\big(\sum_{i=0}^t\sum_{j=0}^i \prod_{k=i+1}^T (1-\eta\lambda)\theta(j)\transpose \theta(i) \Sigma^2 + \Sigma^2 s(T) s(t-1)\transpose \big)$, $\Phi_t \defeq \frac{\eta}{p\sqrt{p}} \|b\|^2 \sum_{i=0}^t\sum_{j=0}^i \prod_{k=i+1}^T (1-\eta\lambda)\theta(j)\transpose \theta(i) \Sigma^2$ and $\Xi(t) = \frac{\eta}{\sqrt p}\big(u\transpose \tilde{s}(t) \Sigma^2 + \Sigma^2 u s(t-1)\transpose + \Sigma^2 s(t-1)u\transpose\big)$. Notice that $\frac{1}{p} s(T)\transpose(s(T) s(T)\transpose)\theta(t) = \frac{\|s(T)\|^2}{p} \alpha(t)$, we further split $s(T) = s(T) + (s(T) - s(T))$ to get
+    \begin{align*}
+        s(T) s(t-1)\transpose = s(T) s(T)\transpose + \underbrace{(s(T) - s(T)) s(t-1)\transpose + s(T) (s(t-1) - s(T))\transpose + (s(T) - s(T))(s(t-1) - s(T))\transpose}_{\Psi(t)},
+    \end{align*}
+    and we define a shorthand $\Psi(t)$ to represent the remaining tails that are going to be proved as smaller terms. Given the shorthand, we can further rewrite the update rule on $\theta(t)$ into
+    \begin{align}
+        \begin{split}\label{eqn:update-split}
+            \theta(t+1) & = \Big( I_d - \frac{n\eta}{d} I_d - \frac{\eta^3}{p^2} \|b\|^2 \Sigma^2 s(T) s(T)\transpose \Big)\theta(t) \\
+            & \qquad + \Big( \frac{\eta}{\sqrt{p}} \Phi_t + \frac{\eta}{\sqrt p}\Xi(t)  - (1-\lambda\eta)^{T+1} \frac{\eta}{p} b\transpose\beta(0) \Sigma^2 + \frac{n\eta}{d}I_d - \frac{\eta}{p}\Sigma^2 W(0)\transpose W(0) - \frac{\eta^3}{p^2} \|b\|^2 \Sigma^2 \Psi(t) \Big)\theta(t).
+        \end{split}
+    \end{align}
+    Multiply $\frac{1}{\sqrt{p}} s(T)\transpose$ on both sides of \cref{eqn:update-split}, we have
+    \begin{align*}
+        \alpha(t+1) & = \Big( 1 - \frac{n\eta}{d} - \frac{n\eta^3}{dp^2} \|b\|^2 \|s(T)\|^2 \Big) \alpha(t) \\
+        & \qquad + \frac{1}{\sqrt{p}} s(T)\transpose \Big( \frac{\eta}{\sqrt{p}} \Phi_t + \frac{\eta}{\sqrt p}\Xi(t)  - (1-\lambda\eta)^{T+1} \frac{\eta}{p} b\transpose\beta(0) \Sigma^2 + \frac{n\eta}{d}I_d - \frac{\eta}{p}\Sigma^2 W(0)\transpose W(0) - \frac{\eta^3}{p^2} \|b\|^2 \Sigma^2 \Psi(t) \\
+        & \qquad + \frac{\eta^3}{p^2} \|b\|^2 (\frac{n}{d}I_d - \Sigma^2) s(T) s(T)\transpose \Big)\theta(t) \\
+        & \geq \Big( 1 - \frac{n\eta}{d} - \frac{n\eta^3}{dp^2} \|b\|^2 \|s(T)\|^2 \Big) \alpha(t) \\
+        & \qquad - \frac{1}{\sqrt{p}} \|s(T)\|\|\theta(t)\| \Big( \frac{\eta}{\sqrt{p}} \|\Phi_t\| + \frac{\eta}{\sqrt p} \|\Xi(t)\| + (1-\lambda\eta)^{T+1} \frac{\eta}{p} |b\transpose\beta(0)| \|\Sigma^2\| + \Big\| \frac{n\eta}{d}I_d - \frac{\eta}{p}\Sigma^2 W(0)\transpose W(0) \Big\| \\
+        & \qquad + \frac{\eta^3}{p^2} \|b\|^2 \|\Sigma^2\| \|\Psi(t)\| + \frac{\eta^3}{p^2} \|b\|^2 \|s(T)\|^2 \Big\| \frac{n}{d}I_d - \Sigma^2 \Big\| \Big).
+    \end{align*}
+    In particular, if $p \geq 16\log\frac{2}{\delta}$ and $\tau M \leq (T-\tau) \|\theta_*\|$ under the condition that
+    \begin{align*}
+        \sqrt{p} \geq \left( \tau + \left(1 + \sqrt{8\log\frac{2d}{\delta}}\right) \right) \frac{8n\eta}{\sqrt{d}},
+    \end{align*}
+    we have
+    \begin{align*}
+        \frac{n\eta^3}{dp^2} \|b\|^2 \|s(T)\|^2 & \leq (1 + 4\sqrt{\log(1/2\delta)/p}) \frac{n\eta^3}{dp} (\tau M + (T-\tau) \|\theta_*\|)^2 \\
+        & \leq (1 + 4\sqrt{\log(1/2\delta)/p}) \frac{4n\eta^3}{dp} T^2 \|\theta_*\|^2 \\
+        & \leq (1 + 4\sqrt{\log(1/2\delta)/p}) \frac{\eta}{4n} \|\theta_*\|^2 \\
+        & \leq \frac{\eta}{2n} \|\theta_*\|^2 \\
+        & \leq \frac{(1+\eps)n}{2d}\eta,
+    \end{align*}
+    where the first inequality is due to \cref{cor:b-norm-concentration} and triangular inequality, the second inequality is due to $\tau M \leq (T-\tau) \|\theta_*\|$, the third inequality follows from $T \leq \frac{\sqrt{d}}{4\eta n}\sqrt{p}$, the fourth inequality follows from $p \geq 16\log\frac{2}{\delta}$, and the last inequality follows from $\|\theta_*\| \leq \|X\|\|y\|$.
+    
+    Note that $\frac{1}{\sqrt{p}} \|s(T)\|\leq \frac{2T}{\sqrt{p}} \|\theta_*\| \leq \frac{\sqrt{d}}{2n\eta} \|\theta_*\| \leq \frac{1+\eps}{2\eta}$ for $\tau M \leq (T-\tau) \|\theta_*\|$, and if $\sqrt{p}\geq 96(1+\eps)^2 d\sqrt{8\log(d/\delta)}(1 + \sqrt{8\log(d/\delta)})$, then with probability at least $1-5\delta$ that
+    \begin{align*}
+        \|\Xi(t)\| & \leq \frac{3(1+\eps)n\eta}{d\sqrt{p}} \|u\|\|s(T)\| \leq \frac{n}{8d},
+    \end{align*}
+    \begin{align*}
+        \frac{1}{\sqrt{p}}|b\transpose\beta(0)| \|\Sigma^2\| & \leq \frac{(1+\eps)n}{d}\sqrt{8\log\frac{2}{\delta}} \leq (1+\eps)\sqrt{8\log\frac{2}{\delta}} \cdot \frac{n}{d},
+    \end{align*}
+    and
+    \begin{align*}
+        \Big\| \frac{1}{p}\Sigma^2 W(0)\transpose W(0) - \frac{n}{d} I_d \Big\| \leq \frac{\eps n}{d}.
+    \end{align*}
+    Further, we also have upper bounds:
+    \begin{align*}
+        \frac{\eta^3}{p^2} \|b\|^2 \|s(T)\|^2 \Big\| \frac{n}{d}I_d - \Sigma^2 \Big\| & \leq \left(1 + \frac{4}{\sqrt p}\sqrt{\log\frac{2}{\delta}}\right) \frac{\eta^3}{p}\cdot 4T^2 \|\theta_*\|^2 \frac{\eps n}{d} \\
+        & \leq \left(1 + \frac{4}{\sqrt p}\sqrt{\log\frac{2}{\delta}}\right) \frac{\eps\eta}{4n} \|\theta_*\|^2 \\
+        & \leq (1+\eps) \left(1 + \frac{4}{\sqrt p}\sqrt{\log\frac{2}{\delta}}\right) \frac{\eps\eta}{4n}\frac{n^2}{d} \\
+        & \leq \frac{\eps\eta n}{d}
+    \end{align*}
+    if $p \geq 16\log\frac{2}{\delta}$, and
+    \begin{align*}
+        \frac{\eta^3}{p^2} \|b\|^2 \|\Sigma^2\| \|\Psi(t)\| & \leq (1+\eps) \left(1 + \frac{4}{\sqrt p}\sqrt{\log\frac{2}{\delta}}\right) \frac{\eta^3}{p} \frac{n}{d} \|\Psi(t)\|,
+    \end{align*}
+    where 
+    \begin{align*}
+        \|\Psi(t)\| & \leq \|s(T) - s(T)\| \|s(t-1)\| + \|s(T)\| \|s(t-1) - s(T)\| + \|s(T) - s(T)\|\|s(t-1) - s(T)\| \\
+        & \leq 2\sum_{i=T}^t \|\theta(i)\| \Big( \sum_{i=0}^T \|\theta(i)\| + \sum_{i=T}^t \|\theta(i)\| \Big) + \Big( \sum_{i=T}^t \|\theta(i)\| \Big)^2 \\
+        & \leq \sum_{i=T}^t \|\theta(i)\| \sum_{i=0}^T \|\theta(i)\| + 3\Big( \sum_{i=T}^t \|\theta(i)\| \Big)^2,
+    \end{align*}
+    and from previous arguments we have $\sum_{i=0}^T \|\theta(i)\| \leq \tau M + (T-\tau) \|\theta_*\| \leq 2T \|\theta_*\|$ and $\sum_{i=T}^t \|\theta(i)\| \leq \frac{2d}{n\eta}\|\theta_*\|$. Combine them to get 
+    \begin{align*}
+        \frac{\eta^3}{p^2} \|b\|^2 \|\Sigma^2\| \|\Psi(t)\| & \leq (1+\eps) \left(1 + \frac{4}{\sqrt p}\sqrt{\log\frac{2}{\delta}}\right) \frac{\eta^3}{p} \frac{n}{d} \frac{6d}{n\eta} T \|\theta_*\|^2 \\
+        & \leq (1+\eps) \left(1 + \frac{4}{\sqrt p}\sqrt{\log\frac{2}{\delta}}\right) \frac{3\eta}{\sqrt{p}} \frac{\sqrt{d}}{2n} \|\theta_*\|^2 \\
+        & \leq (1+\eps)^2 \left(1 + \frac{4}{\sqrt p}\sqrt{\log\frac{2}{\delta}}\right) \frac{3\eta}{\sqrt{p}} \frac{n}{2\sqrt{d}} \\
+        & \leq \frac{12n\eta}{\sqrt{dp}}.
+    \end{align*}
+    Finally, we have 
+    \begin{align*}
+        \|\Phi_t\| & \leq \frac{\eta}{p\sqrt{p}} \|b\|^2 \|\Sigma^2\| \Big( \sum_{i=0}^{T-1} (1-\eta\lambda)^{T-i-1}\theta(i)\transpose  \sum_{j=0}^i \theta(j) + \sum_{i=T}^t \theta(i)\transpose  \sum_{j=0}^i \theta(j) \Big) \\
+        & \leq \frac{\eta}{p\sqrt{p}} \|b\|^2 \|\Sigma^2\| \Big[ \sum_{i=0}^{T-1} (1-\eta\lambda)^{T-i-1} \|\theta(i)\|  \sum_{j=0}^{T-1} \|\theta(j)\| + \sum_{i=T}^t \|\theta(i)\|  \Big( \sum_{j=0}^{T-1} \|\theta(j)\| + \sum_{j=T}^i \|\theta(j)\| \Big) \Big] \\
+        & \leq \frac{\eta(1+\eps)n}{d\sqrt{p}} \left(1 + \frac{4}{\sqrt p}\sqrt{\log\frac{2}{\delta}}\right) \Big[ \Big( \tau M + \frac{1}{\lambda\eta} \|\theta_*\| \Big) 2T \|\theta_*\| + \frac{2d}{n\eta}\|\theta_*\|  \Big( 2T \|\theta_*\| + \frac{2d}{n\eta}\|\theta_*\| \Big) \Big] \\
+        & \leq \frac{4\eta n}{d\sqrt{p}} \left[ (1+\eps)^2 (1+\eps)\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right) \tau \frac{n\sqrt{p}}{2\eta d} + (1+\eps) \frac{n\sqrt{p}}{2\lambda\eta^2\sqrt{d}} + (1+\eps) \frac{\sqrt{p}}{\eta^2\sqrt{d}} + \frac{4d}{\eta^2} \right] \\
+        & \leq 8\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right) \tau \frac{2n^2}{d^2} + \frac{2n^2}{\lambda\eta d\sqrt{d}} + \frac{8n}{\eta d\sqrt{d}} + \frac{16n}{\eta\sqrt{p}} \\
+        & \leq 8\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right) \tau \frac{2n^2}{d^2} + \frac{n}{6\eta \sqrt{d}} + \frac{8n}{\eta d\sqrt{d}} + \frac{16n}{\eta\sqrt{p}}.
+    \end{align*}
+    Hence, all the small terms can be bounded by
+    \begin{align*}
+        &\frac{1}{\sqrt{p}} \|s(T)\|\|\theta(t)\| \Big( \frac{\eta}{\sqrt{p}} \|\Phi_t\| + \frac{\eta}{\sqrt p} \|\Xi(t)\| + (1-\lambda\eta)^{T+1} \frac{\eta}{p} |b\transpose\beta(0)| \|\Sigma^2\| + \Big\| \frac{n\eta}{d}I_d - \frac{\eta}{p}\Sigma^2 W(0)\transpose W(0) \Big\| \\
+        & \qquad + \frac{\eta^3}{p^2} \|b\|^2 \|\Sigma^2\| \|\Psi(t)\| + \frac{\eta^3}{p^2} \|b\|^2 \|s(T)\|^2 \Big\| \frac{n}{d}I_d - \Sigma^2 \Big\| \Big) \\
+        & \leq \frac{1+\eps}{2\eta}  \Big[ \frac{\eta}{\sqrt{p}} \Big( 8\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right) \tau \frac{2n^2}{d^2} + \frac{n}{6\eta \sqrt{d}} + \frac{8n}{\eta d\sqrt{d}} + \frac{16n}{\eta\sqrt{p}} \Big) + \frac{\eta}{\sqrt p} \frac{n}{8d} \\
+        & \qquad + (1+\eps)\sqrt{8\log\frac{2}{\delta}} \cdot \frac{n}{d\sqrt{p}} + \frac{\eps n\eta}{d} + \frac{12n\eta}{\sqrt{dp}} + \frac{\eps\eta n}{d} \Big] \|\theta(t)\| \\
+        & \leq \Big[ \frac{1}{\sqrt{p}} \Big( 8\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right) \tau \frac{2n^2}{d^2} + \frac{n}{6\eta \sqrt{d}} + \frac{8n}{\eta d\sqrt{d}} + \frac{16n}{\eta\sqrt{p}} \Big) + \frac{n}{8d\sqrt{p}} \\
+        & \qquad + 2\sqrt{8\log\frac{2}{\delta}} \cdot \frac{n}{\eta d\sqrt{p}} + \frac{2\eps n}{d} + \frac{12n}{\sqrt{dp}} \Big] \|\theta(t)\|
+    \end{align*}
+    
+    Consequently, we have $\alpha(t+1) \geq (1-2\frac{n\eta}{d})\alpha(t) + \frac{3\eps n}{d}\|\theta(t)\|$ when $p\geq \icomment{TODO}$ and for all $t>T$ it holds
+    \begin{align*}
+        \alpha(t) \geq \Big( 1-\frac{2n\eta}{d} \Big)^{t-T}\alpha(t) - \frac{3\eps n}{d} \sum_{i=0}^{t-T} \Big( 1-\frac{2n\eta}{d} \Big)^{t-T-i} \|\theta(i)\|.
+    \end{align*}
+    Summing over all $t>T$ to get
+    \begin{align*}
+        \sum_{t=T}^\infty\alpha(t) & \geq \sum_{t=T}^\infty \Big( 1-\frac{2n\eta}{d} \Big)^{t-T}\alpha(t) - \sum_{t=T}^\infty \frac{3\eps n}{d} \sum_{i=0}^{t-T} \Big( 1-\frac{2n\eta}{d} \Big)^{t-T-i}\|\theta(i)\| \\
+        & \geq \frac{d}{2n\eta}\alpha(t) - \frac{3\eps n}{d} \sum_{t=T}^\infty\sum_{i=0}^{t-T} \Big( 1-\frac{2n\eta}{d} \Big)^{t-T-i}\|\theta(i)\| \\
+        &\geq \frac{d}{2n\eta}\alpha(t) - \frac{3\eps n}{d} \sum_{i=0}^\infty\|\theta_{i+T}\|\sum_{t=T}^\infty \Big( 1-\frac{2n\eta}{d} \Big)^{t-T-i} \\
+        &\geq \frac{d}{2n\eta}\alpha(t) - \frac{\frac{3\eps n}{d} d}{2n\eta} \sum_{i=0}^\infty \Big( 1-\frac{n\eta}{2d} \Big)^i \|\theta_{T}\| \\
+        &\geq \frac{d}{2n\eta} \frac{3\sqrt{d}}{512n\eta^2} \|\theta(t)\|^2 - \frac{\frac{3\eps n}{d} d^2}{n^2\eta} \|\theta(t)\| \\
+        &\geq \frac{3d\sqrt{d}}{1024n^2\eta^3} \|\theta(t)\|^2 - \frac{d^2}{n^2\eta^2} \frac{3\eps n}{d} \|\theta(t)\| \\
+        &\geq \frac{3d\sqrt{d}}{2048n^2\eta^3} \|\theta_*\| \|\theta(t)\| - \frac{d^2}{n^2\eta^2} \frac{3\eps n}{d} \|\theta(t)\| \icomment{Require lower bound on $\|\theta_*\|$} \\
+        & \geq \Big( \frac{3}{2048\eta} - 3\eps \Big) \frac{d}{n\eta^2} \|\theta(t)\|.
+    \end{align*}
+    This implies that $\frac{\eta^2}{\sqrt p}\sum_{j=0}^T \theta(j)\transpose \sum_{i=T+1}^{t-1} \theta(i) = \frac{\eta^2}{\sqrt p} \sum_{i=T+1}^{t-1} s(T)\transpose \theta(i) = \eta^2 \sum_{t=T}^\infty\alpha(t) \geq ( \frac{3}{2048\eta} - 3\eps ) \frac{d}{n} \|\theta(t)\|$. Recall that $\eta\sum_{i=T}^{t-1} \|\theta(i)\| \leq \frac{2d}{n} \|\theta(t)\|$. For any $\eps\eta \leq \frac{1}{2\times 6144}$, we have
+    \begin{align*}
+        \frac{\eta^2}{\sqrt p}\sum_{j=0}^T \theta(j)\transpose \sum_{i=T+1}^{t-1} \theta(i) \geq \frac{\frac{3}{2048\eta} - 3\eps}{2} \cdot \eta\sum_{i=T}^{t-1} \|\theta(i)\|.
+    \end{align*}
+    
+    % In particular, the first term can be upper bounded with
+    % \begin{align*}
+    %     \eta\sum_{i=\tau}^{T-1} (1-\lambda\eta)^{T-i-2}\|\theta(i)\| & \leq \frac{\eta^2}{2\sqrt p}\sum_{i=\tau}^{T-1}\prod_{k=i+1}^{t-1}(1-\tlam(k))a(i)\sum_{j=0}^{i-1} a(j) \leq C_5\|\phi_{3}(t)\|, \icomment{TODO}
+    % \end{align*}
+    % where $\|\phi_{2}(t)\| \gtrsim \eta\sum_{i=0}^{t-1}(1-\lambda\eta)^i \simeq \frac{1}{\lambda}$.
+    
+    % Recall that $a_0 \geq -\|\theta(0)\|\geq -(1+\eps)(1 + \sqrt{8\log\frac{2d}{\delta}})\frac{n}{\sqrt{d}}$ with probability at least $1-3\delta$, and for any initialization starting $a_0\leq \frac{(\lambda - \frac{n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}}$, it converges to the quantity exponentially fast. More specifically, for any $\lambda\geq \frac{4n}{d}$, we have with probability at least $1-3\delta$ that
+    % \begin{align*}
+    %     (1-\eps)\frac{n}{\sqrt{d}} \leq \|\theta_*\| \leq (1+\eps)\frac{n}{\sqrt{d}}.
+    % \end{align*}
+    % Let us denote $\tau_0$ be the first time that $a(t)\geq 0$, then it holds that 
+    % \begin{align*}
+    %     \tau_0 & \leq \log\left[ \frac{\lambda+\frac{2n}{d}}{(\lambda-\frac{n}{d})\|\theta_*\|} \left( \frac{(\lambda - \frac{n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}} + (1+\eps)\Big( 1 + \sqrt{8\log\frac{2d}{\delta}} \Big)\frac{n}{\sqrt{d}} \right) \right]/\log\frac{1}{1 - (\lambda+\frac{n}{2d})\eta} \\
+    %     & \leq \log \left( 1 + \frac{2(1+\eps)}{1-\eps} \Big( 1 + \sqrt{8\log\frac{2d}{\delta}} \Big) \right) / \log\frac{1}{1 - (\lambda+\frac{n}{2d})\eta}.
+    % \end{align*}
+    % Therefore, we have $\sum_{j=0}^{\tau_0-1} |a(j)| \leq \tau_0\|\theta(0)\| \leq (1+\eps)(1 + \sqrt{8\log\frac{2d}{\delta}})\frac{n\tau_0}{\sqrt{d}}$. Recall that for any $t$ falls between $\tau$ and $T$, it holds that $a(t)\geq \frac{(\lambda - \frac{2n}{d})\|\theta_*\|}{\lambda + \frac{2n}{d}} \geq \frac{1}{3}\|\theta_*\| \geq \frac{1}{3}(1-\eps)\frac{n}{\sqrt{d}}$. Consequently, we have $\sum_{j=0}^t a(j) \geq 0$ for any $t\geq \tau' = \tau+\bar\tau$, where
+    % \begin{align*}
+    %     \bar\tau = \frac{3(1+\eps)}{1-\eps} \Big( 1 + \sqrt{8\log\frac{2d}{\delta}} \Big) \tau_0.
+    % \end{align*}
+    % As long as $\tau'\leq\frac{T}{4}$\icomment{TODO: calculate conditions on $p$}, the first term can be further bounded by
+    % \begin{align*}
+    %     \frac{\eta^2}{2\sqrt p} \sum_{i=\frac{T}{K}}^{T-1} (1-\lambda\eta)^{t-i-2} |a(i)| \cdot \Big( \sum_{j=0}^{\tau'-1} a(j) + \sum_{j=\tau'}^{i-1} a(j) \Big) & \geq \frac{\eta^2}{2\sqrt p} \sum_{i=\frac{T}{K}}^{T-1} (1-\lambda\eta)^{t-i-2} |a(i)| \cdot \frac{T}{4} \cdot \frac{1}{3}(1-\eps)\frac{n}{\sqrt{d}} \\
+    %     & \geq \frac{\eta}{48}(1-\eps) \sum_{i=\frac{T}{K}}^{T-1} (1-\lambda\eta)^{t-i-2} |a(i)|,
+    % \end{align*}
+    % where the first inequality follows from $\tau'\leq \frac{T}{4}$ and $a(t)\geq \frac{1}{3}(1-\eps)\frac{n}{\sqrt{d}}$ for $t\geq\tau'$ and the second inequality follows from $T \geq \frac{\sqrt{d}}{8\eta n}\sqrt{p}$.
+    
+    Putting the pieces together, we have
+    \begin{align*}
+        \|\phi_{2}(t)\| & \leq  \eta\sum_{i=\frac{T}{K}}^{T-1} (1-\lambda\eta)^{T-i-2} \|\theta(i)\| + \eta\sum_{i=0}^{\frac{T}{K}-1}\prod_{k=i+1}^{\frac{T}{K}-1}(1-\tlam(k)) \|\theta(i)\| + \eta\sum_{i=T}^{t-1} \prod_{k=T+1}^{t-1}(1-\tlam(k)) \|\theta(i)\| \\
+        & \leq \eta\sum_{i=\frac{T}{K}}^{T-1} (1-\lambda\eta)^{T-i-2} \|\theta(i)\| + \frac{2d}{n} \|\theta(t)\| + \eta\tau M + \frac{1}{\lambda} \|\theta_*\| 
+    \end{align*}
+    and 
+    \begin{align*}
+        \|\phi_{3}(t)\| 
+        & \geq \frac{\eta^2}{\sqrt p}\sum_{i=\frac{T}{K}}^{T}\prod_{k=i+1}^{T-1}(1-\lambda\eta)\theta(i)\transpose\sum_{j=0}^{i-1} \theta(j) - \frac{\eta^2}{\sqrt p}\sum_{i=0}^{\frac{T}{K}-1}\sum_{j=0}^i\prod_{k=i+1}^{\frac{T}{K}-1}(1-\tlam(k)) \|\theta(i)\|\|\theta(j)\| \\
+        & \qquad + \frac{\eta^2}{\sqrt p}\sum_{i=T+1}^{t-1}\sum_{j=0}^i\prod_{k=i+1}^{t-1}(1-\tlam(k)) \theta(i)\transpose \theta(j) \\
+        & \geq \frac{\sqrt{5}(1-\eps)}{560} \cdot \eta\sum_{i=\frac{T}{K}}^{T-1}(1-\lambda\eta)^{T-i-2} \|\theta(i)\| + \Big( \frac{3}{2048\eta} - 3\eps \Big) \frac{d}{n} \|\theta(t)\| \\
+        & \qquad - \frac{\eta^2}{\sqrt p} \tau^2 M^2 - \frac{\eta^2}{\sqrt p} \Big( \tau M + \frac{T}{K} \|\theta_*\| \Big) \sum_{i=\tau}^{\frac{T}{K}-1}(1 - \lambda\eta)^{\frac{T}{K}-i-2} \|\theta(i)\|.
+    \end{align*}
+    Let us define $A(T,K) \defeq \eta\sum_{i=\frac{T}{K}}^{T-1}(1-\lambda\eta)^{T-i-2} \|\theta(i)\|$ and $B(T) \defeq \frac{d}{n} \|\theta(t)\|$, and we can we can rewrite the above inequalities into
+    \begin{align*}
+        \|\phi_{2}(t)\| & \leq A(T,K) + 2B(T) + \eta\tau M + \frac{1}{\lambda} \|\theta_*\|
+    \end{align*}
+    and
+    \begin{align*}
+        \|\phi_{3}(t)\| & \geq \frac{\sqrt{5}}{1120} A(T,K) + \frac{3}{4096\eta} B(T) - \frac{\eta^2}{\sqrt p} \tau^2 M^2 - \frac{\eta^2}{\sqrt p} \Big( \tau M + \frac{T}{K} \|\theta_*\| \Big) \sum_{i=\tau}^{\frac{T}{K}-1}(1 - \lambda\eta)^{\frac{T}{K}-i-2} \|\theta(i)\|.
+    \end{align*}
+    Note that $B(T) \geq \frac{d}{2n} \|\theta_*\|$ and
+    \begin{align*}
+        A(T,K) & \geq \eta\sum_{i=\frac{T}{K}}^{T-1}(1-\lambda\eta)^{T-i-2} |a(i)| \geq \frac{\eta}{2}\sum_{i=\frac{T}{K}}^{T-1}(1-\lambda\eta)^{T-i-2} \|\theta_*\| \geq \frac{\eta}{2} \frac{1 - (\lambda\eta)^{(1-1/K)T}}{\lambda\eta} \|\theta_*\| \geq \frac{1}{4\lambda} \|\theta_*\|,
+    \end{align*}
+    where the last inequality follows from the condition that $\sqrt{p} \geq 2 \frac{\log 2}{\log\frac{d}{12n\eta}}\frac{8n\eta}{\sqrt{d}}$. Hence, we have 
+    \begin{align*}
+        \|\phi_{2}(t)\| \leq A(T,K) + \left[ 3 + 8\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right)\tau \right] B(T),
+    \end{align*}
+    which is due to $\eps\leq \frac{1}{2}$, $\lambda \geq \frac{12n}{d}$, $M \leq (1+\eps)\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right)\frac{n}{\sqrt{d}}$, and $\|\theta_*\|\geq (1-\eps)\frac{n}{\sqrt{d}}$ \icomment{Require lower bound on $\|\theta_*\|$}. Further, we have $\frac{\eta^2}{\sqrt p} \tau^2 M^2 \leq \frac{1}{4096\eta} B(T)$ under the condition that $\sqrt{p} \geq 2\times 8192\eta^3\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right)^2 \tau^2 \frac{n^2}{d\sqrt{d}}$. Note that $\sum_{i=\tau}^{\frac{T}{K}-1}(1 - \lambda\eta)^{\frac{T}{K}-i-2} \|\theta(i)\| \leq \sum_{i=\tau}^{\frac{T}{K}-1}(1 - \lambda\eta)^{\frac{T}{K}-i-2} \|\theta_*\| \leq \frac{1}{\lambda\eta} \|\theta_*\|$. We thus have 
+    \begin{align*}
+        \frac{\eta^2}{\sqrt p} \Big( \tau M + \frac{T}{K} \|\theta_*\| \Big) \sum_{i=\tau}^{\frac{T}{K}-1}(1 - \lambda\eta)^{\frac{T}{K}-i-2} \|\theta(i)\| & \leq \frac{\eta}{\sqrt p} \frac{1}{\lambda} \tau M \|\theta_*\| + \frac{\eta}{\sqrt p} \frac{1}{\lambda} \frac{T}{K} \|\theta_*\| \|\theta_*\| \\
+        & \leq \frac{n\eta}{3\sqrt{p}} \left(1 + \sqrt{8\log\frac{2d}{\delta}}\right) \tau + \frac{\sqrt{d}}{48K}.
+    \end{align*}
+    Recall that with probability at least $1-\delta$ that $B(T) \geq \frac{d}{2n}\|\theta_*\| \geq (1-\eps)\frac{\sqrt{d}}{2}$, and $\frac{\sqrt{d}}{48K} \leq \frac{B(T)}{4096\eta}$ for any $K \geq \frac{1024\eta}{3}$. Similarly, we have $\frac{n\eta}{3\sqrt{p}} \left(1 + \sqrt{8\log\frac{2d}{\delta}}\right) \tau \leq \frac{B(T)}{8192\eta}$ for any $\sqrt{p} \geq \frac{32768n\eta^2}{3\sqrt{d}}\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right)\tau$.
+    Combine the above arguments together, we have 
+    \begin{align*}
+        \|\phi_{3}(t)\| \geq \frac{\sqrt{5}}{1120} A(T,K) + \frac{1}{8192\eta} B(T).
+    \end{align*}
+    
+    Recall that the cosine value between $b$ and $\beta(t)$ writes
+    \begin{align*}
+        \cos\angle(b, \beta(t)) & \geq \frac{(1-\eps)\|\phi_{3}(t)\|-\frac{1}{(1-\eps)\sqrt{p}} \sqrt{8d\log\frac{2d}{\delta}} \|\phi_{2}(t)\| - \|\phi_{1}(t)\|}{\|\phi_{1}(t)\|+(1+\eps)\|\phi_{2}(t)\|+(1+\eps)\|\phi_{3}(t)\|} \\
+        & \geq \frac{\frac{1}{2}\|\phi_{3}(t)\|-\frac{2}{\sqrt{p}} \sqrt{8d\log\frac{2d}{\delta}} \max\left\{ \frac{1120}{\sqrt{5}}, \frac{1}{8192\eta} \left[ 3 + 8\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right)\tau \right] \right\} \|\phi_{3}(t)\| - \|\phi_{1}(t)\|}{\|\phi_{1}(t)\|+2\max\left\{ \frac{1120}{\sqrt{5}}, \frac{1}{8192\eta} \left[ 3 + 8\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right)\tau \right] \right\} \|\phi_{3}(t)\| + 2\|\phi_{3}(t)\|} \\
+        & \geq \frac{1}{12 + 8 \max\left\{ \frac{1120}{\sqrt{5}}, \frac{1}{8192\eta} \left[ 3 + 8\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right)\tau \right] \right\}},
+    \end{align*}
+    where the second inequality follows from 
+    \begin{align*}
+        \|\phi_{2}(t)\| \leq \max\left\{ \frac{1120}{\sqrt{5}}, \frac{1}{8192\eta} \left[ 3 + 8\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right)\tau \right] \right\} \|\phi_{3}(t)\|
+    \end{align*}
+    and the last inequality follows from $\|\phi_{1}(t)\| \leq \|\phi_{3}(t)\|$ if $\sqrt{p} \geq \frac{2\sqrt{d}}{3}\log\frac{262144}{3\sqrt{d}}$ and the condition that
+    \begin{align*}
+        \sqrt{p} \geq \max\left\{ \frac{17920}{\sqrt{5}}\sqrt{8\log\frac{2d}{\delta}}, \frac{1}{512\eta} \sqrt{8\log\frac{2d}{\delta}} \left[ 3 + 8\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right)\tau \right] \right\}.
+    \end{align*}
+    
+    Therefore, we conclude $\cos\angle(b, \beta(t)) = \Theta(1)$.
+\end{proof}
+
+\section{Technical Lemmata}
+
+In this section, we present some of the technical lemmata that will be used in proofs.
+We will first introduce a variant of the Restricted Isometry Property that bounds the spectral norm of a random Gaussian matrix towards $1$ with high probability.
+
+\begin{lemma}[\citealp{hand2018global}]\label{lem:RIP}
+    Let $X\in \Rnd$ has \iid $\calN(0,1/n)$ entries. Fix $0<\varepsilon<1$, $k < n$, and a subspace $T\subseteq \R^d$ of dimension $k$, then there exists universal constants $C$ and $\gamma$, such that with probability at least $1-(C/\varepsilon)^k e^{-\gamma\varepsilon n}$,
+    \begin{align*}
+    (1-\varepsilon)\|v\|^2_2 \leq \|Xv\|^2_2 \leq (1+\varepsilon)\|v\|^2_2, \quad \forall v\in T.
+    \end{align*}
+\end{lemma}
+Let us take $k = d$ in \cref{lem:RIP} to get the following corollary for the design matrix $X$ with \iid $\calN(0,1/d)$ entries:
+\begin{corollary}\label{cor:RIP}
+    Let $X\in \Rnd$ has \iid $\calN(0,1/d)$ entries. For any $0<\varepsilon<1$, there exists universal constants $C$ and $\gamma$, such that with probability at least $1-(C/\varepsilon)^d e^{-\gamma\varepsilon n}$,
+    \begin{align*}
+        (1-\varepsilon)\frac{n}{d}\|v\|^2_2 \leq \|Xv\|^2_2 \leq (1+\varepsilon)\frac{n}{d}\|v\|^2_2, \quad \forall v\in\Rd.
+    \end{align*}
+    Further, if $\eps \leq C$ and $n \geq \frac{1}{\eps\gamma} (d\log\frac{C}{\eps} + \log\frac{1}{\delta})$, then it holds $\|X\transpose X - \frac{n}{d} I_d\| \leq \frac{n}{d}\varepsilon$ with probability at least $1-\delta$.
+\end{corollary}
+From \cref{cor:RIP} we have high probability control over the spectral norm of $X\transpose X$ as long as the number of samples $n$ is large enough compared to their dimension $d$.
+Similarly, we have the following corollary on $W(0)$ that controls the spectral norm of $X\transpose XW(0)\transpose W(0)$.
+
+\begin{corollary}\label{cor:W0-tail}
+    Let $X\in \Rnd$ has \iid $\calN(0,1/d)$ entries and $W(0)\in \Rpd$ has \iid $\calN(0,1)$ entries. For any $0<\varepsilon<1$, there exists universal constants $C$ and $\gamma$, such that if $\eps \leq C$, $n \geq \frac{1}{\eps\gamma} (d\log\frac{C}{\eps} + \log\frac{1}{\delta})$, and $p \geq \frac{1}{\eps\gamma} (d\log\frac{C}{\eps} + \log\frac{1}{\delta})$, then it holds $\|\frac{d}{np}X\transpose XW(0)\transpose W(0) - I_d\| \leq \varepsilon$ with probability at least $1-\delta$.
+\end{corollary}
+
+For $\chi^2$ random variables, there are famous tail bounds available.
+\begin{lemma}[\citealp{laurent2000adaptive}]\label{lem:chi-squared-tail}
+    Suppose $X\sim \chi^2_p$, then for all $t\geq 0$ it holds
+    \begin{align*}
+        \prob\{X-p \geq 2\sqrt{pt} + 2t\} \leq e^{-t}
+    \end{align*}
+    and
+    \begin{align*}
+        \prob\{X-p \leq -2\sqrt{pt}\} \leq e^{-t}.
+    \end{align*}
+\end{lemma}
+For both $b$ and $\beta(0)$ as random Gaussian vectors of dimension $p$, we have $\|b\|^2$ and $\|\beta(0)\|^2$ distributed as independent $\chi^2_p$ random variables, and thus follows the next corollary.
+\begin{corollary}\label{cor:b-norm-concentration}
+    Suppose $b$ is a random Gaussian vector with independent entries $b_r\sim\calN(0,1)$ for all $r\in[p]$, then for any $p \geq \log\frac{2}{\delta}$, with probability at least $1-\delta$, 
+    \begin{align*}
+        1 - 2\sqrt{\frac{\log\frac{2}{\delta}}{p}} \leq \frac{\|b\|^2}{p} \leq 1 + 4\sqrt{\frac{\log\frac{2}{\delta}}{p}}.
+    \end{align*}
+    Further, for $p \geq \frac{16}{\eps^2}\log\frac{2}{\delta}$, it holds $1-\eps \leq \frac{\|b\|^2}{p} \leq 1+\eps$ with probability at least $1-\delta$.
+\end{corollary}
+In particular, the product of any sub-Gaussian random variables is distributed as a sub-exponential random variable, and the composition property of \iid sub-exponential random variables is illustrated by the following proposition.
+\begin{proposition}[\citealp{boucheron2013concentration}]\label{prop:subexponential}
+    Suppose $X_i,\ldots,X_p$ are \iid centered sub-exponential random variables with parameter $\nu$ and $\alpha$ such that 
+    \begin{align*}
+        \expect e^{\lambda X_i} \leq e^{\lambda^2\nu^2/2}
+    \end{align*}
+    for any $\lambda$ with $|\lambda|<\frac{1}{\alpha}$, then denote it holds
+    \begin{align*}
+        \prob\bigg( \frac{1}{p}\Big|\sum_{i=1}^p X_i\Big| \geq t \bigg) \leq \exp\bigg( -\frac{p}{2}\min\Big\{ \frac{t^2}{p\nu^2}, \frac{t}{\alpha} \Big\} \bigg).
+    \end{align*}
+\end{proposition}
+% Next, we will introduce Bernstein's inequality \citep{boucheron2013concentration} that may turn out to be useful in later sections.
+% \begin{theorem}\label{thm:bernstein}
+%     Let $X_1,\ldots,X_p$ be real-valued random variables. Assume that there exist positive numbers $v$ and $c$, such that $\sum_{i=1}^p \expect[X_i^2] \leq v$ and 
+%     \begin{align*}
+%         \sum_{i=1}^p \expect[(X_i)_+^k] \leq \frac{k!}{2} vc^{k-2}, \qquad k \geq 3.
+%     \end{align*}
+%     If $S = \sum_{i=1}^p (X_i - \expect[X_i])$, then for all $t \geq 0$, 
+%     \begin{align*}
+%         \prob\{ S \geq \sqrt{2vt} + ct\} \leq e^{-t}.
+%     \end{align*}
+% \end{theorem}
+
+% \begin{theorem}\label{thm:inner-product-tail}
+%     Let $X,Y\in\Rp$ be independent random Gaussian vectors where $X_r\sim\calN(0,1)$ and $Y_r\sim\calN(0,1)$ independently for all $r\in[p]$, then with probability at least $1-\delta$ that
+%     \begin{align*}
+%         |\inner{X}{Y}| \leq 4\sqrt{p\log\frac{2}{\delta}}.
+%     \end{align*}
+% \end{theorem}
+
+% \begin{proof}
+%     Due to rotational invariant of random Gaussian vectors, we assume $X$ aligns with the first basis vector, \ie, $X = \|X\|\cdot[1,0,\ldots,0]\transpose$. Hence, we write 
+%     \begin{align*}
+%         |\inner{X}{Y}| = |Y_1|\cdot\|X\|,
+%     \end{align*}
+%     where $Y_1$ denotes the first entry of $Y$, which is distributed as $\calN(0,1)$, independent of $X$. From \cref{cor:b-norm-concentration} we know that if $\eps\leq 1$ and $p \geq \frac{16}{\eps^2}\log\frac{2}{\delta}$, it holds $\|b\|\leq (1+\eps)\sqrt{p}\leq 2\sqrt{p}$ with probability at least $1-\frac{\delta}{2}$. Recall that for Gaussian random variable $Y_1\sim\calN(0,1)$, we have $\prob\{|Y_1|\geq t\}\leq 2e^{-t^2/2}$, \ie, $|Y_1| \leq 2\sqrt{\log\frac{2}{\delta}}$ with probability at least $1-\frac{\delta}{2}$. Combine them together to get the desired tail bound.
+% \end{proof}
+
+For two independent random Gaussian vectors, their inner product can be controlled with the following tail bound.
+\begin{theorem}[\citealp{gao2020model}]\label{thm:inner-product-tail}
+    Let $X,Y\in\Rp$ be independent random Gaussian vectors where $X_r\sim\calN(0,1)$ and $Y_r\sim\calN(0,1)$ for all $r\in[p]$, then it holds
+    \begin{align*}
+        \prob(|X\transpose Y| \geq \sqrt{2pt} + 2t) \leq 2e^t.
+    \end{align*}
+\end{theorem}
+
+% From \cref{thm:bernstein}, we can establish a tail bound for random Gaussian vectors $b$ and $\beta(0)$.
+\begin{lemma}\label{lem:inner-product-tail}
+    Let $b,\beta(0)\in\Rp$ be independent random Gaussian vectors with $b_r\sim\calN(0,1)$ and $(\beta(0))_r\sim\calN(0,1)$ independently for all $r\in[p]$, then for any $p \geq 2\log\frac{2}{\delta}$ it holds with probability at least $1-\delta$ that
+    \begin{align*}
+        \frac{|\inner{b}{\beta(0)}|}{\sqrt{p}} \leq \sqrt{8\log\frac{2}{\delta}}.
+    \end{align*}
+\end{lemma}
+
+\begin{corollary}\label{cor:W0-b-tail}
+    Let $W(0)\in\Rpd$ and $b\in\Rp$ be independent random Gaussian matrix and vector with $(W(0))_{rj}\sim\calN(0,1)$ and $b_r\sim\calN(0,1)$ independently for all $r\in[p]$ and $j\in[d]$, then for any $p \geq 2\log\frac{2d}{\delta}$ it holds with probability at least $1-\delta$ that
+    \begin{align*}
+        \frac{\|W(0)\transpose b\|}{\sqrt{p}} \leq \sqrt{8d\log\frac{2d}{\delta}}.
+    \end{align*}
+\end{corollary}
+
+\begin{corollary}\label{cor:theta-tail}
+    Let $\theta(0) = X\transpose e_0 = \frac{1}{\sqrt{p}}X\transpose X W(0)\transpose\beta(0) - X\transpose y$ and $\theta_* = X\transpose y$, where $W(0)\in\Rpd$ and $\beta(0)\in\Rp$ be independent random Gaussian matrix and vector with $(W(0))_{rj}\sim\calN(0,1)$ and $(\beta(0))_r\sim\calN(0,1)$ independently for all $r\in[p]$ and $j\in[d]$ and $|y_i|\leq 1$ for all $i\in[n]$. If if $\eps \leq C$, $n \geq \frac{1}{\eps\gamma} (d\log\frac{C}{\eps} + \log\frac{1}{\delta})$, and $p \geq 2\log\frac{2d}{\delta}$, then with probability at least $1-3\delta$ that
+    \begin{align*}
+        \|\theta(0)\|\leq (1+\eps)\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right)\frac{n}{\sqrt{d}}, \qquad \|\theta_*\|\leq (1+\eps)\frac{n}{\sqrt{d}}.
+    \end{align*}
+\end{corollary}
+
+\begin{proof}
+    Recall that from \cref{cor:RIP} we have $\|X\|\leq (1+\eps)\sqrt{\frac{n}{d}}$ with probability at least $1-\delta$. If $|y_i|\leq 1$ for all $i\in[n]$, it holds that $\|y\|\leq \sqrt{n}$. Consequently, we have $\|\theta_*\| \leq \|X\|\|y\| \leq (1+\eps)\frac{n}{\sqrt{d}}$ with probability at least $1-\delta$. In particular, if $\eps \leq C$ and $n \geq \frac{1}{\eps\gamma} (d\log\frac{C}{\eps} + \log\frac{1}{\delta})$, it holds with probability at least $1-3\delta$ that
+    \begin{align*}
+        \|\theta(0)\| & \leq \frac{1}{\sqrt{p}}\|X\transpose X\|\|W(0) \beta(0)\| + \|\theta_*\| \\
+        & \leq (1+\eps)\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right)\frac{n}{\sqrt{d}},
+    \end{align*}
+    where the first inequality is due to Cauchy-Schwarz and triangular inequality, and the second inequality is due to \cref{cor:RIP,cor:W0-b-tail}.
+\end{proof}

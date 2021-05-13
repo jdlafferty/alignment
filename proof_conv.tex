@@ -1,4 +1,6 @@
-\section{Proof of Convergence on Two-Layer Nonlinear Networks}
+\section{Proofs of Technical Results}
+
+\subsection{Convergence on Two-Layer Nonlinear Networks}
 We consider the following neural network
 \begin{equation}
 f(x) = \frac{1}{\sqrt p}\sum_{r=1}^p \beta_r \psi(w_r\transpose x) = \frac{1}{\sqrt p}\beta\transpose \psi(Wx)
@@ -28,25 +30,25 @@ where $D_i(t) = \text{diag}(\psi'(W(t)x_i))$ and $e_i(t) = \frac{1}{\sqrt p}\bet
 \label{assump:G}
 Define matrix $\bar{G} \in \R^{n\times n}$ with entries
 \begin{equation}
-    \bar{G}_{i,j} = \E_{w\sim N(0,I_p)}\psi(w\transpose x_i) \psi(w\transpose  x_j),
+    \bar{G}_{i,j} = \E_{w\sim \calN(0,I_p)}\psi(w\transpose x_i) \psi(w\transpose  x_j),
 \end{equation}
 we assume $\lambda_{\min}(\bar{G}) \geq \gamma$, where $\gamma$ is a positive constant.
 \end{assumption}
 We justify this assumption by the following lemma (Lemma A.7 in \citep{gao2020model}) and proposition.
 \begin{lemma}
 \label{lma:G}
-Assume $x_1,...,x_n \sim\text{i.i.d.} N(0,I_d/d)$. We define  matrix $\tilde{G}\in \R^{n\times n}$ with entries
+Assume $x_1,...,x_n \overset{\iid}{\sim} \calN(0,I_d/d)$. We define  matrix $\tilde{G}\in \R^{n\times n}$ with entries
 \begin{equation}
     \tilde{G}_{i,j} = |\E\psi'(Z)|^2 \frac{x_i\transpose x_j}{\|x_i\|\|x_j\|} + (\E|\psi(Z)|^2-|\E\psi'(Z)|^2)\I\{i=j\}
 \end{equation}
-where $Z\sim N(0,1)$. If $d = \Omega(\log n)$, then with high probability, we have
+where $Z\sim \calN(0,1)$. If $d = \Omega(\log n)$, then with high probability, we have
 \begin{equation}
 \|\bar{G}-\tilde{G}\|^2 \lesssim \frac{\log n}{d} + \frac{n^2}{d^2}
 \end{equation}
 \end{lemma}
 
 \begin{proposition}
-Suppose $x_1,...,x_n \sim\text{i.i.d.} N(0,I_d/d)$ and the activation function $\psi$ is sigmoid or tanh. If $d=\Omega(n)$, then assumption \ref{assump:G} holds with high probability.
+Suppose $x_1,...,x_n \overset{\iid}{\sim} \calN(0,I_d/d)$ and the activation function $\psi$ is sigmoid or tanh. If $d=\Omega(n)$, then assumption \ref{assump:G} holds with high probability.
 \end{proposition}
 \begin{proof}
 In fact, if $\psi$ is sigmoid or tanh, for a standard Gaussian random variable $Z$, we have
@@ -99,7 +101,7 @@ Assume $W(0)$, $\beta(0)$ and $b$ have i.i.d. standard Gaussian entries. Given $
 \begin{proof}
 We will show each inequality holds with probability at least $1-\delta/4$, then by a union bound, all of them hold with probability at least $1-\delta/4$. Since $\Var(\frac{1}{p}\sum_{r=1}^p|b_r|)\leq \Var(|b_0|)/p$, by Chebyshev's inequality, we have 
 \begin{equation*}
-    \Pr(\frac{1}{p}\sum_{r=1}^p|b_r| > \E(b_1) + 1) \leq \Var(|b_1|)/p \leq \delta/4
+    \prob(\frac{1}{p}\sum_{r=1}^p|b_r| > \E(b_1) + 1) \leq \Var(|b_1|)/p \leq \delta/4
 \end{equation*} 
 if $p\geq 4\Var(|b_1|)/\delta$, which gives \eqref{eq:sumb_bd}. The proof for \eqref{eq:sumbbet_bd} is similar since $\Var(\frac{1}{p}\sum_{r=1}^p|b_r\beta_r(0)|)=O(1/p)$. To prove \eqref{eq:e0_bd}, since $|y_i|$ and $\|x_i\|$ are bounded, it suffices to show $|u_i(0)|\leq c$ for all $i\in [n]$. Actually, by independence, we have
 \begin{equation*}
@@ -107,11 +109,11 @@ if $p\geq 4\Var(|b_1|)/\delta$, which gives \eqref{eq:sumb_bd}. The proof for \e
 \end{equation*}
 By Chebyshev's inequality, we have for each $i\in [n]$
 \begin{equation*}
-    \Pr(|u_i(0)|> c) \leq \frac{\Var(u_i(0))}{c^2} \leq \frac{\delta}{4n}
+    \prob(|u_i(0)|> c) \leq \frac{\Var(u_i(0))}{c^2} \leq \frac{\delta}{4n}
 \end{equation*}
 where we require $p=\Omega(n/\delta)$. With a union bound argument, we could show \eqref{eq:e0_bd}. Finally, \eqref{eq:maxb_bd} is followed from standard Gaussian tail bound and union bound argument, i.e.
 \begin{equation*}
-    \Pr(\max_{r\in[p]}|b_r| > 2\sqrt{\log p}) \leq \sum_{r\in [p]}\Pr(|b_r| > 2\sqrt{\log p}) \leq 2pe^{-2\log p} = \frac{2}{p} \leq \frac{\delta}{4}
+    \prob(\max_{r\in[p]}|b_r| > 2\sqrt{\log p}) \leq \sum_{r\in [p]}\prob(|b_r| > 2\sqrt{\log p}) \leq 2pe^{-2\log p} = \frac{2}{p} \leq \frac{\delta}{4}
 \end{equation*}
 \end{proof}
 
@@ -136,9 +138,9 @@ By independence and boundedness of $\psi$ and $\psi'$, we have $\Var(G_{ij}(0)) 
 \end{equation*}
 by Markov's inequality, when $p=\Omega(\frac{n^2}{\delta\gamma^2})$
 \begin{equation*}
-    \Pr(\|G(0)-\bar{G}\|>\frac{\gamma}{4})\leq O(\frac{n^2}{p\gamma^2})\leq\frac{\delta}{2}
+    \prob(\|G(0)-\bar{G}\|>\frac{\gamma}{4})\leq O(\frac{n^2}{p\gamma^2})\leq\frac{\delta}{2}
 \end{equation*}
-Similarly we have $\Pr(\|H(0)\|>\frac{\gamma}{4})\leq\frac{\delta}{2}$, since $\E(H(0))=0$. Then with probability at least $1-\delta$, $\lambda_{\min}(G(0)) \geq \lambda_{\min}(\bar{G}) -\gamma/4 \geq \frac{3}{4}\gamma$, and $\lambda_{\max}(\|H(0)\|)\leq \gamma/4$.
+Similarly we have $\prob(\|H(0)\|>\frac{\gamma}{4})\leq\frac{\delta}{2}$, since $\E(H(0))=0$. Then with probability at least $1-\delta$, $\lambda_{\min}(G(0)) \geq \lambda_{\min}(\bar{G}) -\gamma/4 \geq \frac{3}{4}\gamma$, and $\lambda_{\max}(\|H(0)\|)\leq \gamma/4$.
 \end{proof}
 
 
