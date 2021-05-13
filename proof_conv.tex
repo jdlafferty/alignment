@@ -1,0 +1,283 @@
+\section{Proof of convergence on Two-Layer Nonlinear Networks}
+We consider the following neural network
+\begin{equation}
+f(x) = \frac{1}{\sqrt p}\sum_{r=1}^p \beta_r \psi(w_r\transpose x) = \frac{1}{\sqrt p}\beta\transpose \psi(Wx)
+\end{equation}
+where $\beta \in \R^p$, $W = (w_1,...,w_p)\transpose\in\R^{p\times d}$, and $\psi$ is activation function. Given data, the loss function is 
+\begin{equation}
+\Loss(W, \beta) = \frac{1}{2}\sum_{i=1}^n(f(x_i)-y_i)^2 = \frac{1}{2}\sum_{i=1}^n\Big(\frac{1}{\sqrt p}\beta\transpose \psi(Wx_i)-y\Big)^2
+\end{equation}
+The feedback alignment algorithm gives
+\begin{equation}
+\label{eq:updates}
+\begin{aligned}
+    W(t+1) &= W(t) - \eta\frac{1}{\sqrt p}\sum_{i=1}^nD_i(t)bx_i\transpose e_i(t) \\
+    \beta(t+1) &= \beta(t)- \eta \frac{1}{\sqrt p}\sum_{i=1}^n \psi(W(t)x_i)e_i(t)
+\end{aligned}
+\end{equation}
+where $D_i(t) = \text{diag}(\psi'(W(t)x_i))$ and $e_i(t) = \frac{1}{\sqrt p}\beta(t)\transpose \psi(W(t)x_i)-y_i$. We also denote $u(t)\in\R^n$ with $u_i(t) = \frac{1}{\sqrt p}\beta(t)\transpose \psi(W(t)x_i)$, the network prediction on $x_i$ at time $t$. To make the proof clear, we use $c$, $c'$ as the global constants whose values may vary from line to line.
+
+% $f_t(\cdot)$ as the network with parameter $\beta_t$ and $W_t$, and
+% \begin{equation}
+% f_t(X) = \frac{1}{\sqrt p}\psi(XW_t\transpose)\beta_t
+% \end{equation}
+% as the network prediction on data $X = (x_1\transpose,...,x_n\transpose)\transpose$ at step $t$.
+
+
+\begin{assumption}
+\label{assump:G}
+Define matrix $\bar{G} \in \R^{n\times n}$ with entries
+\begin{equation}
+    \bar{G}_{i,j} = \E_{w\sim N(0,I_p)}\psi(w\transpose x_i) \psi(w\transpose  x_j),
+\end{equation}
+we assume $\lambda_{\min}(\bar{G}) \geq \gamma$, where $\gamma$ is a positive constant.
+\end{assumption}
+We justify this assumption by the following lemma (Lemma A.7 in \citep{gao2020model}) and proposition.
+\begin{lemma}
+\label{lma:G}
+Assume $x_1,...,x_n \sim\text{i.i.d.} N(0,I_d/d)$. We define  matrix $\tilde{G}\in \R^{n\times n}$ with entries
+\begin{equation}
+    \tilde{G}_{i,j} = |\E\psi'(Z)|^2 \frac{x_i\transpose x_j}{\|x_i\|\|x_j\|} + (\E|\psi(Z)|^2-|\E\psi'(Z)|^2)\I\{i=j\}
+\end{equation}
+where $Z\sim N(0,1)$. If $d = \Omega(\log n)$, then with high probability, we have
+\begin{equation}
+\|\bar{G}-\tilde{G}\|^2 \lesssim \frac{\log n}{d} + \frac{n^2}{d^2}
+\end{equation}
+\end{lemma}
+
+\begin{proposition}
+Suppose $x_1,...,x_n \sim\text{i.i.d.} N(0,I_d/d)$ and the activation function $\psi$ is sigmoid or tanh. If $d=\Omega(n)$, then assumption \ref{assump:G} holds with high probability.
+\end{proposition}
+\begin{proof}
+In fact, if $\psi$ is sigmoid or tanh, for a standard Gaussian random variable $Z$, we have
+\begin{equation*}
+    \gamma\triangleq \frac{1}{2}(\E|\psi(Z)|^2-|\E\psi'(Z)|^2) >0.
+\end{equation*}
+From lemma \ref{lma:G}, we know that with high probability $\lambda_{\min}(\bar{G}) \geq \lambda_{\min}(\tilde{G})-\|\bar{G}-\tilde{G}\|\geq 2\gamma - C(\sqrt{\frac{\log n}{d}} + \frac{n}{d}) \geq \gamma$.
+\end{proof}
+
+\begin{theorem}
+\label{thm:nonliner_conv}
+Let $W(0)$, $\beta(0)$ and $b$ have i.i.d. standard Gaussian entries. Assume
+\begin{enumerate}
+    \item assumption \ref{assump:G} holds,
+    \item $\psi$ is smooth, $\psi$, $\psi'$ and $\psi''$ are bounded,
+    \item $|y_i|$ and $\|x_i\|$ are bounded for all $i\in[n]$.
+\end{enumerate}
+Then there exists universal constant $C_1$ and $C_2$, such that for any $\delta\in(0,1)$, if 
+\begin{equation}
+    p \geq \max(C_1\frac{n^2}{\delta\gamma^2}, C_2\frac{n^4\log p}{\gamma^4}),
+\end{equation}
+we have
+\begin{equation}
+\label{eq:conv}
+    \|u(t)-y\|^2 \leq (1-\frac{\gamma\eta}{4})^t\|u(0)-y\|^2
+\end{equation}
+hold with probability at least $1-\delta$
+\end{theorem}
+
+\begin{lemma}
+\label{lma:inqs}
+Assume $W(0)$, $\beta(0)$ and $b$ have i.i.d. standard Gaussian entries. Given $\delta\in(0,1)$, if $p=\Omega(n/\delta)$, then with probability $1-\delta$, all of the following inequality hold.
+\begin{equation}
+\label{eq:sumb_bd}
+    \frac{1}{p}\sum_{r=1}^p|b_r| \leq c
+\end{equation}
+\begin{equation}
+\label{eq:sumbbet_bd}
+    \frac{1}{p}\sum_{r=1}^p|b_r\beta_r(0)| \leq c
+\end{equation}
+\begin{equation}
+\label{eq:e0_bd}
+    \|e(0)\| \leq c\sqrt n
+\end{equation}
+\begin{equation}
+\label{eq:maxb_bd}
+    \max_{r\in[p]}|b_r|\leq 2\sqrt{\log p}
+\end{equation}
+\end{lemma}
+\begin{proof}
+We will show each inequality holds with probability at least $1-\delta/4$, then by a union bound, all of them hold with probability at least $1-\delta/4$. Since $\Var(\frac{1}{p}\sum_{r=1}^p|b_r|)\leq \Var(|b_0|)/p$, by Chebyshev's inequality, we have 
+\begin{equation*}
+    \Pr(\frac{1}{p}\sum_{r=1}^p|b_r| > \E(b_1) + 1) \leq \Var(|b_1|)/p \leq \delta/4
+\end{equation*} 
+if $p\geq 4\Var(|b_1|)/\delta$, which gives \eqref{eq:sumb_bd}. The proof for \eqref{eq:sumbbet_bd} is similar since $\Var(\frac{1}{p}\sum_{r=1}^p|b_r\beta_r(0)|)=O(1/p)$. To prove \eqref{eq:e0_bd}, since $|y_i|$ and $\|x_i\|$ are bounded, it suffices to show $|u_i(0)|\leq c$ for all $i\in [n]$. Actually, by independence, we have
+\begin{equation*}
+    \Var(u_i(0)) = \Var \Big(\frac{1}{p}\sum_{r=1}^p \beta_r(0)\psi(w_r(0)\transpose x_i)\Big) = \frac{1}{p}\Var\Big(\beta_1(0)\psi(w_1(0)\transpose x_i)\Big) = O(1/p).
+\end{equation*}
+By Chebyshev's inequality, we have for each $i\in [n]$
+\begin{equation*}
+    \Pr(|u_i(0)|> c) \leq \frac{\Var(u_i(0))}{c^2} \leq \frac{\delta}{4n}
+\end{equation*}
+where we require $p=\Omega(n/\delta)$. With a union bound argument, we could show \eqref{eq:e0_bd}. Finally, \eqref{eq:maxb_bd} is followed from standard Gaussian tail bound and union bound argument, i.e.
+\begin{equation*}
+    \Pr(\max_{r\in[p]}|b_r| > 2\sqrt{\log p}) \leq \sum_{r\in [p]}\Pr(|b_r| > 2\sqrt{\log p}) \leq 2pe^{-2\log p} = \frac{2}{p} \leq \frac{\delta}{4}
+\end{equation*}
+\end{proof}
+
+\begin{lemma}
+\label{lma:GH}
+Under the assumption of theorem \ref{thm:nonliner_conv}, we define matrix $G(0),H(0)\in\R^{n\times n}$ with entries
+\begin{equation}
+\label{eq:def_G0}
+G_{ij}(0) = \frac{1}{p}\psi(W(0)x_i)\transpose \psi(W(0)x_j) = \frac{1}{p}\sum_{r=1}^p\psi(w_r(0)\transpose x_i)\psi(w_r(0)\transpose x_j) 
+\end{equation}
+and 
+\begin{equation}
+\label{eq:def_H0}
+H_{ij}(0) = \frac{x_i\transpose x_j}{p}\beta(0)\transpose D_i(0)D_j(0)b = \frac{1}{p}\sum_{r=1}^p\beta_r(0)b_r\psi'(w_r(0)\transpose x_i)\psi'(w_r(0)\transpose x_j).
+\end{equation}
+For any $\delta \in (0,1)$, if $p=\Omega(\frac{n^2}{\delta\gamma^2})$, then with probability at least $1-\delta$, we have $\lambda_{\min}(G(0))\geq \frac{3}{4}\gamma$ and $\lambda_{\max}(\|H(0)\|)\leq \frac{\gamma}{4}$.
+\end{lemma}
+\begin{proof}
+By independence and boundedness of $\psi$ and $\psi'$, we have $\Var(G_{ij}(0)) = O(1/p)$ and $\Var(H_{ij}(0)) = O(1/p)$. Since $\E(G(0))=\bar{G}$, we have
+\begin{equation*}
+\E\|G(0)-\bar{G}\|^2 \leq \E\|G(0)-\bar{G}\|^2_F = O(\frac{n^2}{p})
+\end{equation*}
+by Markov's inequality, when $p=\Omega(\frac{n^2}{\delta\gamma^2})$
+\begin{equation*}
+    \Pr(\|G(0)-\bar{G}\|>\frac{\gamma}{4})\leq O(\frac{n^2}{p\gamma^2})\leq\frac{\delta}{2}
+\end{equation*}
+Similarly we have $\Pr(\|H(0)\|>\frac{\gamma}{4})\leq\frac{\delta}{2}$, since $\E(H(0))=0$. Then with probability at least $1-\delta$, $\lambda_{\min}(G(0)) \geq \lambda_{\min}(\bar{G}) -\gamma/4 \geq \frac{3}{4}\gamma$, and $\lambda_{\max}(\|H(0)\|)\leq \gamma/4$.
+\end{proof}
+
+
+
+\begin{lemma}
+\label{lma:weights}
+Assume all the inequalities from Lemma \ref{lma:inqs} holds. If the error bound \eqref{eq:conv} holds for all $t=1,2,...,T-1$, then there exists positive constant $c_1$, $c_2$, such that for any $t\leq T$ and $r=1,2,...,p$, we have 
+\begin{equation}
+\label{eq:weights}
+\begin{aligned}
+    \|w_r(t)-w_r(0)\| &\leq c_1\frac{n\sqrt{\log p}}{\gamma\sqrt p} \\
+    \|\beta_r(t)-\beta_r(0)\| &\leq c_2\frac{n}{\gamma\sqrt p}
+\end{aligned}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+From the feedback alignment updates \eqref{eq:updates}, we have for all $t\leq T$.
+\begin{equation*}
+\begin{aligned}
+    \|\beta_r(t)-\beta_r(0)\| &\leq \frac{\eta}{\sqrt p}\sum_{s=0}^{t-1}\sum_{i=1}^n |\psi(w_r(t)x_i)e_i(t)| \\
+    &\leq c\frac{\eta}{\sqrt p}\sum_{s=0}^{t-1}\sum_{i=1}^n |e_i(t)| \\
+    &\leq c\frac{\eta\sqrt n}{\sqrt p}\sum_{s=0}^{t-1} \|e(t)\| \\
+    &\leq c\frac{\eta\sqrt n}{\sqrt p}\sum_{s=0}^{t-1}  (1-\frac{\gamma\eta}{4})^t\|e(0)\|  \\
+    &\leq c\frac{\sqrt n}{\gamma\sqrt p}\|e(0)\| \\
+    &\leq c\frac{n}{\gamma\sqrt p}
+\end{aligned}
+\end{equation*}
+where we use $\psi$ is bounded and \eqref{eq:e0_bd}. We also have
+\begin{equation*}
+\begin{aligned}
+    \|w_r(t)-w_r(0)\| &\leq \frac{\eta}{\sqrt p}\sum_{s=0}^{t-1}\sum_{i=1}^n \|\psi'(w_r(t)\transpose x_i)b_rx_i e_i(t)\| \\
+    & \leq c\frac{\eta}{\sqrt p}\sum_{s=0}^{t-1}\sum_{i=1}^n |b_r| |e_i(t)| \\
+    & \leq c|b_r|\frac{\eta\sqrt n}{\sqrt p}\sum_{s=0}^{t-1} \|e(t)\| \\
+    & \leq c|b_r|\frac{\sqrt n}{\gamma\sqrt p}\|e(0)\| \\
+    & \leq c\frac{n\sqrt{\log p}}{\gamma\sqrt p}
+\end{aligned}
+\end{equation*}
+where we use $\psi'$ is bounded, \eqref{eq:e0_bd} and \eqref{eq:maxb_bd}.
+\end{proof}
+
+\begin{lemma}
+\label{lma:induction}
+Assume all the inequalities from Lemma \ref{lma:inqs} holds. If the bound for weights difference \eqref{eq:weights} holds for all $t\leq T$ and error bound \eqref{eq:conv} holds for all $t\leq T-1$, then \eqref{eq:conv} holds for $t=T$.
+\end{lemma}
+\begin{proof}
+We start with analyzing the error $e(t)$
+\begin{equation*}
+\begin{aligned}
+    e_i(t+1) 
+    &= \frac{1}{\sqrt p}\beta(t+1)\transpose\psi(W(t+1)x_i) - y_i \\
+    &= \frac{1}{\sqrt p}\beta(t+1)\transpose(\psi(W(t+1)x_i)-\psi(W(t)x_i))+ \frac{1}{\sqrt p}(\beta(t+1)-\beta(t))\transpose \psi(W(t)x_i) \\
+    & \quad + \frac{1}{\sqrt p}\beta(t)\transpose \psi(W(t)x_i) - y_i \\
+    &=e_i(t) - \frac{\eta}{p}\beta(t+1)\transpose D_i(t)\sum_{j=1}^nD_j(t)b x_j\transpose x_i e_j(t)  - \frac{\eta}{p}\sum_{j=1}^n\psi(W(t)x_j)\transpose\psi(W(t)x_i)e_j(t) \\
+    & \quad + v_i(t) \\
+    & = e_i(t)-\eta\sum_{j=1}^n\big(H_{ij}(t)+G_{ij}(t)\big)e_j(t) + v_i(t)
+\end{aligned}
+\end{equation*}
+where
+\begin{equation}
+\begin{aligned}
+G_{ij}(t) &= \frac{1}{p}\psi(W(t)x_j)\transpose\psi(W(t)x_i) \\
+H_{ij}(t) &= \frac{x_i\transpose x_j}{p}\beta(t+1)\transpose D_i(t)D_j(t)b
+\end{aligned}
+\end{equation}
+and $v_i(t)$ is the residual term from the Taylor's expansion
+\begin{equation}
+    v_i(t) = \frac{1}{2\sqrt p}\sum_{r=1}^p\beta_r(t+1)|(w_r(t+1)-w_r(t))\transpose x_i|^2\psi''(\xi_{ri}(t))
+\end{equation}
+with $\xi_{ri}(t)$ between $w_r(t)\transpose x_i$ and $w_r(t+1)\transpose x_i$. We can also rewrite the above iteration in a vector form
+\begin{equation}
+\label{eq:et_iter}
+     e(t+1) = e(t) - \eta(G(t)+H(t))e(t) + v(t)
+\end{equation} 
+Now we try to show that both $G(t)$ and $H(t)$ are close to their initialization. Notice that
+\begin{equation*}
+\begin{aligned}
+    |G_{ij}(t) - G_{ij}(0)| 
+    & = \frac{1}{p}\Big|\psi(W(t)x_j)\transpose\psi(W(t)x_i) -\psi(W(t)x_j)\transpose\psi(W(t)x_i)\Big| \\
+    & \leq \frac{1}{p} \sum_{r=1}^p |\psi(w_r(t)\transpose x_j)||\psi(w_r(t)\transpose x_i)-\psi(w_r(0)\transpose x_i)| \\
+    &\quad + \frac{1}{p} \sum_{r=1}^p |\psi(w_r(0)\transpose x_i)||\psi(w_r(t)\transpose x_j)-\psi(w_r(0)\transpose x_j)| \\
+    &\leq c \frac{1}{p} \sum_{r=1}^p|w_r(t)\transpose x_i-w_r(0)\transpose x_i| + \frac{1}{p} \sum_{r=1}^p|w_r(t)\transpose x_j-w_r(0)\transpose x_j| \\
+    &\leq c_0 \frac{n\sqrt{\log p}}{\gamma\sqrt p} (\|x_i\|+\|x_j\|)
+\end{aligned}
+\end{equation*}
+where the second inequality is due to the boundedness of $\psi$ and $\psi'$, the last inequality is by \eqref{eq:weights}, then we have
+\begin{equation}
+\label{eq:bound_Gt}
+    \|G(t)-G(0)\| \leq \max_{j \in [n]}\sum_{i=1}^n|G_{ij}(t) - G_{ij}(0)| \leq c_0 \frac{n^2\sqrt{\log p}}{\gamma\sqrt p}
+\end{equation}
+For matrix $H(t)$, similarly we have
+\begin{equation*}
+\begin{aligned}
+    |H_{ij}(t)-H_{ij}(0)|
+    &\leq \frac{|x_i\transpose x_j|}{p}\Big|\beta(t+1)\transpose D_i(t)D_j(t)b - \beta(0)\transpose D_i(0)D_j(0)b\Big| \\
+    &\leq \frac{\|x_i\|\|x_j\|}{p}\sum_{r=1}^p \Big|b_r\beta_r(t+1)\psi'(w_r(t)\transpose x_i)\psi'(w_r(t)\transpose x_j)\\
+    &\quad -b_r\beta_r(0)\psi'(w_r(0)\transpose x_i)\psi'(w_r(0)\transpose x_j)\Big| \\
+    &\leq \frac{|\|x_i\|\|x_j\||}{p}\sum_{r=1}^p\Big(|b_r||\beta_r(t+1)-\beta_r(0)| |\psi'(w_r(t)\transpose x_i)\psi'(w_r(t)\transpose x_j)|\\
+    & \quad +|b_r||\beta_r(0)| |\psi'(w_r(t)\transpose x_i)-\psi'(w_r(0)\transpose x_i)| |\psi'(w_r(t)\transpose x_j)|\\
+    & \quad +|b_r||\beta_r(0)| |\psi'(w_r(0)\transpose x_i)| |\psi'(w_r(t)\transpose x_j)-\psi'(w_r(0)\transpose x_j)| \Big)\\
+    &\leq c\frac{\|x_i\|\|x_j\|}{p}\sum_{r=1}^p\Big(|b_r|\frac{n}{\gamma\sqrt p} + |b_r||\beta_r(0)|\frac{n\sqrt{\log p}}{\gamma\sqrt p} (\|x_i\|+\|x_j\|)\Big) \\
+    &\leq c_1 \frac{n}{\gamma\sqrt p} + c_2\frac{n\sqrt{\log p}}{\gamma\sqrt p}.
+\end{aligned}
+\end{equation*}
+It follows
+\begin{equation}
+\label{eq:bound_Ht}
+    \|H(t)-H(0)\| \leq \max_{j \in [n]}\sum_{i=1}^n|H_{ij}(t) - H_{ij}(0)| \leq c_1 \frac{n^2}{\gamma\sqrt p} + c_2\frac{n^2\sqrt{\log p}}{\gamma\sqrt p}
+\end{equation}
+Next, we bound the residual term $v_i(t)$. Since $\psi''$ is bounded, we have
+\begin{equation*}
+\begin{aligned}
+    |v_i(t)|
+    &\leq c\frac{1}{\sqrt p}\sum_{r=1}^p|\beta_r(t+1)|\|w_r(t+1)-w_r(t)\|^2 \\
+    &\leq c\frac{1}{\sqrt p}\frac{\eta^2}{p}\sum_{r=1}^p|\beta_r(t+1)|\Big(\sum_{i=1}^n\|\psi'(w_r(t)\transpose x_i)b_rx_ie_i(t)\|\Big)^2 \\
+    &\leq c\frac{1}{\sqrt p}\frac{\eta^2}{p}\sum_{r=1}^p|\beta_r(t+1)||b_r|^2\Big(\sum_{i=1}^n|e_i(t)|\Big)^2 \\
+    &\leq c\frac{\eta^2n}{\sqrt p}\|e(t)\|^2 \\
+    &\leq c_3\frac{\eta^2n\sqrt n}{\sqrt p}\|e(t)\|
+\end{aligned}
+\end{equation*}
+It gives the bound
+\begin{equation}
+\label{eq:bound_vt}
+    \|v(t)\| =\Big(\sum_{i=1}^n|v_i(t)|^2\Big)^{1/2} \leq c_3\frac{\eta^2n^2}{\sqrt p}\|e(t)\|
+\end{equation}
+Combining \eqref{eq:et_iter}, \eqref{eq:bound_Gt}, \eqref{eq:bound_Ht} and \eqref{eq:bound_vt}, we have
+\begin{equation}
+\begin{aligned}
+\|e(t+1)\| 
+&\leq \|I_n-\eta (G(t)+H(t))\|\|e(t)\|+\|v(t)\| \\
+&\leq \Big(\|I_n-\eta G(0)\|+\eta\|G(t)-G(0)\|+\eta\|H(0)\| \\
+&\quad +\eta\|H(t)-H(0)\|\Big)\|e(t)\| + \|v(t)\| \\
+&\leq \Big( 1-\frac{3\eta\gamma}{4}+c_0\frac{\eta n^2\sqrt{\log p}}{\gamma\sqrt p}+\frac{\eta\gamma}{4}+c_1\frac{\eta n^2}{\gamma\sqrt p} + c_2\frac{\eta n^2\sqrt{\log p}}{\gamma\sqrt p}+c_3\frac{\eta^2n\sqrt n}{\sqrt p}\Big)\|e(t)\|  \\
+&\leq(1-\frac{\eta\gamma}{4})\|e(t)\|
+\end{aligned}
+\end{equation}
+where we use the lemma \ref{lma:GH} and $p=\Omega(\frac{n^4\log p}{\gamma^4})$.
+\end{proof}
+
+\begin{proof}[Proof of theorem \ref{thm:nonliner_conv}]
+We prove the inequality \eqref{eq:conv} by induction. Suppose \eqref{eq:conv} holds for all $t=1,2,...,T-1$, by lemma \ref{lma:weights} and lemma \ref{lma:induction} we know \eqref{eq:conv} holds for $t=T$, which completes the proof.
+\end{proof}
