@@ -53,7 +53,7 @@ Moreover, instead of working explicitly on $e(t) = f(t) - y$, we consider the up
     Provided the recursive nature of \cref{eqn:parameter-update-reg}, we represent $W(t)$ with only $W(0)$ and $\theta(i)$ for $i\leq t-1$, \ie,
     \begin{align}\label{eqn:Wt}
         W(t) = W(0) - \frac{\eta}{\sqrt p} \sum_{i=0}^{t-1} b\theta(i)\transpose.
-    \end{align}
+   \end{align}
     Similarly, we can also apply the same argument to $\beta(t)$ and present it as
     \begin{align}\label{eqn:betat}
         \beta(t) &= \prod_{k=0}^{t-1}(1-\eta\lambda(k))\beta(0) - \frac{\eta}{\sqrt p}\sum_{i=0}^{t-1} \prod_{k=i+1}^{t-1}(1-\eta\lambda(k))W(i)\theta(i) \\

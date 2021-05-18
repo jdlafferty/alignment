@@ -26,25 +26,23 @@ where $D_i(t) = \text{diag}(\psi'(W(t)x_i))$ and $e_i(t) = \frac{1}{\sqrt p}\bet
 % as the network prediction on data $X = (x_1\transpose,...,x_n\transpose)\transpose$ at step $t$.
 
 
-\begin{assumption}
-\label{assump:G}
+\begin{assumption}\label{assump:G}
 Define matrix $\bar{G} \in \R^{n\times n}$ with entries
-\begin{equation}
+\begin{equation*}
     \bar{G}_{i,j} = \E_{w\sim \calN(0,I_p)}\psi(w\transpose x_i) \psi(w\transpose  x_j),
-\end{equation}
+\end{equation*}
 we assume $\lambda_{\min}(\bar{G}) \geq \gamma$, where $\gamma$ is a positive constant.
 \end{assumption}
 We justify this assumption by the following lemma (Lemma A.7 in \citep{gao2020model}) and proposition.
-\begin{lemma}
-\label{lma:G}
-Assume $x_1,...,x_n \overset{\iid}{\sim} \calN(0,I_d/d)$. We define  matrix $\tilde{G}\in \R^{n\times n}$ with entries
-\begin{equation}
-    \tilde{G}_{i,j} = |\E\psi'(Z)|^2 \frac{x_i\transpose x_j}{\|x_i\|\|x_j\|} + (\E|\psi(Z)|^2-|\E\psi'(Z)|^2)\I\{i=j\}
-\end{equation}
+\begin{lemma}[\citealp{gao2020model}]\label{lma:G}
+Assume $x_1,...,x_n \overset{\iid}{\sim} \calN(0,I_d/d)$. We define  matrix $\widetilde{G}\in \R^{n\times n}$ with entries
+\begin{equation*}
+    \widetilde{G}_{i,j} = |\E\psi'(Z)|^2 \frac{x_i\transpose x_j}{\|x_i\|\|x_j\|} + (\E|\psi(Z)|^2-|\E\psi'(Z)|^2)\I\{i=j\}
+\end{equation*}
 where $Z\sim \calN(0,1)$. If $d = \Omega(\log n)$, then with high probability, we have
-\begin{equation}
-\|\bar{G}-\tilde{G}\|^2 \lesssim \frac{\log n}{d} + \frac{n^2}{d^2}
-\end{equation}
+\begin{equation*}
+\|\bar{G}-\widetilde{G}\|^2 \lesssim \frac{\log n}{d} + \frac{n^2}{d^2}
+\end{equation*}
 \end{lemma}
 
 \begin{proposition}
@@ -53,55 +51,48 @@ Suppose $x_1,...,x_n \overset{\iid}{\sim} \calN(0,I_d/d)$ and the activation fun
 \begin{proof}
 In fact, if $\psi$ is sigmoid or tanh, for a standard Gaussian random variable $Z$, we have
 \begin{equation*}
-    \gamma\triangleq \frac{1}{2}(\E|\psi(Z)|^2-|\E\psi'(Z)|^2) >0.
+    \gamma\defeq \frac{1}{2}(\E|\psi(Z)|^2-|\E\psi'(Z)|^2) >0.
 \end{equation*}
-From lemma \ref{lma:G}, we know that with high probability $\lambda_{\min}(\bar{G}) \geq \lambda_{\min}(\tilde{G})-\|\bar{G}-\tilde{G}\|\geq 2\gamma - C(\sqrt{\frac{\log n}{d}} + \frac{n}{d}) \geq \gamma$.
+From lemma \ref{lma:G}, we know that with high probability $\lambda_{\min}(\bar{G}) \geq \lambda_{\min}(\widetilde{G})-\|\bar{G}-\widetilde{G}\|\geq 2\gamma - C(\sqrt{\frac{\log n}{d}} + \frac{n}{d}) \geq \gamma$.
 \end{proof}
 
-\begin{theorem}
-\label{thm:nonliner_conv}
-Let $W(0)$, $\beta(0)$ and $b$ have i.i.d. standard Gaussian entries. Assume
+\begin{theorem}\label{thm:nonliner_conv}
+Let $W(0)$, $\beta(0)$ and $b$ have \iid standard Gaussian entries. Assume
 \begin{enumerate}
     \item assumption \ref{assump:G} holds,
     \item $\psi$ is smooth, $\psi$, $\psi'$ and $\psi''$ are bounded,
     \item $|y_i|$ and $\|x_i\|$ are bounded for all $i\in[n]$.
 \end{enumerate}
 Then there exists universal constant $C_1$ and $C_2$, such that for any $\delta\in(0,1)$, if 
-\begin{equation}
+\begin{equation*}
     p \geq \max(C_1\frac{n^2}{\delta\gamma^2}, C_2\frac{n^4\log p}{\gamma^4}),
+\end{equation*}
+then with probability at least $1-\delta$
+\begin{equation}\label{eq:conv}
+    \|u(t)-y\|^2 \leq (1-\frac{\gamma\eta}{4})^t\|u(0)-y\|^2.
 \end{equation}
-we have
-\begin{equation}
-\label{eq:conv}
-    \|u(t)-y\|^2 \leq (1-\frac{\gamma\eta}{4})^t\|u(0)-y\|^2
-\end{equation}
-hold with probability at least $1-\delta$
 \end{theorem}
 
 \begin{lemma}
 \label{lma:inqs}
-Assume $W(0)$, $\beta(0)$ and $b$ have i.i.d. standard Gaussian entries. Given $\delta\in(0,1)$, if $p=\Omega(n/\delta)$, then with probability $1-\delta$, all of the following inequality hold.
-\begin{equation}
-\label{eq:sumb_bd}
-    \frac{1}{p}\sum_{r=1}^p|b_r| \leq c
+Assume $W(0)$, $\beta(0)$ and $b$ have \iid standard Gaussian entries. Given $\delta\in(0,1)$, if $p=\Omega(n/\delta)$, then with probability $1-\delta$
+\begin{equation}\label{eq:sumb_bd}
+    \frac{1}{p}\sum_{r=1}^p|b_r| \leq c,
 \end{equation}
-\begin{equation}
-\label{eq:sumbbet_bd}
-    \frac{1}{p}\sum_{r=1}^p|b_r\beta_r(0)| \leq c
+\begin{equation}\label{eq:sumbbet_bd}
+    \frac{1}{p}\sum_{r=1}^p|b_r\beta_r(0)| \leq c,
 \end{equation}
-\begin{equation}
-\label{eq:e0_bd}
-    \|e(0)\| \leq c\sqrt n
+\begin{equation}\label{eq:e0_bd}
+    \|e(0)\| \leq c\sqrt n,
 \end{equation}
-\begin{equation}
-\label{eq:maxb_bd}
-    \max_{r\in[p]}|b_r|\leq 2\sqrt{\log p}
+\begin{equation}\label{eq:maxb_bd}
+    \max_{r\in[p]}|b_r|\leq 2\sqrt{\log p}.
 \end{equation}
 \end{lemma}
 \begin{proof}
-We will show each inequality holds with probability at least $1-\delta/4$, then by a union bound, all of them hold with probability at least $1-\delta/4$. Since $\Var(\frac{1}{p}\sum_{r=1}^p|b_r|)\leq \Var(|b_0|)/p$, by Chebyshev's inequality, we have 
+We will show each inequality holds with probability at least $1-\frac{\delta}{4}$, then by a union bound, all of them hold with probability at least $1-\frac{\delta}{4}$. Since $\Var(\frac{1}{p}\sum_{r=1}^p|b_r|)\leq \frac{\Var(|b_0|)}{p}$, by Chebyshev's inequality, we have 
 \begin{equation*}
-    \prob(\frac{1}{p}\sum_{r=1}^p|b_r| > \E(b_1) + 1) \leq \Var(|b_1|)/p \leq \delta/4
+    \prob(\frac{1}{p}\sum_{r=1}^p|b_r| > \E(b_1) + 1) \leq \frac{\Var(|b_1|)}{p} \leq \delta/4
 \end{equation*} 
 if $p\geq 4\Var(|b_1|)/\delta$, which gives \eqref{eq:sumb_bd}. The proof for \eqref{eq:sumbbet_bd} is similar since $\Var(\frac{1}{p}\sum_{r=1}^p|b_r\beta_r(0)|)=O(1/p)$. To prove \eqref{eq:e0_bd}, since $|y_i|$ and $\|x_i\|$ are bounded, it suffices to show $|u_i(0)|\leq c$ for all $i\in [n]$. Actually, by independence, we have
 \begin{equation*}
@@ -111,7 +102,7 @@ By Chebyshev's inequality, we have for each $i\in [n]$
 \begin{equation*}
     \prob(|u_i(0)|> c) \leq \frac{\Var(u_i(0))}{c^2} \leq \frac{\delta}{4n}
 \end{equation*}
-where we require $p=\Omega(n/\delta)$. With a union bound argument, we could show \eqref{eq:e0_bd}. Finally, \eqref{eq:maxb_bd} is followed from standard Gaussian tail bound and union bound argument, i.e.
+where we require $p=\Omega(n/\delta)$. With a union bound argument, we could show \eqref{eq:e0_bd}. Finally, \eqref{eq:maxb_bd} is followed from standard Gaussian tail bound and union bound argument, \ie,
 \begin{equation*}
     \prob(\max_{r\in[p]}|b_r| > 2\sqrt{\log p}) \leq \sum_{r\in [p]}\prob(|b_r| > 2\sqrt{\log p}) \leq 2pe^{-2\log p} = \frac{2}{p} \leq \frac{\delta}{4}
 \end{equation*}
@@ -200,19 +191,18 @@ We start with analyzing the error $e(t)$
 \end{aligned}
 \end{equation*}
 where
-\begin{equation}
+\begin{equation*}
 \begin{aligned}
 G_{ij}(t) &= \frac{1}{p}\psi(W(t)x_j)\transpose\psi(W(t)x_i) \\
 H_{ij}(t) &= \frac{x_i\transpose x_j}{p}\beta(t+1)\transpose D_i(t)D_j(t)b
 \end{aligned}
-\end{equation}
+\end{equation*}
 and $v_i(t)$ is the residual term from the Taylor's expansion
-\begin{equation}
+\begin{equation*}
     v_i(t) = \frac{1}{2\sqrt p}\sum_{r=1}^p\beta_r(t+1)|(w_r(t+1)-w_r(t))\transpose x_i|^2\psi''(\xi_{ri}(t))
-\end{equation}
+\end{equation*}
 with $\xi_{ri}(t)$ between $w_r(t)\transpose x_i$ and $w_r(t+1)\transpose x_i$. We can also rewrite the above iteration in a vector form
-\begin{equation}
-\label{eq:et_iter}
+\begin{equation}\label{eq:et_iter}
      e(t+1) = e(t) - \eta(G(t)+H(t))e(t) + v(t)
 \end{equation} 
 Now we try to show that both $G(t)$ and $H(t)$ are close to their initialization. Notice that
@@ -227,8 +217,7 @@ Now we try to show that both $G(t)$ and $H(t)$ are close to their initialization
 \end{aligned}
 \end{equation*}
 where the second inequality is due to the boundedness of $\psi$ and $\psi'$, the last inequality is by \eqref{eq:weights}, then we have
-\begin{equation}
-\label{eq:bound_Gt}
+\begin{equation}\label{eq:bound_Gt}
     \|G(t)-G(0)\| \leq \max_{j \in [n]}\sum_{i=1}^n|G_{ij}(t) - G_{ij}(0)| \leq c_0 \frac{n^2\sqrt{\log p}}{\gamma\sqrt p}
 \end{equation}
 For matrix $H(t)$, similarly we have
@@ -246,8 +235,7 @@ For matrix $H(t)$, similarly we have
 \end{aligned}
 \end{equation*}
 It follows
-\begin{equation}
-\label{eq:bound_Ht}
+\begin{equation}\label{eq:bound_Ht}
     \|H(t)-H(0)\| \leq \max_{j \in [n]}\sum_{i=1}^n|H_{ij}(t) - H_{ij}(0)| \leq c_1 \frac{n^2}{\gamma\sqrt p} + c_2\frac{n^2\sqrt{\log p}}{\gamma\sqrt p}
 \end{equation}
 Next, we bound the residual term $v_i(t)$. Since $\psi''$ is bounded, we have
@@ -262,12 +250,11 @@ Next, we bound the residual term $v_i(t)$. Since $\psi''$ is bounded, we have
 \end{aligned}
 \end{equation*}
 It gives the bound
-\begin{equation}
-\label{eq:bound_vt}
+\begin{equation}\label{eq:bound_vt}
     \|v(t)\| =\Big(\sum_{i=1}^n|v_i(t)|^2\Big)^{1/2} \leq c_3\frac{\eta^2n^2}{\sqrt p}\|e(t)\|
 \end{equation}
-Combining \eqref{eq:et_iter}, \eqref{eq:bound_Gt}, \eqref{eq:bound_Ht} and \eqref{eq:bound_vt}, we have
-\begin{equation}
+Combining \cref{eq:et_iter,eq:bound_Gt,eq:bound_Ht,eq:bound_vt}, we have
+\begin{equation*}
 \begin{aligned}
 \|e(t+1)\| 
 &\leq \|I_n-\eta (G(t)+H(t))\|\|e(t)\|+\|v(t)\| \\
@@ -276,7 +263,7 @@ Combining \eqref{eq:et_iter}, \eqref{eq:bound_Gt}, \eqref{eq:bound_Ht} and \eqre
 &\leq \Big( 1-\frac{3\eta\gamma}{4}+c_0\frac{\eta n^2\sqrt{\log p}}{\gamma\sqrt p}+\frac{\eta\gamma}{4}+c_1\frac{\eta n^2}{\gamma\sqrt p} + c_2\frac{\eta n^2\sqrt{\log p}}{\gamma\sqrt p}+c_3\frac{\eta^2n\sqrt n}{\sqrt p}\Big)\|e(t)\|  \\
 &\leq(1-\frac{\eta\gamma}{4})\|e(t)\|
 \end{aligned}
-\end{equation}
+\end{equation*}
 where we use the lemma \ref{lma:GH} and $p=\Omega(\frac{n^4\log p}{\gamma^4})$.
 \end{proof}
 
