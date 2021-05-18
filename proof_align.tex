@@ -99,7 +99,7 @@ After opening the brackets and rearranging the items, we can obtain \eqref{eq:er
 
 \begin{lemma}
 \label{lma:ineqs_2}
-Given $\delta\in(0,1)$ and $\epsilon>0$ , if $p=\Omega(\log\frac{d}{\delta}+\frac{1}{\epsilon}d\log\frac{1}{\epsilon})$, the following inequalities hold with probability at least $1-\delta$
+Given $\delta\in(0,1)$ and $\epsilon>0$ , if $p=\Omega(\frac{1}{\epsilon}\log\frac{d}{\delta}+\frac{d}{\epsilon}\log\frac{1}{\epsilon})$, the following inequalities hold with probability at least $1-\delta$
 \begin{equation}
 \label{eq:bbeta_sqrtp}
 \frac{|b\transpose\beta(0)|}{\sqrt p}\leq c\sqrt{\log\frac{1}{\delta}}
@@ -119,10 +119,9 @@ Given $\delta\in(0,1)$ and $\epsilon>0$ , if $p=\Omega(\log\frac{d}{\delta}+\fra
 where $c$ is a constant.
 \end{lemma}
 
-\begin{proof}[Proof]
-[TODO]
+\begin{proof}
+\eqref{eq:bbeta_sqrtp} is derived from Lemma \ref{lem:inner-product-tail}. \eqref{eq:bW_sqrtp} is by \eqref{eq:bbeta_sqrtp} and a union bound argument. \eqref{eq:b_norm} is by Lemma \ref{lem:chi-squared-tail}. \eqref{eq:ww_p} is by Corollary \ref{cor:RIP}
 \end{proof}
-
 
 \begin{proof}[Proof of Theorem \ref{thm:lin_conv}]  
 We show \eqref{eq:reg_error_bd} by induction. Assume \eqref{eq:reg_error_bd} holds for all $t=0,1,...,t'$, then for any $t\leq t'$, we apply \eqref{eq:reg_error_bd} repeatedly on the right hand side of itself to get
@@ -189,8 +188,17 @@ $\lambda_{\min}(XX\transpose)\geq\gamma$ and $\lambda_{\max}(XX\transpose)\leq(1
 \end{definition}
 
 \begin{proposition}
-Assume $X\in\R^{n\times d}$ has independent entries drawn from $N(0,1/d)$, then if $p=\Omega(\log\frac{d}{\delta}+\frac{d}{\epsilon}\log \frac{1}{\epsilon})$, $X$ is $(1-\epsilon, \epsilon)$-isometric with probability $1-\delta$.
+\label{prop:isom}
+Assume $X\in\R^{n\times d}$ has independent entries drawn from $N(0,1/d)$. For any $\epsilon \in (0,1/2)$ and $\delta \in (0,1)$, if $d=\Omega(\frac{1}{\epsilon}\log\frac{n}{\delta}+\frac{n}{\epsilon}\log \frac{1}{\epsilon})$, $X$ is $(1-\epsilon, 4\epsilon)$-isometric with probability $1-\delta$.
 \end{proposition}
+\begin{proof}[Proof of Proposition \ref{prop:isom}]
+By Corollary \ref{cor:RIP}, if $d=\Omega(\frac{1}{\epsilon}\log\frac{n}{\delta}+\frac{n}{\epsilon}\log \frac{1}{\epsilon})$, we have 
+\begin{equation*}
+\|XX\transpose - I_n\|\leq \epsilon 
+\end{equation*}
+It follows that $\lambda_{\min}(XX\transpose)\geq 1-\epsilon$ and $\lambda_{\max}(XX\transpose)\leq 1+\epsilon \leq (1+4\epsilon)(1-\epsilon)$ for $\epsilon <1/2$.
+\end{proof}
+
 
 \begin{theorem}
 \label{thm:lin_align}

@@ -17,7 +17,7 @@ The feedback alignment algorithm gives
     \beta(t+1) &= \beta(t)- \eta \frac{1}{\sqrt p}\sum_{i=1}^n \psi(W(t)x_i)e_i(t)
 \end{aligned}
 \end{equation}
-where $D_i(t) = \text{diag}(\psi'(W(t)x_i))$ and $e_i(t) = \frac{1}{\sqrt p}\beta(t)\transpose \psi(W(t)x_i)-y_i$. We also denote $u(t)\in\R^n$ with $u_i(t) = \frac{1}{\sqrt p}\beta(t)\transpose \psi(W(t)x_i)$, the network prediction on $x_i$ at time $t$. To make the proof clear, we use $c$, $c'$ as the global constants whose values may vary from line to line.
+where $D_i(t) = \text{diag}(\psi'(W(t)x_i))$ and $e_i(t) = \frac{1}{\sqrt p}\beta(t)\transpose \psi(W(t)x_i)-y_i$. We also denote $u(t)\in\R^n$ with $u_i(t) = \frac{1}{\sqrt p}\beta(t)\transpose \psi(W(t)x_i)$, the network prediction on $x_i$ at time $t$. To make the proof clear, we use $c$, $C$ as the global constants whose values may vary from line to line.
 
 % $f_t(\cdot)$ as the network with parameter $\beta_t$ and $W_t$, and
 % \begin{equation}
@@ -53,13 +53,13 @@ In fact, if $\psi$ is sigmoid or tanh, for a standard Gaussian random variable $
 \begin{equation*}
     \gamma\defeq \frac{1}{2}(\E|\psi(Z)|^2-|\E\psi'(Z)|^2) >0.
 \end{equation*}
-From lemma \ref{lma:G}, we know that with high probability $\lambda_{\min}(\bar{G}) \geq \lambda_{\min}(\widetilde{G})-\|\bar{G}-\widetilde{G}\|\geq 2\gamma - C(\sqrt{\frac{\log n}{d}} + \frac{n}{d}) \geq \gamma$.
+From Lemma \ref{lma:G}, we know that with high probability $\lambda_{\min}(\bar{G}) \geq \lambda_{\min}(\widetilde{G})-\|\bar{G}-\widetilde{G}\|\geq 2\gamma - C(\sqrt{\frac{\log n}{d}} + \frac{n}{d}) \geq \gamma$.
 \end{proof}
 
 \begin{theorem}\label{thm:nonliner_conv}
 Let $W(0)$, $\beta(0)$ and $b$ have \iid standard Gaussian entries. Assume
 \begin{enumerate}
-    \item assumption \ref{assump:G} holds,
+    \item Assumption \ref{assump:G} holds,
     \item $\psi$ is smooth, $\psi$, $\psi'$ and $\psi''$ are bounded,
     \item $|y_i|$ and $\|x_i\|$ are bounded for all $i\in[n]$.
 \end{enumerate}
@@ -110,7 +110,7 @@ where we require $p=\Omega(n/\delta)$. With a union bound argument, we could sho
 
 \begin{lemma}
 \label{lma:GH}
-Under the assumption of theorem \ref{thm:nonliner_conv}, we define matrix $G(0),H(0)\in\R^{n\times n}$ with entries
+Under the assumption of Theorem \ref{thm:nonliner_conv}, we define matrix $G(0),H(0)\in\R^{n\times n}$ with entries
 \begin{equation}
 \label{eq:def_G0}
 G_{ij}(0) = \frac{1}{p}\psi(W(0)x_i)\transpose \psi(W(0)x_j) = \frac{1}{p}\sum_{r=1}^p\psi(w_r(0)\transpose x_i)\psi(w_r(0)\transpose x_j) 
@@ -264,9 +264,9 @@ Combining \cref{eq:et_iter,eq:bound_Gt,eq:bound_Ht,eq:bound_vt}, we have
 &\leq(1-\frac{\eta\gamma}{4})\|e(t)\|
 \end{aligned}
 \end{equation*}
-where we use the lemma \ref{lma:GH} and $p=\Omega(\frac{n^4\log p}{\gamma^4})$.
+where we use the Lemma \ref{lma:GH} and $p=\Omega(\frac{n^4\log p}{\gamma^4})$.
 \end{proof}
 
-\begin{proof}[Proof of theorem \ref{thm:nonliner_conv}]
-We prove the inequality \eqref{eq:conv} by induction. Suppose \eqref{eq:conv} holds for all $t=1,2,...,T-1$, by lemma \ref{lma:weights} and lemma \ref{lma:induction} we know \eqref{eq:conv} holds for $t=T$, which completes the proof.
+\begin{proof}[Proof of Theorem \ref{thm:nonliner_conv}]
+We prove the inequality \eqref{eq:conv} by induction. Suppose \eqref{eq:conv} holds for all $t=1,2,...,T-1$, by Lemma \ref{lma:weights} and Lemma \ref{lma:induction} we know \eqref{eq:conv} holds for $t=T$, which completes the proof.
 \end{proof}
