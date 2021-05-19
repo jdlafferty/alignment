@@ -44,8 +44,8 @@ where
 \begin{equation*}
 \begin{aligned}
 &J_1(t) = \frac{1}{p}b\transpose\beta(0)\prod_{i=0}^{t}(1-\eta\lambda(i))XX\transpose \\
-&J_2(t) = -\frac{\eta}{p}\Big(\bar{v}\transpose X\transpose \tilde{s}(t) XX\transpose+ XX\transpose s(t-1)\bar{v}\transpose X\transpose + X \bar{v}s(t-1)\transpose XX\transpose\Big) \\
-&J_3(t) = \frac{\eta^2}{p^2}\|b\|^2\Big(\tilde{S}(t)XX\transpose + XX\transpose s(t-1)s(t-1)\transpose XX\transpose)
+&J_2(t) = -\frac{\eta}{p}\Big(\bar{v}\transpose X\transpose \hat{s}(t) XX\transpose+ XX\transpose s(t-1)\bar{v}\transpose X\transpose + X \bar{v}s(t-1)\transpose XX\transpose\Big) \\
+&J_3(t) = \frac{\eta^2}{p^2}\|b\|^2\Big(\hat{S}(t)XX\transpose + XX\transpose s(t-1)s(t-1)\transpose XX\transpose)
 \end{aligned} 
 \end{equation*}
 and
@@ -53,8 +53,8 @@ and
 \begin{aligned}
 &\bar{v} = \frac{1}{\sqrt p}W(0)\transpose b \\
 &s(t) = \sum_{i=0}^{t}e(i) \\
-&\tilde{s}(t) = \sum_{i=0}^{t}\prod_{i<k\leq t}(1-\eta\lambda(k)) e(i) \\
-&\tilde{S}(t) = \sum_{i=0}^{t}\prod_{i<k\leq t}(1-\eta\lambda(k))e(i)\transpose XX\transpose \sum_{j=0}^{i-1}e(j).
+&\hat{s}(t) = \sum_{i=0}^{t}\prod_{i<k\leq t}(1-\eta\lambda(k)) e(i) \\
+&\hat{S}(t) = \sum_{i=0}^{t}\prod_{i<k\leq t}(1-\eta\lambda(k))e(i)\transpose XX\transpose \sum_{j=0}^{i-1}e(j).
 \end{aligned}
 \end{equation*}
 \end{lemma}
@@ -73,7 +73,7 @@ Similarly, for $\beta(t)$ we have
     &=\prod_{i=0}^{t-1}(1-\eta\lambda(i))\beta(0)-\frac{\eta}{\sqrt p}\sum_{i=0}^{t-1}\prod_{i<k<t}(1-\eta\lambda(k))\Big(W(0) -\frac{\eta}{\sqrt p} b\sum_{j=0}^{i-1}e(j)\transpose X\Big)X\transpose e(i) \\
     &=\prod_{i=0}^{t-1}(1-\eta\lambda(i))\beta(0)-\frac{\eta}{\sqrt p}\sum_{i=0}^{t-1}\prod_{i<k<t}(1-\eta\lambda(k))W(0)X\transpose e(i)\\
     &\quad + \frac{\eta^2}{p}b\sum_{i=0}^{t-1}\prod_{i<k<t}(1-\eta\lambda(k))e(i)\transpose XX\transpose \sum_{j=0}^{i-1}e(j) \\
-    &=\prod_{i=0}^{t-1}(1-\eta\lambda(i))\beta(0) -\frac{\eta}{\sqrt p}W(0)X\transpose \tilde{s}(t-1) +\frac{\eta^2}{p}b \tilde{S}(t-1).
+    &=\prod_{i=0}^{t-1}(1-\eta\lambda(i))\beta(0) -\frac{\eta}{\sqrt p}W(0)X\transpose \hat{s}(t-1) +\frac{\eta^2}{p}b \hat{S}(t-1).
 \end{aligned}
 \end{equation}
 We now study how error $e(t)$ changes after one step of update
@@ -89,7 +89,7 @@ By plugging \eqref{eq:Wt} and \eqref{eq:betat} into above equation, we have
 \begin{equation*}   
 \begin{aligned}
     e(t+1) &= (1-\eta\lambda(t))e(t) \\
-    &\quad-\frac{\eta}{p}b\transpose\bigg[ \prod_{i=0}^{t}(1-\eta\lambda(i))\beta(0) -\frac{\eta}{\sqrt p}W(0)X\transpose \tilde{s}(t) +\frac{\eta^2}{p}b \tilde{S}(t)\bigg]XX\transpose e(t) \\
+    &\quad-\frac{\eta}{p}b\transpose\bigg[ \prod_{i=0}^{t}(1-\eta\lambda(i))\beta(0) -\frac{\eta}{\sqrt p}W(0)X\transpose \hat{s}(t) +\frac{\eta^2}{p}b \hat{S}(t)\bigg]XX\transpose e(t) \\
     &\quad - \frac{\eta}{p}X\bigg[W(0) -\frac{\eta}{\sqrt p}bs(t-1)\transpose X\bigg]\transpose \bigg[W(0) -\frac{\eta}{\sqrt p}bs(t-1)\transpose X\bigg]X\transpose e(t)\\
     &\quad - \eta\lambda(t)y
 \end{aligned}
@@ -146,12 +146,12 @@ where we use $\|e(0)\|=O(\sqrt n)$ and $\|y\|=O(\sqrt n)$. With this bound and t
 \end{equation}
 \begin{equation}
 \label{eq:J2_bd}
-\|J_2(t)\| \leq \frac{\eta}{p}\|X\| \|XX\transpose\|\|\bar{v}\|(2\|s(t-1)\|+\|\tilde{s}(t)\|)\leq c\frac{\eta}{p}M^{3/2}\sqrt{d\log\frac{d}{\delta}}\frac{\sqrt n}{\gamma}(\frac{1}{\eta}+S_\lambda)\leq \frac{\gamma}{16}
+\|J_2(t)\| \leq \frac{\eta}{p}\|X\| \|XX\transpose\|\|\bar{v}\|(2\|s(t-1)\|+\|\hat{s}(t)\|)\leq c\frac{\eta}{p}M^{3/2}\sqrt{d\log\frac{d}{\delta}}\frac{\sqrt n}{\gamma}(\frac{1}{\eta}+S_\lambda)\leq \frac{\gamma}{16}
 \end{equation}
 and
 \begin{equation}
 \label{eq:J3_bd}
-\|J_3(t)\| \leq \frac{\eta^2}{p^2}\|b\|^2(\|XX\transpose\| |\tilde{S}(t)|+\|XX\transpose\|^2 \|s(t-1)\|^2) \leq c\frac{\eta^2}{p}M^2 \frac{n}{\gamma^2}(\frac{1}{\eta}+S_\lambda)^2\leq \frac{\gamma}{16}
+\|J_3(t)\| \leq \frac{\eta^2}{p^2}\|b\|^2(\|XX\transpose\| |\hat{S}(t)|+\|XX\transpose\|^2 \|s(t-1)\|^2) \leq c\frac{\eta^2}{p}M^2 \frac{n}{\gamma^2}(\frac{1}{\eta}+S_\lambda)^2\leq \frac{\gamma}{16}
 \end{equation}
 hold if $p = \Omega(\frac{Md\log(d/\delta)}{\gamma})$ and $S_\lambda = O(\frac{\gamma\sqrt{\gamma p}}{\eta\sqrt{n}M})$. Furthermore, since $\|\frac{1}{p}W(0)W(0)\transpose-I_d\|\leq \epsilon_0$ with high probability when $p=\Omega(d)$, we have
 \begin{equation}
@@ -217,9 +217,9 @@ with $\lambda=\Omega(\gamma)$ and $T = \lfloor S_\lambda/\lambda\rfloor$. Then, 
 \label{lma:suf_cond}
 Recall from Lemma \ref{lma:one_step_update} that
 \begin{equation*}
-\beta(t)=\prod_{i=0}^{t-1}(1-\eta\lambda(i))\beta(0) -\frac{\eta}{\sqrt p}W(0)X\transpose \tilde{s}(t-1) +\frac{\eta^2}{p}b \tilde{S}(t-1)
+\beta(t)=\prod_{i=0}^{t-1}(1-\eta\lambda(i))\beta(0) -\frac{\eta}{\sqrt p}W(0)X\transpose \hat{s}(t-1) +\frac{\eta^2}{p}b \hat{S}(t-1)
 \end{equation*}
-with $\tilde{s}(t) = \sum_{i=0}^{t}\prod_{i<k\leq t}(1-\eta\lambda(k)) e(i)$ and $\tilde{S}(t) = \sum_{i=0}^{t}\prod_{i<k\leq t}(1-\eta\lambda(k))e(i)\transpose XX\transpose \sum_{j=0}^{i-1}e(j)$. Under the conditions of Theorem \ref{thm:lin_align}, if $t>C_1\frac{\log (p/\eta)}{\eta\lambda}$ and $\tilde{S}(t)\geq \max(C_2\frac{\sqrt{p\gamma}}{\eta}\|\tilde{s}(t)\|,1)$ for some positive constants $C_1$ and $C_2$, then $\cos\angle(b, \beta(t)) \geq c$ for some constant $c=c_\delta$.
+with $\hat{s}(t) = \sum_{i=0}^{t}\prod_{i<k\leq t}(1-\eta\lambda(k)) e(i)$ and $\hat{S}(t) = \sum_{i=0}^{t}\prod_{i<k\leq t}(1-\eta\lambda(k))e(i)\transpose XX\transpose \sum_{j=0}^{i-1}e(j)$. Under the conditions of Theorem \ref{thm:lin_align}, if $t>C_1\frac{\log (p/\eta)}{\eta\lambda}$ and $\hat{S}(t)\geq \max(C_2\frac{\sqrt{p\gamma}}{\eta}\|\hat{s}(t)\|,1)$ for some positive constants $C_1$ and $C_2$, then $\cos\angle(b, \beta(t)) \geq c$ for some constant $c=c_\delta$.
 \end{lemma}
 \begin{proof}
 We compute the cosine of the angle between $\beta(t)$ and $b$. With probability $1-\delta$,
@@ -227,11 +227,11 @@ We compute the cosine of the angle between $\beta(t)$ and $b$. With probability 
 \begin{aligned}
     \cos\angle(b, \beta(t)) 
     &= \frac{b\transpose \beta(t)}{\|b\|\|\beta(t)\|}= \frac{\frac{b}{\|b\|}\transpose \beta(t)}{\|\beta(t)\|}\\
-    &\geq \frac{\frac{\eta^2}{p}\|b\|\tilde{S}(t-1) - (1-\eta\lambda)^t\|\beta(0)\| - \frac{\eta}{\sqrt p}\|\frac{b}{\|b\|}\transpose W(0)\|\|X\|\|\tilde{s}(t-1)\|}{\frac{\eta^2}{p}\|b\|\tilde{S}(t-1)+(1-\eta\lambda)^t\|\beta(0)\| + \frac{\eta}{\sqrt p}\|W(0)\|\|X\|\|\tilde{s}(t-1)\|} \\
-    &\geq \frac{c'_1\frac{\eta^2}{\sqrt p}\tilde{S}(t-1) - c'_2\sqrt p(1-\eta\lambda)^t- c'_3\eta\sqrt{\frac{d\gamma}{p}}\|\tilde{s}(t-1)\|}{c'_1\frac{\eta^2}{\sqrt p}\tilde{S}(t-1) + c'_2\sqrt p(1-\eta\lambda)^t+ c'_4\eta\sqrt{\gamma}\|\tilde{s}(t-1)\|}
+    &\geq \frac{\frac{\eta^2}{p}\|b\|\hat{S}(t-1) - (1-\eta\lambda)^t\|\beta(0)\| - \frac{\eta}{\sqrt p}\|\frac{b}{\|b\|}\transpose W(0)\|\|X\|\|\hat{s}(t-1)\|}{\frac{\eta^2}{p}\|b\|\hat{S}(t-1)+(1-\eta\lambda)^t\|\beta(0)\| + \frac{\eta}{\sqrt p}\|W(0)\|\|X\|\|\hat{s}(t-1)\|} \\
+    &\geq \frac{c'_1\frac{\eta^2}{\sqrt p}\hat{S}(t-1) - c'_2\sqrt p(1-\eta\lambda)^t- c'_3\eta\sqrt{\frac{d\gamma}{p}}\|\hat{s}(t-1)\|}{c'_1\frac{\eta^2}{\sqrt p}\hat{S}(t-1) + c'_2\sqrt p(1-\eta\lambda)^t+ c'_4\eta\sqrt{\gamma}\|\hat{s}(t-1)\|}
 \end{aligned}
 \end{equation*}
-where we use \eqref{eq:b_norm}, \eqref{eq:ww_p} and the tail bound for standard Gaussian vectors, and $c'_i$, $i\in[4]$ are constant that only depends on $\delta$. Notice that if $t=\Omega(\frac{\log (p/\eta)}{\eta\lambda})$, we have $c'_2\sqrt p(1-\eta\lambda)^t = O(\frac{\eta^2}{\sqrt p})$. It follows that $\cos\angle(b, \beta(t)) \geq c$ if $\tilde{S}(t-1)=\Omega(\frac{\sqrt{p\gamma}}{\eta}\|\tilde{s}(t-1)\|+1)$.
+where we use \eqref{eq:b_norm}, \eqref{eq:ww_p} and the tail bound for standard Gaussian vectors, and $c'_i$, $i\in[4]$ are constant that only depends on $\delta$. Notice that if $t=\Omega(\frac{\log (p/\eta)}{\eta\lambda})$, we have $c'_2\sqrt p(1-\eta\lambda)^t = O(\frac{\eta^2}{\sqrt p})$. It follows that $\cos\angle(b, \beta(t)) \geq c$ if $\hat{S}(t-1)=\Omega(\frac{\sqrt{p\gamma}}{\eta}\|\hat{s}(t-1)\|+1)$.
 \end{proof}
 
 \begin{lemma}
@@ -296,7 +296,7 @@ The bound \eqref{eq:xit_ubd} holds when $t\in [\tau_1+\tau_3,T]$ with $\tau_3 = 
 
 \begin{lemma}
 \label{lma:ST_sT}
-Under the conditions of Theorem \ref{thm:lin_align}. Given $T = \lfloor \frac{S_\lambda}{\lambda} \rfloor = C_T\frac{\sqrt{p}}{\eta\sqrt{n\gamma}}$. We have $\tilde{S}(T) \geq \tilde{c}\frac{\sqrt {p\gamma}}{\eta}\|\tilde{s}(T)\|$, where $C_T$ and $\tilde{c}$ are positive constants.
+Under the conditions of Theorem \ref{thm:lin_align}. Given $T = \lfloor \frac{S_\lambda}{\lambda} \rfloor = C_T\frac{\sqrt{p}}{\eta\sqrt{n\gamma}}$. We have $\hat{S}(T) \geq \tilde{c}\frac{\sqrt {p\gamma}}{\eta}\|\hat{s}(T)\|$, where $C_T$ and $\tilde{c}$ are positive constants.
 \end{lemma}
 \begin{proof}
 Notice that
@@ -319,7 +319,7 @@ For $i\in[T/2,T]$ and $\tau$ defined in Lemma \ref{lma:decomp_1}, we have
 The second inequality is by orthogonal decomposition of $e(i)$ and $\|e(i)\|\leq c\|y\|$ given by \eqref{eq:reg_error_bd}. The third inequality is by \eqref{eq:at_lbd}, \eqref{eq:xit_ubd} and \eqref{eq:et_y_bd} from Lemma \ref{lma:decomp_1}. The forth inequality is by $\lambda=\Omega(\gamma)$, $i-\tau \geq T/4$ and $\tau/(i-\tau)$ is small ($p=\Omega(n)$). The last inequality is by $\|y\|=\Theta(\sqrt n)$. Therefore,
 \begin{equation*}
 \begin{aligned}
-    \tilde{S}(T) &= \sum_{i=0}^T(1-\eta\lambda)^{T-i}e(i)\transpose XX\transpose \sum_{j<i}e(j) \\
+    \hat{S}(T) &= \sum_{i=0}^T(1-\eta\lambda)^{T-i}e(i)\transpose XX\transpose \sum_{j<i}e(j) \\
     &= \sum_{i=T/2}^T(1-\eta\lambda)^{T-i}e(i)\transpose XX\transpose \sum_{j<i}e(j) + (1-\eta\lambda)^{T/2}\sum_{i=0}^{T/2}(1-\eta\lambda)^{T/2-i}e(i)\transpose XX\transpose \sum_{j<i}e(j) \\
     &\geq \sum_{i=T/2}^T(1-\eta\lambda)^{T-i}c\frac{\sqrt{p\gamma}}{\eta}\|y\| + (1-\eta\lambda)^{T/2}\sum_{i=0}^{T/2}(1-\eta\lambda)^{T/2-i}c'T\gamma\|y\|^2 \\
     &\geq \frac{c}{2}\frac{\sqrt{p\gamma}}{\eta}\frac{\|y\|}{\eta\lambda} -(1-\eta\lambda)^{T/2}\frac{c'T\gamma\|y\|^2}{\eta\lambda} \\
@@ -329,7 +329,7 @@ The second inequality is by orthogonal decomposition of $e(i)$ and $\|e(i)\|\leq
 where the last inequality is by $(1-\eta\lambda)^{T/2}\ll 1$ when $p=\Omega(n)$. On the other hand,
 \begin{equation*}
 \begin{aligned}
-\|\tilde{s}(T)\|  
+\|\hat{s}(T)\|  
 &\leq \sum_{i=0}^T(1-\eta\lambda)^{T-i}\|e(i)\|\leq \frac{c}{\eta\lambda}\|y\|
 \end{aligned}
 \end{equation*}
@@ -337,13 +337,13 @@ Combining the above inequalities gives the proof.
 \end{proof}
 
 \begin{proof}[Proof of Theorem \ref{thm:lin_align}]
-First, notice that $\lambda(t)=0$ when $t>T$. By Theorem \ref{thm:lin_conv} we have the prediction error converges to 0 exponentially fast, or $\|e(t+1)\|\leq (1-\eta\gamma/2)\|e(t)\|$. It follows $\tilde{S}(t)\to \tilde{S}(\infty)$ and $\tilde{s}(t)\to \tilde{s}(\infty)$ as $t\to\infty$. By Lemma \ref{lma:suf_cond}, we know it suffices to show $\tilde{S}(\infty)\geq C\frac{\sqrt{p\gamma}}{\eta}\|\tilde{s}(\infty)\|$ with some constant $C$. Since 
+First, notice that $\lambda(t)=0$ when $t>T$. By Theorem \ref{thm:lin_conv} we have the prediction error converges to 0 exponentially fast, or $\|e(t+1)\|\leq (1-\eta\gamma/2)\|e(t)\|$. It follows $\hat{S}(t)\to \hat{S}(\infty)$ and $\hat{s}(t)\to \hat{s}(\infty)$ as $t\to\infty$. By Lemma \ref{lma:suf_cond}, we know it suffices to show $\hat{S}(\infty)\geq C\frac{\sqrt{p\gamma}}{\eta}\|\hat{s}(\infty)\|$ with some constant $C$. Since 
 \begin{equation*}
-\tilde{S}(\infty) = \sum_{i=0}^\infty(1-\eta\lambda)^{(T-i)_+}e(i)\transpose XX\transpose \sum_{j<i} e(j) = \tilde{S}(T)+ \sum_{i>T}e(i)\transpose XX\transpose \sum_{j<i}e(j)
+\hat{S}(\infty) = \sum_{i=0}^\infty(1-\eta\lambda)^{(T-i)_+}e(i)\transpose XX\transpose \sum_{j<i} e(j) = \hat{S}(T)+ \sum_{i>T}e(i)\transpose XX\transpose \sum_{j<i}e(j)
 \end{equation*}
 and 
 \begin{equation*}
-\tilde{s}(\infty) = \sum_{i=0}^\infty(1-\eta\lambda)^{(T-i)_+}e(i)= \tilde{s}(T)+ \sum_{i>T}e(i)
+\hat{s}(\infty) = \sum_{i=0}^\infty(1-\eta\lambda)^{(T-i)_+}e(i)= \hat{s}(T)+ \sum_{i>T}e(i)
 \end{equation*}
 By Lemma \ref{lma:ST_sT}, it suffices to show 
 \begin{equation}
