@@ -1,6 +1,20 @@
 \section{Convergence of Gradient Descent With Random Backpropagation Weights}
 
-Previous studies on over-parametrized two-layer networks \citep{du2018gradient,gao2020model} focus on the Neural Tangent Kernels (NTKs) induced by the backpropagation of gradient descent that control the process of convergence. More specifically, as long as the sum of two Gram matrices $G(t)$ and $H(t)$ corresponding to the NTK of first- and second-layer weights are positive definite, the loss $L(t)$ converges at a linear rate due to the fact that $\frac{\diff L(t)}{\diff t} = -2 (y - f(t))\transpose(G(t) + K(t))(y - f(t))$. However, due to the replacement of feed-forward weights $\beta(t)$ with a random backpropagation weights $b$, feedback alignment no longer follows a strict gradient descent on the squared error loss and the previous argument cannot be applied directly to our case. Despite of this difference, we will show in this section that the linear convergence of $L(t)$ is still achievable under feedback alignment for over-parametrized two-layer networks. In particular, we have the following theorem.
+Due to the replacement of backward weights with the random backpropagation weights in feedback alignment algorithm, there is \emph{a priori} no guarantee that the algorithm will go downhill on the squared error loss $L$, not to mention the linear convergence.
+Previous studies on over-parametrized networks focus on the analysis of Neural Tangent Kernels (NTKs) induced by the gradient descent that control the process of convergence \citep{du2018gradient,gao2020model}. Specific to the two-layer case, the loss $L(t)$ converges at a linear rate as long as the sum of two Gram matrices $G(t)$ and $H(t)$ corresponding to the NTKs of first- and second-layer weights are positive definite. This is due to the fact that $L$ is locally convex and $\frac{\diff L(t)}{\diff t} = -2 (y - f(t))\transpose(G(t) + K(t))(y - f(t))$. However, after replacing the feed-forward weights $\beta(t)$ with a random backpropagation weights $b$, feedback alignment algorithm no longer follows a strict gradient descent on the squared error loss and the previous argument cannot be applied directly to our case. Despite of this difference, we will show in this section that the linear convergence of $L(t)$ is still achievable by the feedback alignment algorithm for over-parametrized two-layer networks. In particular, the following theorem gives a quantitative guarantee on the rate of convergence.
+
+\begin{assumption}\label{assump:G}
+Define matrix $\bar{G} \in \R^{n\times n}$ with entries
+\begin{equation*}
+    \bar{G}_{i,j} = \E_{w\sim \calN(0,I_p)}\psi(w\transpose x_i) \psi(w\transpose  x_j),
+\end{equation*}
+we assume $\lambda_{\min}(\bar{G}) \geq \gamma$, where $\gamma$ is a positive constant.
+\end{assumption}
+
+\begin{proposition}\label{prop:positive-definiteness}
+Suppose $x_1,...,x_n \overset{\iid}{\sim} \calN(0,I_d/d)$ and the activation function $\psi$ is sigmoid or tanh. If $d=\Omega(n)$, then assumption \ref{assump:G} holds with high probability.
+\end{proposition}
+
 \begin{theorem}[informal]
 Let $W(0)$, $\beta(0)$ and $b$ have \iid standard Gaussian entries. If $\psi$ is smooth, $\psi$, $\psi'$ and $\psi''$ are bounded, $|y_i|$ and $\|x_i\|$ are bounded for all $i\in[n]$, and $\frac{d}{n}$ is large enough, then there exists universal constant $C_1$ and $C_2$, such that for any $\delta\in(0,1)$, if $p$ is large, then with probability at least $1-\delta$
 \begin{equation*}

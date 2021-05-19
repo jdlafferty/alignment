@@ -16,21 +16,6 @@ The regularized feedback alignment algorithm gives
 where $e(t)=u(t)-y$ is the error vector and $u(t) = \frac{1}{\sqrt p}XW(t)\transpose \beta$ is the network prediction at time t.
 
 
-\begin{theorem}
-\label{thm:lin_conv}
-Assume
-\begin{enumerate}
-\item $\|y\| = \Theta(\sqrt n)$. $\lambda_{\min}(XX\transpose)>\gamma$ and $\lambda_{\max}(XX\transpose)<M$ for some constants $M>\gamma>0$,
-\item $\sum_{t=0}^\infty \lambda(t) \leq  S_\lambda = c_{S}\frac{\gamma\sqrt{\gamma p}}{\eta\sqrt{n}M}$ for some constant $c_{S}$,
-\item $\eta \leq 1/(\max \lambda(t)+M)$.
-\end{enumerate}
-For any $\delta\in(0,1)$, if $p = \Omega(\frac{Md\log(d/\delta)}{\gamma})$, the following inequality holds for all $t\geq 0$ with probability at least $1-\delta$
-\begin{equation}
-\label{eq:reg_error_bd}
-\|e(t+1)\|\leq \big(1-\frac{\eta\gamma}{2}-\eta\lambda(t)\big)\|e(t)\| + \lambda(t)\|y\|
-\end{equation} 
-\end{theorem}
-
 \begin{lemma}
 \label{lma:one_step_update}
 Suppose the network is trained with regularized feedback alignment algorithm \eqref{eq:reg_alg}, then the prediction error $e(t)$ follows the iteration update
@@ -175,17 +160,8 @@ Therefore, combining \eqref{eq:J1_bd}, \eqref{eq:J2_bd}, \eqref{eq:J3_bd} and \e
 which completes the proof. 
 \end{proof} 
 
-\begin{definition}
-    A series of vectors $\{\beta(t)\}_{t=0}^\infty$ align with a fixed vector $b$ if there exists a constant $c>0$ and time $T_c$ such that for all $t > T_c$ it holds
-    \begin{align*}
-        \cos\angle(b, \beta(t)) = \frac{b\transpose \beta(t)}{\|b\|\|\beta(t)\|} \geq c.
-    \end{align*}
-\end{definition}
 
-\begin{definition}[$(\gamma, \epsilon)$-Isometric]
-Given positive constant $\gamma$ and $\epsilon$, we say $X$ is $(\gamma, \epsilon)$-isometric if 
-$\lambda_{\min}(XX\transpose)\geq\gamma$ and $\lambda_{\max}(XX\transpose)\leq(1+\epsilon)\gamma$.
-\end{definition}
+
 
 \begin{proposition}
 \label{prop:isom}
@@ -199,19 +175,6 @@ By Corollary \ref{cor:RIP}, if $d=\Omega(\frac{1}{\epsilon}\log\frac{n}{\delta}+
 It follows that $\lambda_{\min}(XX\transpose)\geq 1-\epsilon$ and $\lambda_{\max}(XX\transpose)\leq 1+\epsilon \leq (1+4\epsilon)(1-\epsilon)$ for $\epsilon <1/2$.
 \end{proof}
 
-
-\begin{theorem}
-\label{thm:lin_align}
-Assume all conditions from Theorem \ref{thm:lin_conv} hold and $X$ is $(\gamma, \epsilon)$-isometric with a small constant $\epsilon$. Let the regularization weights
-\begin{align*}
-\lambda(t) = 
-\begin{cases}
-    \lambda, \quad t\leq T,\\
-    0, \quad t > T,
-\end{cases}
-\end{align*}
-with $\lambda=\Omega(\gamma)$ and $T = \lfloor S_\lambda/\lambda\rfloor$. Then, for any $\delta\in(0,1)$, if $p = \Omega(d\log(d/\delta))$, with probability at least $1-\delta$, feedback alignment on linear network achieves alignment. Specifically, there exist a constant $c=c_\delta$ and time $T_c$, such that $\cos\angle(b, \beta(t))\geq c$ for all $t>T_c$.
-\end{theorem}
 
 \begin{lemma}
 \label{lma:suf_cond}

@@ -26,13 +26,6 @@ where $D_i(t) = \text{diag}(\psi'(W(t)x_i))$ and $e_i(t) = \frac{1}{\sqrt p}\bet
 % as the network prediction on data $X = (x_1\transpose,...,x_n\transpose)\transpose$ at step $t$.
 
 
-\begin{assumption}\label{assump:G}
-Define matrix $\bar{G} \in \R^{n\times n}$ with entries
-\begin{equation*}
-    \bar{G}_{i,j} = \E_{w\sim \calN(0,I_p)}\psi(w\transpose x_i) \psi(w\transpose  x_j),
-\end{equation*}
-we assume $\lambda_{\min}(\bar{G}) \geq \gamma$, where $\gamma$ is a positive constant.
-\end{assumption}
 We justify this assumption by the following lemma (Lemma A.7 in \citep{gao2020model}) and proposition.
 \begin{lemma}[\citealp{gao2020model}]\label{lma:G}
 Assume $x_1,...,x_n \overset{\iid}{\sim} \calN(0,I_d/d)$. We define  matrix $\widetilde{G}\in \R^{n\times n}$ with entries
@@ -45,10 +38,8 @@ where $Z\sim \calN(0,1)$. If $d = \Omega(\log n)$, then with high probability, w
 \end{equation*}
 \end{lemma}
 
-\begin{proposition}
-Suppose $x_1,...,x_n \overset{\iid}{\sim} \calN(0,I_d/d)$ and the activation function $\psi$ is sigmoid or tanh. If $d=\Omega(n)$, then assumption \ref{assump:G} holds with high probability.
-\end{proposition}
-\begin{proof}
+
+\begin{proof}[Proof of \cref{prop:positive-definiteness}]
 In fact, if $\psi$ is sigmoid or tanh, for a standard Gaussian random variable $Z$, we have
 \begin{equation*}
     \gamma\defeq \frac{1}{2}(\E|\psi(Z)|^2-|\E\psi'(Z)|^2) >0.

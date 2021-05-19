@@ -10,57 +10,49 @@ Given data $(X,y)$, we denote $f(t) = \frac{1}{\sqrt p}\beta(t)\transpose\psi(W(
 
 \paragraph{Backpropagation on two-layer network.}
 
-Backpropagation has been the most commonly used scheme for training, which updates the weight parameters following gradient direction. In particular, for two-layer network \eqref{eqn:nonlinear-network} the backpropagation updates write $W(t+1) = W(t) - \eta \frac{\partial L(t)}{\partial W(t)}$ and $\beta(t+1) = \beta(t) - \eta \frac{\partial L(t)}{\partial \beta(t)}$, where $\eta$ represents learning rate. However, such learning algorithm requires the gradient information for weight parameters that not only includes the backpropagated error signals but also consists of non-local information of weight parameters from top layers. More specifically, the gradient on second-layer weights $\frac{\partial L(t)}{\partial \beta(t)} = \frac{1}{\sqrt{p}} \psi(W(t) X\transpose) (f(t) - y)$ contains only the second-layer inputs $\psi(W(t) X\transpose)$ and error signal $f(t) - y$, while the gradient on first-layer weights 
+Backpropagation has been the most commonly used scheme for training, which updates the weight parameters following gradient direction. In particular, for two-layer network \eqref{eqn:nonlinear-network} the backpropagation updates write $W(t+1) = W(t) - \eta \frac{\partial L(t)}{\partial W(t)}$ and $\beta(t+1) = \beta(t) - \eta \frac{\partial L(t)}{\partial \beta(t)}$, where $\eta$ represents learning rate. However, such learning algorithm requires updating its weights with backpropagated error signals that consist of non-local information of weight parameters from top layers. More specifically, the gradient on second-layer weights $\frac{\partial L(t)}{\partial \beta(t)} = \frac{1}{\sqrt{p}} \psi(W(t) X\transpose) (f(t) - y)$ contains only the local inputs $\psi(W(t) X\transpose)$ and error signal $f(t) - y$, while the gradient on first-layer weights 
 \begin{align}\label{eqn:backprop-gradient}
     \frac{\partial L(t)}{\partial W(t)} = \frac{1}{\sqrt{p}} [(\beta (f(t) - y)\transpose)\circ \psi'(W(t)X\transpose)] X,
 \end{align}
-requires not only the local input $X$, local output $W(t)X\transpose$, and error signal $f(t) - y$, but also the information on the second-layer weights $\beta$. This appearance of $\beta$ is due to 
-This requires the feed-forward connections between layers to be identical with the corresponding backward connections, and this requirement on synaptic symmetry is regarded as not biological plausible \citep{lillicrap2016random}. 
+requires not only the local input $X$, local output $W(t)X\transpose$ but also the backpropagated error signal $\beta (f(t) - y)\transpose$ that also contains the information on the second-layer feed-forward weights $\beta$. This appearance of $\beta$ is due to the chain rule between two adjacent layers and can be recognized as the backward weights in reverse propagation of error signals.
+Consequently, backpropagation requires the feed-forward weights between layers to be identical with the corresponding backward weights, and from a biological perspective, this is a requirement on synaptic symmetry and is regarded as not biological plausible \citep{lillicrap2016random}. 
 
 \paragraph{Feedback alignment on two-layer network.}
 
-One of the alternative approaches proposed to improve the biological plausibility over backpropagation is \emph{Feedback Alignment}, which replaces the feed-forward weights by an independent fixed random backpropagation weights at each layer as backward weights \citep{lillicrap2016random}. In particular, for two-layer networks considered in this work, the second-layer weights $\beta$ is replaced with a fixed random backpropagation weights $b\in\Rp$ at the gradient update while the gradient update on $\beta$ remains the same. By replacing the vector $\beta$ with $b$ in \cref{eqn:backprop-gradient}, the feedback alignment update for $W$ becomes
+One of the alternative approaches proposed to improve the biological plausibility over backpropagation is \emph{Feedback Alignment}, which at the backpropagation stage replaces the backward weights at each layer by an independent fixed random backpropagation weights \citep{lillicrap2016random}. In particular, for the two-layer networks considered in this work, the second-layer weights $\beta$ is replaced by a fixed random backpropagation weights $b\in\Rp$ at backpropagation stage while the gradient update on $\beta$ remains the same, \ie,
 \begin{align}\label{eqn:alignment-update}
     W(t+1) = W(t) - \frac{\eta}{\sqrt{p}} [(b (f(t) - y)\transpose)\circ \psi'(WX\transpose)] X.
 \end{align}
-After the substitution, the backpropagation update on $W(t)$ no longer depends on $\beta(t)$ directly and therefore bears no requirement on synaptic symmetry. \cref{algo:fa} shows the feedback alignment algorithm, where $\psi'$ is applied entry-wisely on the matrix and the shorthand $e(t) \defeq f(t) -y$ denotes the error made by the network $f$ in predicting $y$. Note that the path of $\beta(t)$ do not follow the gradient descent path under usual backpropagation anymore when considered jointly with the feedback alignment updates on $W(t)$. Even though we motivate the algorithm from a loss function $L$ and the corresponding gradient descent on such function, we end up arriving at the feedback alignment algorithm that does not explicitly optimize on any particular loss function.
+After the substitution, the feedback alignment update on $W(t)$ no longer depends on $\beta(t)$ directly and therefore bears no requirement on synaptic symmetry. Note that the path of $\beta(t)$ does not follow the one by gradient descent under standard backpropagation when considered jointly with the feedback alignment updates on $W(t)$. It is important to notice that the feedback alignment algorithm that we end up arriving at does not explicitly optimize on any particular loss function even though we motivate the algorithm from a loss function $L$ and the corresponding gradient descent algorithm.
+\cref{algo:fa} shows the feedback alignment algorithm on \eqref{eqn:nonlinear-network}, where $\psi'$ is applied entry-wisely and the shorthand $e(t) \defeq f(t) -y$ denotes the error made by the network $f(t)$ in predicting $y$.
 
-\begin{minipage}{0.49\textwidth}
+\begin{minipage}{\textwidth}
 \begin{algorithm}[H]
 \centering
 \caption{Feedback Alignment}\label{algo:fa}
     \begin{algorithmic}[1]
-        \Require Network $f$ with weight parameters $W,\beta$, activation function $\psi$, dataset $(X,y)$, learning rate $\eta$.
-        \State {\bf initialize} $W(0)$ and $\beta(0)$ as Gaussian
+        \Require Feed-forward weights $W,\beta$, activation $\psi$, dataset $(X,y)$, and step $\eta$.
+        \State {\bf initialize} $W(0)$ and $\beta(0)$ with Gaussian entries
         \While{$\|f(t) - y\|^2$ not converge}
             \State $W(t+1) \gets W(t) - \frac{\eta}{\sqrt p}[(b e(t)\transpose)\circ \psi'(W(t)X\transpose)] X$
             \State $\beta(t+1) \gets \beta(t) - \frac{\eta}{\sqrt p} \psi(W(t)X\transpose) e(t)$
         \EndWhile
-        \State \Return $f$
     \end{algorithmic}    
-\end{algorithm}
-\end{minipage}
-\hfill
-\begin{minipage}{0.49\textwidth}
+\end{algorithm}%
 \begin{algorithm}[H]
 \centering
 \caption{Regularized Feedback Alignment}\label{algo:fa-reg}
     \begin{algorithmic}[1]
-        \Require Network $f$ with weight parameters $W,\beta$, activation function $\psi$, dataset $(X,y)$, learning rate $\eta$, regularization rate $\{\lambda(t)\}_t$.
-        \State {\bf initialize} $W(0)$ and $\beta(0)$ as Gaussian
+        \Require Feed-forward weights $W,\beta$, activation $\psi$, dataset $(X,y)$, step $\eta$, and regularization $\{\lambda(t)\}_t$.
+        \State {\bf initialize} $W(0)$ and $\beta(0)$ with Gaussian entries
         \While{$\|f(t) - y\|^2$ not converge}
             \State $W(t+1) \gets W(t) - \frac{\eta}{\sqrt p}[(b e(t)\transpose)\circ \psi'(W(t)X\transpose)] X$
             \State $\beta(t+1) \gets (1-\eta\lambda(t))\beta(t) - \frac{\eta}{\sqrt p} \psi(W(t)X\transpose) e(t)$
         \EndWhile
-        \State \Return $f$
     \end{algorithmic}    
 \end{algorithm}
 \end{minipage}
 
-Feedback alignment is named after its phenomenon of alignment between the feed-forward weights and the fixed backpropagation weights during training. In the case of two-layer network, the alignment is represented as the positive inner product between two vectors $\beta$ and $b$. More specifically, we define alignment as the following.
-\begin{definition}\label{def:alignment}
-    A series of vectors $\{\beta(t)\}_{t=0}^\infty$ align with a fixed vector $b$ if there exists a constant $c>0$ and time $T_c$ such that for all $t > T_c$ it holds
-    \begin{align*}
-        \cos\angle(b, \beta(t)) = \frac{b\transpose \beta(t)}{\|b\|\|\beta(t)\|} \geq c.
-    \end{align*}
-\end{definition}
+\paragraph{Alignment.}
+
+The most prominent characteristic of feedback alignment algorithm is its phenomenon of alignment between the feed-forward weights and the fixed backward weights during training. \citet{lillicrap2016random} noticed a decreasing angle between the backpropogated signal with feed-forward weights and that with fixed random feedback weights during the training with feedback alignment. In the case of two-layer network, alignment can be characterized simply as the positive inner product between two vectors $\beta(t)$ and $b$ at large $t$ limit. More specifically, we define alignment under model \eqref{eqn:nonlinear-network} in \cref{sec:alignment}.
