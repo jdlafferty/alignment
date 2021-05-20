@@ -134,7 +134,7 @@ Assume all the inequalities from Lemma \ref{lma:inqs} holds. If the error bound 
 \label{eq:weights}
 \begin{aligned}
     \|w_r(t)-w_r(0)\| &\leq c_1\frac{n\sqrt{\log p}}{\gamma\sqrt p} \\
-    \|\beta_r(t)-\beta_r(0)\| &\leq c_2\frac{n}{\gamma\sqrt p}
+    |\beta_r(t)-\beta_r(0)| &\leq c_2\frac{n}{\gamma\sqrt p}
 \end{aligned}
 \end{equation}
 \end{lemma}
@@ -143,7 +143,7 @@ Assume all the inequalities from Lemma \ref{lma:inqs} holds. If the error bound 
 From the feedback alignment updates \eqref{eq:updates}, we have for all $t\leq T$.
 \begin{equation*}
 \begin{aligned}
-    \|\beta_r(t)-\beta_r(0)\| &\leq \frac{\eta}{\sqrt p}\sum_{s=0}^{t-1}\sum_{i=1}^n |\psi(w_r(t)x_i)e_i(t)| \\
+    |\beta_r(t)-\beta_r(0)| &\leq \frac{\eta}{\sqrt p}\sum_{s=0}^{t-1}\sum_{i=1}^n |\psi(w_r(t)x_i)e_i(t)| \\
     &\leq c\frac{\eta}{\sqrt p}\sum_{s=0}^{t-1}\sum_{i=1}^n |e_i(t)| \\
     &\leq c\frac{\eta\sqrt n}{\sqrt p}\sum_{s=0}^{t-1} \|e(t)\| \\
     &\leq c\frac{\eta\sqrt n}{\sqrt p}\sum_{s=0}^{t-1}  (1-\frac{\gamma\eta}{4})^t\|e(0)\|  \\
