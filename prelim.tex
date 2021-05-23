@@ -1,31 +1,30 @@
 %!TEX root=./main.tex
 \section{Preliminaries}
 
-We consider a two-layer neural network $f:\R^d \to \R$ with the hidden-layer width $p$, and for any input $x\in\Rd$, we have
+In this paper, we consider a two-layer neural network $f:\Rd \to \RR$ with hidden-layer width $p$. For any input $x\in\Rd$, the network outputs
 \begin{align}\label{eqn:nonlinear-network}
     f(x) = \frac{1}{\sqrt p}\sum_{r=1}^p\beta_r\psi(w_r\transpose x)= \frac{1}{\sqrt p}\beta\transpose\psi(Wx),
 \end{align}
-where $\psi$ denotes the element-wise activation function, $W = (w_1,...,w_p)\transpose\in\Rpd$ and $\beta = (\beta_1,...,\beta_p)\transpose\in\Rp$ are the feed-forward weights for the first and the second layer.
-Given $n$ input label pairs $\{(x_i,y_i)\}_{i=1}^n$, we hope to minimize the squared error loss
+where $W = (w_1,...,w_p)\transpose\in\Rpd$ and $\beta = (\beta_1,...,\beta_p)\transpose\in\Rp$ represent the feed-forward weights for the first and the second layer, and $\psi$ denotes an element-wise activation function.
+Given $n$ input-label pairs $\{(x_i,y_i)\}_{i=1}^n$, we hope to minimize the squared error loss
 \begin{equation}
     \Loss(W,\beta) = \frac{1}{2}\sum_{i=1}^n \big(f(x_i)-y_i\big)^2.
 \end{equation}
-The gradient descent algorithm for minimizing the loss writes
+Vanilla gradient descent minimizes \eqref{eqn:nonlinear-network} through updating the feed-forward weights following gradient directions, \ie,
 \begin{align*}
-    \beta_r(t+1) &= \beta_r(t)-\eta\frac{\partial\Loss}{\partial \beta_r}(W(t),\beta(t)), \\
-    w_r(t+1) &= w_r(t)-\eta\frac{\partial\Loss}{\partial w_r}(W(t),\beta(t)), \quad r=1,\ldots,p.
+    \beta_r(t+1) = \beta_r(t)-\eta\frac{\partial\Loss}{\partial \beta_r}(W(t),\beta(t)), \quad w_r(t+1) = w_r(t)-\eta\frac{\partial\Loss}{\partial w_r}(W(t),\beta(t)),
 \end{align*}
-where $\eta>0$ is the step size, and we initialize $\beta(0)$ and $w_r(0)$ with standard Gaussian vectors. We also introduce the notations $u(t),e(t)\in \R^n$, where $u_i(t)$ is the network output on input $x_i$ at step $t$, $e_i(t) = u_i(t)-y$ is corresponding prediction error.
+where $\eta>0$ denotes the step size. In this paper, we initialize $\beta(0)$ and $w_r(0)$ for all $r\in[p]$ with standard Gaussian vectors. To simplify the notation, we introduce in the rest of this paper $u(t),e(t)\in \R^n$, where $u_i(t)$ denotes the network output on input $x_i$ at step $t$ and $e_i(t) = u_i(t)-y$ represents the corresponding prediction error.
 
 \paragraph{Backpropagation on two-layer network.}
 
-Backpropagation has been the most commonly used scheme for computing the gradient of the network parameters. In particular, for two-layer network \eqref{eqn:nonlinear-network}, the gradients given by backpropagation are
+Backpropagation has been the most commonly used scheme for calculating the gradient of network parameters. In particular, for two-layer network \eqref{eqn:nonlinear-network}, the gradients with respect to the first- and second-layer weights under backpropagation write
 \begin{equation*}
     \frac{\partial\Loss}{\partial \beta_r} = \frac{1}{\sqrt p}\sum_{i=1}^n e_i\psi(w_r\transpose x_i), \quad
     \frac{\partial\Loss}{\partial w_r} = \frac{1}{\sqrt p} \sum_{i=1}^n e_i \beta_r\psi'(w_r\transpose x_i)x_i.
 \end{equation*}
-However, such learning algorithm requires updating its weights with backpropagated error signals that consist of non-local information of weight parameters from top layers. More specifically, given an input $x_i$, the gradient of second-layer weights $\frac{\partial \Loss}{\partial \beta_r}$ contains only the local inputs $\psi(w_r x_i)$ and error signal $e_i = f(x_i) - y_i$, while the gradient of first-layer weights $\frac{\partial \Loss}{\partial w_r}$ requires not only the local input $x_i$, local output $w_r x_i$ but also the backpropagated error signal $e_i\beta_r$, which contains the information on the second-layer forward weights $\beta_r$. This appearance of $\beta_r$ is due to the chain rule between two adjacent layers and can be recognized as the backward weights in reverse propagation of error signals.
-Consequently, backpropagation requires the forward weights between layers to be identical with the backward weights. However, from a biological perspective, this is a requirement on synaptic symmetry and is regarded as not biological plausible \citep{lillicrap2016random}. 
+However, such learning algorithm requires updating its weights with backpropagated error signals that consist of non-local information of weight parameters from top layers. More specifically, given an input $x_i$, the gradient of second-layer weights $\frac{\partial \Loss}{\partial \beta_r}$ contains only the local inputs $\psi(w_r x_i)$ and error signal $e_i = f(x_i) - y_i$, while the gradient of first-layer weights $\frac{\partial \Loss}{\partial w_r}$ requires not only the local input $x_i$ and the local output $w_r x_i$ but also the backpropagated error signal $e_i\beta_r$, which contains information on the second-layer feed-forward weight $\beta_r$. This appearance of $\beta_r$ is due to the chain rule between the two adjacent layers and can be recognized as the backward weights in reverse propagation of error signals.
+Consequently, backpropagation requires the forward weights between layers to be identical with the backward weights. However, from a biological perspective, this is a requirement on synaptic symmetry and is regarded as too strong to be biological plausible \citep{lillicrap2016random}. 
 
 \paragraph{Feedback alignment on two-layer network.}
 
@@ -33,8 +32,8 @@ One of the alternative approaches proposed to improve the biological plausibilit
 \begin{align}\label{eqn:alignment-update}
     \dfa(w_r) = \frac{1}{\sqrt{p}} \sum_{i=1}^n e_i b_r\psi'(w_r\transpose x_i)x_i.
 \end{align}
-After the substitution, the feedback alignment update on $W$ no longer depends on $\beta$ directly and therefore bears no requirement on synaptic symmetry. Note that the path of $\beta(t)$ does not follow the one by gradient descent under standard backpropagation when considered jointly with the feedback alignment updates on $W(t)$. It is important to notice that the feedback alignment algorithm that we end up arriving at does not explicitly optimize on any particular loss function even though we motivate the algorithm from a loss function $\Loss$ and the corresponding gradient descent algorithm.
-\cref{algo:fa} shows the feedback alignment algorithm on \eqref{eqn:nonlinear-network}.
+After the substitution, the feedback alignment update on $W(t)$ no longer depends on $\beta(t)$ directly and therefore bears no requirement on synaptic symmetry. Note that the path of $\beta(t)$ does not follow the one by gradient descent under standard backpropagation when considered jointly with the feedback alignment updates on $W(t)$. It is important to notice that the feedback alignment algorithm that we end up arriving at does not explicitly optimize on any particular loss function even though we motivate the algorithm with a loss function $\Loss$ and the corresponding gradient descent algorithm.
+In \cref{algo:fa}, we summarize the feedback alignment algorithm on \eqref{eqn:nonlinear-network}.
 
 %\begin{minipage}{\textwidth}
 \begin{algorithm}[H]
@@ -44,8 +43,8 @@ After the substitution, the feedback alignment update on $W$ no longer depends o
         \Require activation $\psi$, dataset $\{(x_i,y_i)\}_{i=1}^n$, and step size $\eta$.
         \State {\bf initialize} $W(0)$, $\beta(0)$ and $b$ with standard Gaussian entries
         \While{not converge}
-            \State $\beta_r(t+1) \gets \beta_r(t) - \frac{\eta}{\sqrt p} \sum_{i=1}^n e_i(t)\psi(w_r(t)\transpose x_i)$,
-            \State $w_r(t+1) = w_r(t) - \frac{\eta}{\sqrt{p}} \sum_{i=1}^n e_i(t) b_r\psi'(w_r(t)\transpose x_i)x_i$, for $r=1,2,\ldots,p$.
+            \State $\beta_r(t+1) \gets \beta_r(t) - \frac{\eta}{\sqrt p} \sum_{i=1}^n e_i(t)\psi(w_r(t)\transpose x_i)$ for $r\in[p]$
+            \State $w_r(t+1) = w_r(t) - \frac{\eta}{\sqrt{p}} \sum_{i=1}^n e_i(t) b_r\psi'(w_r(t)\transpose x_i)x_i$ for $r\in[p]$
         \EndWhile
     \end{algorithmic}    
 \end{algorithm}%

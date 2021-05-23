@@ -34,8 +34,8 @@ where $\{\lambda(t)\}_{t=0}^\infty$ is a sequence of regularization rate, which 
         \Require activation $\psi$, dataset $\{(x_i,y_i)\}_{i=1}^n$, and step size $\eta$, and regularization $\{\lambda(t)\}_t$.
         \State {\bf initialize} $W(0)$, $\beta(0)$ and $b$ with standard Gaussian entries
         \While{not converge}
-            \State $\beta_r(t+1) \gets (1-\lambda(t))\beta_r(t) - \frac{\eta}{\sqrt p} \sum_{i=1}^n e_i(t)\psi(w_r(t)\transpose x_i)$,
-            \State $w_r(t+1) = w_r(t) - \frac{\eta}{\sqrt{p}} \sum_{i=1}^n e_i(t) b_r\psi'(w_r(t)\transpose x_i)x_i$, for $r=1,2,\ldots,p$.
+            \State $\beta_r(t+1) \gets (1-\lambda(t))\beta_r(t) - \frac{\eta}{\sqrt p} \sum_{i=1}^n e_i(t)\psi(w_r(t)\transpose x_i)$ for $r\in[p]$
+            \State $w_r(t+1) = w_r(t) - \frac{\eta}{\sqrt{p}} \sum_{i=1}^n e_i(t) b_r\psi'(w_r(t)\transpose x_i)x_i$ for $r\in[p]$
         \EndWhile
     \end{algorithmic}    
 \end{algorithm}
