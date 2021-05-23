@@ -1,7 +1,18 @@
+%!TEX root=./main.tex
+
 \section{Convergence of Gradient Descent With Random Backpropagation Weights}
 
-Due to the replacement of backward weights with the random backpropagation weights in feedback alignment algorithm, there is \emph{a priori} no guarantee that the algorithm will go downhill on the squared error loss $L$, not to mention the linear convergence.
-Previous studies on over-parametrized networks focus on the analysis of Neural Tangent Kernels (NTKs) induced by the gradient descent that control the process of convergence \citep{du2018gradient,gao2020model}. Specific to the two-layer case, the loss $L(t)$ converges at a linear rate as long as the sum of two Gram matrices $G(t)$ and $H(t)$ corresponding to the NTKs of first- and second-layer weights are positive definite. This is due to the fact that $L$ is locally convex and $\frac{\diff L(t)}{\diff t} = -2 (y - f(t))\transpose(G(t) + K(t))(y - f(t))$. However, after replacing the feed-forward weights $\beta(t)$ with a random backpropagation weights $b$, feedback alignment algorithm no longer follows a strict gradient descent on the squared error loss and the previous argument cannot be applied directly to our case. Despite of this difference, we will show in this section that the linear convergence of $L(t)$ is still achievable by the feedback alignment algorithm for over-parametrized two-layer networks. In particular, the following theorem gives a quantitative guarantee on the rate of convergence.
+Due to the replacement of backward weights with the random backpropagation weights in feedback alignment algorithm, there is \emph{a priori} no guarantee that the algorithm will go downhill on the squared error loss $\Loss$. \citet{lillicrap2020backpropagation} study the convergence on two-layer linear network with the continuous time setting. They derive differential equations for network parameters under the assumption of infinite training data, and show that the network converge to the true linear target function.
+Among the studies of training neural networks with backpropagation, Neural Tangent Kernel (NTK) is proposed to describe the evolution of the network during training process \citep{jacot2018neural}. Given a neural network $f(x,\theta)$ with parameter $\theta$, the NTK is defined to be
+\begin{equation}
+	K_f(x,y) = \Big\langle \frac{\partial f (x,\theta)}{\partial \theta},\frac{\partial f (y,\theta)}{\partial \theta}\Big\rangle.
+\end{equation}
+Given data $\{(x_i,y_i\}_{i=1}^n$, one can also consider the kernel matrix $K = (K_f(x_i,x_j))_{n\times n}$. \citet{jacot2018neural} show that in the infinite width limit, NTK $K_f$ would converge to a constant and remain the same throughout training. Under the over-parameterized regime, it also has been proved that if the kernel matrix $K$ is positive definite, it would stay close to the initialization during training and thus result in a linear convergence of the squared error loss \citep{du2018gradient,du2019gradient,gao2020model}.
+However, after replacing the feed-forward weights $\beta$ with a random backpropagation weights $b$, feedback alignment algorithm no longer follows a strict gradient descent on the squared error loss and the previous argument cannot be applied directly to our case. For two-layer network $f(x, \theta)$ defined in \eqref{eqn:nonlinear-network} with $\theta = (\beta,W)$, the kernel $K_f$ can be written in two parts, $G_f$ and $H_f$, which correspond to $\beta$ and $W$ respectively
+\begin{equation}
+K_f(x,y) = G_f(x, y) + H_f(x,y) \triangleq \Big\langle \frac{\partial f (x,\theta)}{\partial \beta},\frac{\partial f (y,\theta)}{\partial \beta}\Big\rangle + \sum_{r=1}^p\Big\langle \frac{\partial f (x,\theta)}{\partial w_r},\frac{\partial f (y,\theta)}{\partial w_r}\Big\rangle.
+\end{equation}
+With random backpropagation weights $b$, $G_f$ would remain the same while $H_f$ would be close to 0 at initialization if network is over-parameterized. Therefore, if $G = (G_f(x_i,x_j))_{n\times n}$ is positive definite at initialization, so as to $K$ up to a small error $H = (H_f(x_i,x_j))_{n\times n}$. Then we are able to show the loss $\Loss$ converges to zero exponentially fast. Specifically, we provide the following assumption and theorem.
 
 \begin{assumption}\label{assump:G}
 Define matrix $\bar{G} \in \R^{n\times n}$ with entries
@@ -11,14 +22,35 @@ Define matrix $\bar{G} \in \R^{n\times n}$ with entries
 we assume $\lambda_{\min}(\bar{G}) \geq \gamma$, where $\gamma$ is a positive constant.
 \end{assumption}
 
+\begin{theorem}\label{thm:nonliner_conv}
+Let $W(0)$, $\beta(0)$ and $b$ have \iid standard Gaussian entries. Assume
+\begin{enumerate}
+    \item Assumption \ref{assump:G} holds,
+    \item $\psi$ is smooth, $\psi$, $\psi'$ and $\psi''$ are bounded,
+    \item $|y_i|$ and $\|x_i\|$ are bounded for all $i\in[n]$.
+\end{enumerate}
+Then there exists positive constants $c_1$, $c_2$, $C_1$ and $C_2$, such that for any $\delta\in(0,1)$, if 
+\begin{equation*}
+    p \geq \max(C_1\frac{n^2}{\delta\gamma^2}, C_2\frac{n^4\log p}{\gamma^4}),
+\end{equation*}
+with probability at least $1-\delta$, we have
+\begin{equation}\label{eq:conv}
+    \|e(t+1)\|^2 \leq (1-\frac{\eta\gamma}{4})^t\|e(t)\|^2.
+\end{equation}
+and 
+\begin{equation}
+\label{eq:weights}
+    \|w_r(t)-w_r(0)\| \leq c_1\frac{n\sqrt{\log p}}{\gamma\sqrt p}, \quad |\beta_r(t)-\beta_r(0)| \leq c_2\frac{n}{\gamma\sqrt p}
+\end{equation}
+for all $r=1,\ldots, p$ and $t>0$.
+\end{theorem}
+
+Notably, matrix $\bar{G}$ in Assumption \ref{assump:G} is actually the expectation of $G$ over random initialization thus $G$ is close to $\bar{G}$ by concentration. To justify the assumption, we provide the following proposition, which states that Assumption \ref{assump:G} holds when $x_i$ is drawn from Gaussian distribution. The proofs of Theorem \ref{thm:nonliner_conv} and Proposition \ref{prop:positive-definiteness} are deferred to Appendix.
+
 \begin{proposition}\label{prop:positive-definiteness}
 Suppose $x_1,...,x_n \overset{\iid}{\sim} \calN(0,I_d/d)$ and the activation function $\psi$ is sigmoid or tanh. If $d=\Omega(n)$, then assumption \ref{assump:G} holds with high probability.
 \end{proposition}
 
-\begin{theorem}[informal]
-Let $W(0)$, $\beta(0)$ and $b$ have \iid standard Gaussian entries. If $\psi$ is smooth, $\psi$, $\psi'$ and $\psi''$ are bounded, $|y_i|$ and $\|x_i\|$ are bounded for all $i\in[n]$, and $\frac{d}{n}$ is large enough, then there exists universal constant $C_1$ and $C_2$, such that for any $\delta\in(0,1)$, if $p$ is large, then with probability at least $1-\delta$
-\begin{equation*}
-    \|u(t)-y\|^2 \leq (1-\frac{\gamma\eta}{4})^t\|u(0)-y\|^2.
-\end{equation*}
-\end{theorem}
+
+
 

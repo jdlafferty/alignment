@@ -1,4 +1,4 @@
-\subsection{Alignment on Two-Layer Linear Networks}
+\section{Alignment on Two-Layer Linear Networks}
 
 Now we assume $\psi = \mathbbm{1}$, or $f$ is a linear network. The loss function with regularization at time $t$ is 
 \begin{equation}
@@ -161,12 +161,6 @@ which completes the proof.
 \end{proof} 
 
 
-
-
-\begin{proposition}
-\label{prop:isom}
-Assume $X\in\R^{n\times d}$ has independent entries drawn from $N(0,1/d)$. For any $\epsilon \in (0,1/2)$ and $\delta \in (0,1)$, if $d=\Omega(\frac{1}{\epsilon}\log\frac{n}{\delta}+\frac{n}{\epsilon}\log \frac{1}{\epsilon})$, $X$ is $(1-\epsilon, 4\epsilon)$-isometric with probability $1-\delta$.
-\end{proposition}
 \begin{proof}[Proof of Proposition \ref{prop:isom}]
 By Corollary \ref{cor:RIP}, if $d=\Omega(\frac{1}{\epsilon}\log\frac{n}{\delta}+\frac{n}{\epsilon}\log \frac{1}{\epsilon})$, we have 
 \begin{equation*}

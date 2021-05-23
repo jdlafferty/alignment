@@ -1,6 +1,4 @@
-\section{Proofs of Technical Results}
-
-\subsection{Convergence on Two-Layer Nonlinear Networks}
+\section{Convergence on Two-Layer Nonlinear Networks}
 We consider the following neural network
 \begin{equation}
 f(x) = \frac{1}{\sqrt p}\sum_{r=1}^p \beta_r \psi(w_r\transpose x) = \frac{1}{\sqrt p}\beta\transpose \psi(Wx)
@@ -19,15 +17,8 @@ The feedback alignment algorithm gives
 \end{equation}
 where $D_i(t) = \text{diag}(\psi'(W(t)x_i))$ and $e_i(t) = \frac{1}{\sqrt p}\beta(t)\transpose \psi(W(t)x_i)-y_i$. We also denote $u(t)\in\R^n$ with $u_i(t) = \frac{1}{\sqrt p}\beta(t)\transpose \psi(W(t)x_i)$, the network prediction on $x_i$ at time $t$. To make the proof clear, we use $c$, $C$ as the global constants whose values may vary from line to line.
 
-% $f_t(\cdot)$ as the network with parameter $\beta_t$ and $W_t$, and
-% \begin{equation}
-% f_t(X) = \frac{1}{\sqrt p}\psi(XW_t\transpose)\beta_t
-% \end{equation}
-% as the network prediction on data $X = (x_1\transpose,...,x_n\transpose)\transpose$ at step $t$.
 
-
-We justify this assumption by the following lemma (Lemma A.7 in \citep{gao2020model}) and proposition.
-\begin{lemma}[\citealp{gao2020model}]\label{lma:G}
+\begin{lemma}[Lemma A.7 in \citealp{gao2020model}]\label{lma:G}
 Assume $x_1,...,x_n \overset{\iid}{\sim} \calN(0,I_d/d)$. We define  matrix $\widetilde{G}\in \R^{n\times n}$ with entries
 \begin{equation*}
     \widetilde{G}_{i,j} = |\E\psi'(Z)|^2 \frac{x_i\transpose x_j}{\|x_i\|\|x_j\|} + (\E|\psi(Z)|^2-|\E\psi'(Z)|^2)\I\{i=j\}
@@ -46,23 +37,6 @@ In fact, if $\psi$ is sigmoid or tanh, for a standard Gaussian random variable $
 \end{equation*}
 From Lemma \ref{lma:G}, we know that with high probability $\lambda_{\min}(\bar{G}) \geq \lambda_{\min}(\widetilde{G})-\|\bar{G}-\widetilde{G}\|\geq 2\gamma - C(\sqrt{\frac{\log n}{d}} + \frac{n}{d}) \geq \gamma$.
 \end{proof}
-
-\begin{theorem}\label{thm:nonliner_conv}
-Let $W(0)$, $\beta(0)$ and $b$ have \iid standard Gaussian entries. Assume
-\begin{enumerate}
-    \item Assumption \ref{assump:G} holds,
-    \item $\psi$ is smooth, $\psi$, $\psi'$ and $\psi''$ are bounded,
-    \item $|y_i|$ and $\|x_i\|$ are bounded for all $i\in[n]$.
-\end{enumerate}
-Then there exists universal constant $C_1$ and $C_2$, such that for any $\delta\in(0,1)$, if 
-\begin{equation*}
-    p \geq \max(C_1\frac{n^2}{\delta\gamma^2}, C_2\frac{n^4\log p}{\gamma^4}),
-\end{equation*}
-then with probability at least $1-\delta$
-\begin{equation}\label{eq:conv}
-    \|u(t)-y\|^2 \leq (1-\frac{\gamma\eta}{4})^t\|u(0)-y\|^2.
-\end{equation}
-\end{theorem}
 
 \begin{lemma}
 \label{lma:inqs}
@@ -129,14 +103,7 @@ Similarly we have $\prob(\|H(0)\|>\frac{\gamma}{4})\leq\frac{\delta}{2}$, since 
 
 \begin{lemma}
 \label{lma:weights}
-Assume all the inequalities from Lemma \ref{lma:inqs} holds. If the error bound \eqref{eq:conv} holds for all $t=1,2,...,T-1$, then there exists positive constant $c_1$, $c_2$, such that for any $t\leq T$ and $r=1,2,...,p$, we have 
-\begin{equation}
-\label{eq:weights}
-\begin{aligned}
-    \|w_r(t)-w_r(0)\| &\leq c_1\frac{n\sqrt{\log p}}{\gamma\sqrt p} \\
-    |\beta_r(t)-\beta_r(0)| &\leq c_2\frac{n}{\gamma\sqrt p}
-\end{aligned}
-\end{equation}
+Assume all the inequalities from Lemma \ref{lma:inqs} holds. If the error bound \eqref{eq:conv} holds for all $t=1,2,...,T-1$, then the bounds \eqref{eq:weights} hold for all $t\leq T$.
 \end{lemma}
 
 \begin{proof}
