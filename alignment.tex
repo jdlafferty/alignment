@@ -2,11 +2,11 @@
 
 \section{Alignment of Parameters to Random Backpropagation Weights: Linear Case}\label{sec:alignment}
 
-The most prominent characteristic of feedback alignment algorithm is its phenomenon of alignment between the error signals back-propagated with forward weights and those with fixed random backward weights during training. Specifically, if $h\in \R^p$ is a hidden layer of the network, we write $\delta_{BP}(h) \triangleq \frac{\partial \Loss}{\partial h}$ as the error signals for this layer computed with the forward weights, and $\delta_{FA}(h)$ as the error signals computed with fixed random backward weights.
-\citet{lillicrap2016random} noticed a decreasing angle between $\delta_{BP}(h)$ and $\delta_{FA}(h)$ during training. It means feedback alignment algorithm can still carry gradient information for each layer even propagate with random weights.
-For the hidden layer $h$ in a two-layer network \eqref{eqn:nonlinear-network}, the error signals computed through backpropagation and feedback alignment are give by 
+The most prominent characteristic of feedback alignment algorithm is its phenomenon of alignment between the error signals back-propagated with forward weights and those with fixed random backward weights during training. Specifically, if $h\in \R^p$ is a hidden layer of the network, we write $\dbp(h) \defeq \frac{\partial \Loss}{\partial h}$ as the error signals for this layer computed with the forward weights, and $\dfa(h)$ as the error signals computed with fixed random backward weights.
+\citet{lillicrap2016random} noticed a decreasing angle between $\dbp(h)$ and $\dfa(h)$ during training. It means feedback alignment algorithm can still carry gradient information for each layer even propagate with random weights.
+For the hidden layer $h$ in a two-layer network \eqref{eqn:nonlinear-network}, the error signals computed through backpropagation and feedback alignment are given by 
 \begin{equation}
-    \delta_{BP}(h) = \frac{1}{\sqrt{p}}\beta\sum_{i=1}^ne_i \quad\text{and}\quad \delta_{FA}(h) = \frac{1}{\sqrt{p}}b\sum_{i=1}^ne_i,
+    \dbp(h) = \frac{1}{\sqrt{p}}\beta\sum_{i=1}^ne_i \quad\text{and}\quad \dfa(h) = \frac{1}{\sqrt{p}}b\sum_{i=1}^ne_i,
 \end{equation}
 so the alignment can be simply characterized by the angle between $\beta(t)$ and $b$ during training. We formalize this concept by following definition.
 \begin{definition}\label{def:alignment}
@@ -15,21 +15,21 @@ so the alignment can be simply characterized by the angle between $\beta(t)$ and
         \cos\angle(b, \beta(t)) = \frac{\langle b, \beta(t)\rangle}{\|b\|\|\beta(t)\|} \geq c.
     \end{align*}
 \end{definition}
-However, this alignment between $\beta(t)$ and $b$ is not guaranteed for an over-parameterized network. To view this, according to the bounds \eqref{eq:weights} from Theorem \ref{thm:nonliner_conv}, we could control the cosine of the angle by
+However, this alignment between $\beta(t)$ and $b$ is not guaranteed for an over-parameterized network. To view this, according to the bounds \eqref{eq:weights} from \cref{thm:nonliner_conv}, we could control the cosine of the angle by
 \begin{equation}
 \Big|\cos\angle(b, \beta(t))\Big| \leq \frac{|\langle \frac{b}{\|b\|}, \beta(0)\rangle|+ \|\beta(t)- \beta(0)\|}{\|\beta(0)\|-\|\beta(t)-\beta(0)\|} = O\big(\frac{n}{\sqrt p}\big),
 \end{equation}
-which means the two vectors become orthogonal as network gets wide. This is because when $p$ is large, the parameters would always stay near their initializations during training, where $\beta(0)$ and $b$ are almost orthogonal with each other. This motivates us to add regularization to the loss function. Here we consider the squared error loss with a $L_2$ regularization term on $\beta$:
+which means the two vectors become orthogonal as network gets wide. This is because when $p$ is large, the parameters would always stay near their initializations during training, where $\beta(0)$ and $b$ are almost orthogonal with each other. This motivates us to add regularization to the loss function. Here we consider the squared error loss with a $\ell_2$ regularization term on $\beta$:
 \begin{equation}
 \label{eqn:loss-with-reg}
 \Loss(t, W, \beta) = \frac{1}{2}\sum_{i=1}^n\big(f(x_i)-y_i\big)^2 + \frac{1}{2}\lambda(t)\|\beta\|^2,
 \end{equation}
-where $\{\lambda(t)\}_{t=0}^\infty$ is a sequence of regularization rate, which defines a series of loss functions for each training step. The feedback alignment algorithm under the regularized loss are summarized in Algorithm \ref{algo:fa-reg}. We note that with $L_2$ regularization, there is a contraction factor $1-\lambda(t)$ appeared in the update of $\beta$, which diminishes the component of $\beta(0)$ from $\beta(t)$ and thus help with the alignment.
+where $\{\lambda(t)\}_{t=0}^\infty$ is a sequence of regularization rate, which defines a series of loss functions for each training step. The feedback alignment algorithm under the regularized loss are summarized in Algorithm \ref{algo:fa-reg}. We note that with the extra $\ell_2$ regularization, there is a contraction factor $1-\lambda(t)$ appearing in the update of $\beta$, which diminishes the component of $\beta(0)$ from $\beta(t)$ and thus help the alignment.
 
 %\begin{minipage}{\textwidth}
 \begin{algorithm}[H]
 \centering
-\caption{Regularized Feedback Alignment on Two-layer Networks}\label{algo:fa-reg}
+\caption{Regularized Feedback Alignment on Two-Layer Networks}\label{algo:fa-reg}
     \begin{algorithmic}[1]
         \Require activation $\psi$, dataset $\{(x_i,y_i)\}_{i=1}^n$, and step size $\eta$, and regularization $\{\lambda(t)\}_t$.
         \State {\bf initialize} $W(0)$, $\beta(0)$ and $b$ with standard Gaussian entries
@@ -41,7 +41,7 @@ where $\{\lambda(t)\}_{t=0}^\infty$ is a sequence of regularization rate, which 
 \end{algorithm}
 %\end{minipage}
 
-In the theoretical analysis of alignment, we only focus on the linear networks, which is equivalent to set the activation function $\psi$ to be an identical map. Before presenting the results on alignment, we first provide an upper bound for the prediction error $e(t)$. Theorem \ref{thm:lin_conv} shows that the error can be upper bounded if $X = (x_1,\ldots,x_n)\transpose$ has full row rank and the summation of $\lambda(t)$ is upper bounded by $S_\lambda = O(\sqrt{p/n})$.
+In the theoretical analysis of alignment, we only focus on the linear networks, which is equivalent to setting the activation function $\psi$ to be an identity map. Before presenting the results on alignment, we first provide an upper bound for the prediction error $e(t)$. \cref{thm:lin_conv} shows that the error can be upper bounded if $X = (x_1,\ldots,x_n)\transpose$ has full row rank and the summation of $\lambda(t)$ is upper bounded by $S_\lambda = O(\sqrt{p/n})$.
 
 \begin{theorem}
 \label{thm:lin_conv}
@@ -58,24 +58,24 @@ For any $\delta\in(0,1)$, if $p = \Omega(\frac{Md\log(d/\delta)}{\gamma})$, the 
 \end{equation} 
 \end{theorem}
 
-Theorem \ref{thm:lin_conv} actually has some connections with Theorem \ref{thm:nonliner_conv}. In the linear case, the kernel matrix $G$ reduce to $X W\transpose W X\transpose$ and its expectation at initialization $\bar{G}$ is $X X\transpose$, so the assumption \ref{assump:G} holds if $XX\transpose$ is positive definite that is equivalent to that $x_i$ are linearly independent. Since regularization terms add additional error to $e(t)$ as well as the kernel matrix $G$, we need an upper bound of $\sum_{t\geq 0}\lambda(t)$ to ensure the minimal eigenvalue of $G$ is always positive during training, such that the error $e(t)$ can be controlled. In particular, if there is no regularization, \ie, $\lambda(t)=0$ for all $t\geq 0$, then we recover exponential convergence for the error $\|e(t)\|$ as in Theorem \ref{thm:nonliner_conv}.
+\cref{thm:lin_conv} actually has some connections with \cref{thm:nonliner_conv}. In the linear case, the kernel matrix $G$ reduce to $X W\transpose W X\transpose$ and its expectation at initialization $\bar{G}$ is $X X\transpose$, so the \cref{assump:G} holds if $XX\transpose$ is positive definite that is equivalent to that $x_i$ are linearly independent. Since regularization terms add additional error to $e(t)$ as well as the kernel matrix $G$, we need an upper bound of $\sum_{t\geq 0}\lambda(t)$ to ensure the minimal eigenvalue of $G$ is always positive during training, such that the error $e(t)$ can be controlled. In particular, if there is no regularization, \ie, $\lambda(t)=0$ for all $t\geq 0$, then we recover exponential convergence for the error $\|e(t)\|$ as in \cref{thm:nonliner_conv}.
 
-Our results on alignment also rely on an isometric condition on $X$, which requires the minimal and maximal eigenvalue of $XX\transpose$ are close (see Definition \ref{def:isom}). However, we also demonstrate by Proposition \ref{prop:isom} that this condition is relatively mild and can be satisfied when $X$ has random Gaussian entries with a gentle dimensional constraint. Next, we show that under a simple regularization strategy where a constant regularization is adopted until a cutoff time $T$, regularized feedback alignment achieves alignment if $X$ satisfies the isometric condition.
+Our results on alignment also rely on an isometric condition on $X$, which requires the minimal and maximal eigenvalue of $XX\transpose$ to be close enough (\cf \cref{def:isom}). However, we also demonstrate by \cref{prop:isom} that this condition is relatively mild and can be satisfied when $X$ has random Gaussian entries with a gentle dimensional constraint. Next, we show that under a simple regularization strategy where a constant regularization is adopted until a cutoff time $T$, regularized feedback alignment achieves alignment if $X$ satisfies the isometric condition.
 {}
-\begin{definition}[$(\gamma, \epsilon)$-Isometric]
+\begin{definition}[$(\gamma, \eps)$-Isometric]
 \label{def:isom}
-Given positive constant $\gamma$ and $\epsilon$, we say $X$ is $(\gamma, \epsilon)$-isometric if 
-$\lambda_{\min}(XX\transpose)\geq\gamma$ and $\lambda_{\max}(XX\transpose)\leq(1+\epsilon)\gamma$.
+Given positive constant $\gamma$ and $\eps$, we say $X$ is $(\gamma, \eps)$-isometric if 
+$\lambda_{\min}(XX\transpose)\geq\gamma$ and $\lambda_{\max}(XX\transpose)\leq(1+\eps)\gamma$.
 \end{definition}
 
 \begin{proposition}
 \label{prop:isom}
-Assume $X\in\R^{n\times d}$ has independent entries drawn from $N(0,1/d)$. For any $\epsilon \in (0,1/2)$ and $\delta \in (0,1)$, if $d=\Omega(\frac{1}{\epsilon}\log\frac{n}{\delta}+\frac{n}{\epsilon}\log \frac{1}{\epsilon})$, $X$ is $(1-\epsilon, 4\epsilon)$-isometric with probability $1-\delta$.
+Assume $X\in\R^{n\times d}$ has independent entries drawn from $N(0,1/d)$. For any $\eps \in (0,1/2)$ and $\delta \in (0,1)$, if $d=\Omega(\frac{1}{\eps}\log\frac{n}{\delta}+\frac{n}{\eps}\log \frac{1}{\eps})$, $X$ is $(1-\eps, 4\eps)$-isometric with probability $1-\delta$.
 \end{proposition}
 
 \begin{theorem}
 \label{thm:lin_align}
-Assume all conditions from Theorem \ref{thm:lin_conv} hold and $X$ is $(\gamma, \epsilon)$-isometric with a small constant $\epsilon$. Let the regularization weights
+Assume all conditions from \cref{thm:lin_conv} hold and $X$ is $(\gamma, \eps)$-isometric with a small constant $\eps$. Let the regularization weights
 \begin{align*}
 \lambda(t) = 
 \begin{cases}
@@ -86,12 +86,12 @@ Assume all conditions from Theorem \ref{thm:lin_conv} hold and $X$ is $(\gamma, 
 with $\lambda=\Omega(\gamma)$ and $T = \lfloor S_\lambda/\lambda\rfloor$. Then, for any $\delta\in(0,1)$, if $p = \Omega(d\log(d/\delta))$, with probability at least $1-\delta$, regularized feedback alignment on linear network achieves alignment. Specifically, there exist a positive constant $c=c_\delta$ and time $T_c$, such that $\cos\angle(b, \beta(t))\geq c$ for all $t>T_c$.
 \end{theorem}
 
-We also defer to the proofs of Theorem \ref{thm:lin_conv}, Proposition \ref{prop:isom} and Theorem \ref{thm:lin_align} to Appendix. We note that in Theorem \ref{thm:lin_align}, the cutoff schedule of $\lambda(t)$ is not essential to the proof. For other schedule such as inverse-squared decay or exponential decay, one could also obtain the same alignment result, as long as the summation of $\lambda(t)$ is less than $S_\lambda$.
+We also defer to the proofs of \cref{prop:isom,thm:lin_conv,thm:lin_align} to Appendix. We remark that in \cref{thm:lin_align}, the cutoff schedule of $\lambda(t)$ is not essential to the proof. For other schedule such as inverse-squared decay or exponential decay, one could also obtain the same alignment result, as long as the summation of $\lambda(t)$ is less than $S_\lambda$.
 
-\paragraph{Large sample scenario.} In Theorem \ref{thm:lin_conv} and Theorem \ref{thm:lin_align}, we only consider the case where sample size $n$ is less than input dimension, since we require $XX\transpose$ is positive definite. However, both results would still hold even if $n>d$. In fact, the squared error loss can be written as
+\paragraph{Large sample scenario.} In \cref{thm:lin_conv,thm:lin_align}, we only consider the case where sample size $n$ is less than input dimension, since we require $XX\transpose$ is positive definite. However, both results would still hold even if $n>d$. In fact, the squared error loss can be written as
 \begin{equation*}
 \sum_{i=1}^n\big(f(x_i)-y\big)^2 = \big\|\frac{1}{\sqrt{p}}XW\transpose\beta-y\big\|^2 = \big\|\frac{1}{\sqrt{p}}XW\transpose\beta-\bar{y}\big\|^2+ \|\bar{y}-y\|^2,
 \end{equation*}
-where $\bar{y}$ is the projection of $y$ onto the column space of $X$. Without of generality, we assume $y=\bar{y}$. Now, since $y$ and columns of $X$ are all in the same $d$-dimensional subspace of $R^n$, and $XX\transpose$ is actually positive definite on this subspace as long as $X$ is full rank. We can either work on the subspace of $\Rn$ or rotation all the vector into $\Rd$.
+where $\bar{y}$ is the projection of $y$ onto the column space of $X$. Without loss of generality, we assume $y=\bar{y}$. Now, since $y$ and columns of $X$ are all in the same $d$-dimensional subspace of $\Rn$, and $XX\transpose$ is actually positive definite on this subspace as long as $X$ is full rank. We can either work on the subspace of $\Rn$ or rotation all the vector into $\Rd$.
 
 

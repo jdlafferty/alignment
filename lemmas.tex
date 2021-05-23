@@ -4,16 +4,16 @@ In this section, we present some of the technical lemmas that will be used in pr
 We will first introduce a variant of the Restricted Isometry Property that bounds the spectral norm of a random Gaussian matrix towards $1$ with high probability.
 
 \begin{lemma}[\citealp{hand2018global}]\label{lem:RIP}
-    Let $A\in \Rmn$ has \iid $\calN(0,1/m)$ entries. Fix $0<\epsilon<1$, $k < m$, and a subspace $T\subseteq \R^n$ of dimension $k$, then there exists universal constants $c_1$ and $\gamma_1$, such that with probability at least $1-(c_1/\varepsilon)^k e^{-\gamma_1\epsilon m}$,
+    Let $A\in \Rmn$ has \iid $\calN(0,1/m)$ entries. Fix $0<\eps<1$, $k < m$, and a subspace $T\subseteq \R^n$ of dimension $k$, then there exists universal constants $c_1$ and $\gamma_1$, such that with probability at least $1-(c_1/\varepsilon)^k e^{-\gamma_1\eps m}$,
     \begin{align*}
-    (1-\epsilon)\|v\|^2_2 \leq \|Av\|^2_2 \leq (1+\epsilon)\|v\|^2_2, \quad \forall v\in T.
+    (1-\eps)\|v\|^2_2 \leq \|Av\|^2_2 \leq (1+\eps)\|v\|^2_2, \quad \forall v\in T.
     \end{align*}
 \end{lemma}
 Let us take $k = n$ in \cref{lem:RIP} to get the following corollary.
 \begin{corollary}\label{cor:RIP}
-    Let $A\in \Rmn$ has \iid $\calN(0,1/m)$ entries. For any $0<\epsilon<1$, there exists universal constants $c_2$ and $\gamma_2$, such that with probability at least $1-(c_2/\epsilon)^d e^{-\gamma_2\epsilon m}$,
+    Let $A\in \Rmn$ has \iid $\calN(0,1/m)$ entries. For any $0<\eps<1$, there exists universal constants $c_2$ and $\gamma_2$, such that with probability at least $1-(c_2/\eps)^d e^{-\gamma_2\eps m}$,
     \begin{align*}
-        \|A\transpose A - I_m\|\leq \epsilon
+        \|A\transpose A - I_m\|\leq \eps
     \end{align*}
 \end{corollary}
 

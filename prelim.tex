@@ -1,14 +1,14 @@
 %!TEX root=./main.tex
 \section{Preliminaries}
 
-We consider a two-layer neural network $f:\R^d \to \R$ with the hidden-layer width $p$
+We consider a two-layer neural network $f:\R^d \to \R$ with the hidden-layer width $p$, and for any input $x\in\Rd$, we have
 \begin{align}\label{eqn:nonlinear-network}
     f(x) = \frac{1}{\sqrt p}\sum_{r=1}^p\beta_r\psi(w_r\transpose x)= \frac{1}{\sqrt p}\beta\transpose\psi(Wx),
 \end{align}
-where $\psi$ denotes the element-wise activation function, $W = (w_1,...,w_p)\transpose\in\Rpd$ and $\beta = (\beta_1,...,\beta_p)\transpose\in\Rp$ are the feed-forward weights for first and second layers.
-Given data $\{(x_1,y_1),\ldots,(x_n,y_n)\}$, we hope to minimize the L2 loss
+where $\psi$ denotes the element-wise activation function, $W = (w_1,...,w_p)\transpose\in\Rpd$ and $\beta = (\beta_1,...,\beta_p)\transpose\in\Rp$ are the feed-forward weights for the first and the second layer.
+Given $n$ input label pairs $\{(x_i,y_i)\}_{i=1}^n$, we hope to minimize the squared error loss
 \begin{equation}
-    \Loss(W,\beta) = \frac{1}{2}\sum_{i=1}^n \big(f(x_i)-y_i\big)^2
+    \Loss(W,\beta) = \frac{1}{2}\sum_{i=1}^n \big(f(x_i)-y_i\big)^2.
 \end{equation}
 The gradient descent algorithm for minimizing the loss writes
 \begin{align*}
@@ -31,7 +31,7 @@ Consequently, backpropagation requires the forward weights between layers to be 
 
 One of the alternative approaches proposed to improve the biological plausibility over backpropagation is \emph{Feedback Alignment}, which at the backpropagation stage replaces the forward weights at each layer by an independent fixed random backpropagation weights \citep{lillicrap2016random}. In particular, for the two-layer networks considered in this work, the second-layer weights $\beta$ is replaced by a fixed random backpropagation weights $b\in\Rp$ at backpropagation stage while the gradient update on $\beta$ remains the same, \ie,
 \begin{align}\label{eqn:alignment-update}
-    \delta_{FA}(w_r) = \frac{1}{\sqrt{p}} \sum_{i=1}^n e_i b_r\psi'(w_r\transpose x_i)x_i.
+    \dfa(w_r) = \frac{1}{\sqrt{p}} \sum_{i=1}^n e_i b_r\psi'(w_r\transpose x_i)x_i.
 \end{align}
 After the substitution, the feedback alignment update on $W$ no longer depends on $\beta$ directly and therefore bears no requirement on synaptic symmetry. Note that the path of $\beta(t)$ does not follow the one by gradient descent under standard backpropagation when considered jointly with the feedback alignment updates on $W(t)$. It is important to notice that the feedback alignment algorithm that we end up arriving at does not explicitly optimize on any particular loss function even though we motivate the algorithm from a loss function $\Loss$ and the corresponding gradient descent algorithm.
 \cref{algo:fa} shows the feedback alignment algorithm on \eqref{eqn:nonlinear-network}.
@@ -39,7 +39,7 @@ After the substitution, the feedback alignment update on $W$ no longer depends o
 %\begin{minipage}{\textwidth}
 \begin{algorithm}[H]
 \centering
-\caption{Feedback Alignment on Tow-layer Networks}\label{algo:fa}
+\caption{Feedback Alignment on Two-Layer Networks}\label{algo:fa}
     \begin{algorithmic}[1]
         \Require activation $\psi$, dataset $\{(x_i,y_i)\}_{i=1}^n$, and step size $\eta$.
         \State {\bf initialize} $W(0)$, $\beta(0)$ and $b$ with standard Gaussian entries
