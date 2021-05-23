@@ -1,4 +1,4 @@
-\section{Convergence on Two-Layer Nonlinear Networks}
+\section{Convergence on Two-Layer Nonlinear Networks}\label{sec:appendix-convergence}
 We consider the following neural network
 \begin{equation}
 f(x) = \frac{1}{\sqrt p}\sum_{r=1}^p \beta_r \psi(w_r\transpose x) = \frac{1}{\sqrt p}\beta\transpose \psi(Wx)
@@ -25,7 +25,7 @@ Assume $x_1,...,x_n \overset{\iid}{\sim} \calN(0,I_d/d)$. We define  matrix $\wi
 \end{equation*}
 where $Z\sim \calN(0,1)$. If $d = \Omega(\log n)$, then with high probability, we have
 \begin{equation*}
-\|\bar{G}-\widetilde{G}\|^2 \lesssim \frac{\log n}{d} + \frac{n^2}{d^2}
+\|\overline{G}-\widetilde{G}\|^2 \lesssim \frac{\log n}{d} + \frac{n^2}{d^2}
 \end{equation*}
 \end{lemma}
 
@@ -35,7 +35,7 @@ In fact, if $\psi$ is sigmoid or tanh, for a standard Gaussian random variable $
 \begin{equation*}
     \gamma\defeq \frac{1}{2}(\E|\psi(Z)|^2-|\E\psi'(Z)|^2) >0.
 \end{equation*}
-From Lemma \ref{lma:G}, we know that with high probability $\lambda_{\min}(\bar{G}) \geq \lambda_{\min}(\widetilde{G})-\|\bar{G}-\widetilde{G}\|\geq 2\gamma - C(\sqrt{\frac{\log n}{d}} + \frac{n}{d}) \geq \gamma$.
+From Lemma \ref{lma:G}, we know that with high probability $\lambda_{\min}(\overline{G}) \geq \lambda_{\min}(\widetilde{G})-\|\overline{G}-\widetilde{G}\|\geq 2\gamma - C(\sqrt{\frac{\log n}{d}} + \frac{n}{d}) \geq \gamma$.
 \end{proof}
 
 \begin{lemma}
@@ -88,15 +88,15 @@ H_{ij}(0) = \frac{x_i\transpose x_j}{p}\beta(0)\transpose D_i(0)D_j(0)b = \frac{
 For any $\delta \in (0,1)$, if $p=\Omega(\frac{n^2}{\delta\gamma^2})$, then with probability at least $1-\delta$, we have $\lambda_{\min}(G(0))\geq \frac{3}{4}\gamma$ and $\lambda_{\max}(\|H(0)\|)\leq \frac{\gamma}{4}$.
 \end{lemma}
 \begin{proof}
-By independence and boundedness of $\psi$ and $\psi'$, we have $\Var(G_{ij}(0)) = O(1/p)$ and $\Var(H_{ij}(0)) = O(1/p)$. Since $\E(G(0))=\bar{G}$, we have
+By independence and boundedness of $\psi$ and $\psi'$, we have $\Var(G_{ij}(0)) = O(1/p)$ and $\Var(H_{ij}(0)) = O(1/p)$. Since $\E(G(0))=\overline{G}$, we have
 \begin{equation*}
-\E\|G(0)-\bar{G}\|^2 \leq \E\|G(0)-\bar{G}\|^2_F = O(\frac{n^2}{p})
+\E\|G(0)-\overline{G}\|^2 \leq \E\|G(0)-\overline{G}\|^2_F = O(\frac{n^2}{p})
 \end{equation*}
 by Markov's inequality, when $p=\Omega(\frac{n^2}{\delta\gamma^2})$
 \begin{equation*}
-    \prob(\|G(0)-\bar{G}\|>\frac{\gamma}{4})\leq O(\frac{n^2}{p\gamma^2})\leq\frac{\delta}{2}
+    \prob(\|G(0)-\overline{G}\|>\frac{\gamma}{4})\leq O(\frac{n^2}{p\gamma^2})\leq\frac{\delta}{2}
 \end{equation*}
-Similarly we have $\prob(\|H(0)\|>\frac{\gamma}{4})\leq\frac{\delta}{2}$, since $\E(H(0))=0$. Then with probability at least $1-\delta$, $\lambda_{\min}(G(0)) \geq \lambda_{\min}(\bar{G}) -\gamma/4 \geq \frac{3}{4}\gamma$, and $\lambda_{\max}(\|H(0)\|)\leq \gamma/4$.
+Similarly we have $\prob(\|H(0)\|>\frac{\gamma}{4})\leq\frac{\delta}{2}$, since $\E(H(0))=0$. Then with probability at least $1-\delta$, $\lambda_{\min}(G(0)) \geq \lambda_{\min}(\overline{G}) -\gamma/4 \geq \frac{3}{4}\gamma$, and $\lambda_{\max}(\|H(0)\|)\leq \gamma/4$.
 \end{proof}
 
 

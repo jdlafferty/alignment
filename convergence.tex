@@ -12,14 +12,14 @@ However, after replacing the feed-forward weights $\beta$ with a random backprop
 \begin{equation}
 K_f(x,y) = G_f(x, y) + H_f(x,y) \defeq \Big\langle \frac{\partial f (x,\theta)}{\partial \beta},\frac{\partial f (y,\theta)}{\partial \beta}\Big\rangle + \sum_{r=1}^p\Big\langle \frac{\partial f (x,\theta)}{\partial w_r},\frac{\partial f (y,\theta)}{\partial w_r}\Big\rangle.
 \end{equation}
-Under feedback alignment scheme with random backward weights $b$, $G_f$ remains the same as under backpropagation while $H_f$ is no longer positive semi-definite and close to $0$ at initialization if the network is over-parameterized. However, if $G = (G_f(x_i,x_j))_{n\times n}$ is positive definite at initialization and $H = (H_f(x_i,x_j))_{n\times n}$ is small enough. Then we are able to show the loss $\Loss$ converges to zero exponentially fast. Specifically, we provide the following assumption and theorem.
+Under feedback alignment scheme with random backward weights $b$, $G_f$ remains the same as under backpropagation while $H_f$ is no longer positive semi-definite and close to $0$ at initialization if the network is over-parameterized. However, if $G = (G_f(x_i,x_j))_{n\times n}$ is positive definite at initialization and $H = (H_f(x_i,x_j))_{n\times n}$ is small enough, then we are able to show the loss $\Loss$ converging to zero exponentially fast. Specifically, we provide the following assumption and theorem.
 
 \begin{assumption}\label{assump:G}
-Define matrix $\bar{G} \in \R^{n\times n}$ with entries
+Define matrix $\overline{G} \in \R^{n\times n}$ with entries
 \begin{equation*}
-    \bar{G}_{i,j} = \E_{w\sim \calN(0,I_p)}\psi(w\transpose x_i) \psi(w\transpose  x_j),
+    \overline{G}_{i,j} = \E_{w\sim \calN(0,I_p)}\psi(w\transpose x_i) \psi(w\transpose  x_j),
 \end{equation*}
-we assume $\lambda_{\min}(\bar{G}) \geq \gamma$, where $\gamma$ is a positive constant.
+we assume $\lambda_{\min}(\overline{G}) \geq \gamma$, where $\gamma$ is a positive constant.
 \end{assumption}
 
 \begin{theorem}\label{thm:nonliner_conv}
@@ -45,7 +45,7 @@ and
 for all $r=1,\ldots, p$ and $t>0$.
 \end{theorem}
 
-Notably, matrix $\bar{G}$ in \cref{assump:G} is actually the expectation of $G$ over random initialization thus $G$ is close to $\bar{G}$ by concentration. To justify the assumption, we provide the following proposition, which states that \cref{assump:G} holds when $x_i$ is drawn from Gaussian distribution. The proofs of Theorem \ref{thm:nonliner_conv} and Proposition \ref{prop:positive-definiteness} are deferred to Appendix.
+Notably, matrix $\overline{G}$ in \cref{assump:G} is the expectation of $G$ over random initialization and thus close to $\overline{G}$ due to concentration. To justify the assumption, we provide the following proposition, which states that \cref{assump:G} holds when $x_i$'s are drawn independently from Gaussian distribution. The proofs of \cref{thm:nonliner_conv,prop:positive-definiteness} are deferred to \cref{sec:appendix-convergence}.
 
 \begin{proposition}\label{prop:positive-definiteness}
 Suppose $x_1,...,x_n \overset{\iid}{\sim} \calN(0,I_d/d)$ and the activation function $\psi$ is sigmoid or tanh. If $d=\Omega(n)$, then \cref{assump:G} holds with high probability.
