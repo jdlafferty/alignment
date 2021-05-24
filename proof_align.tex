@@ -212,7 +212,7 @@ By Theorem \ref{thm:lin_conv}, we have for all $t\leq T$, $\|e(t)\|\leq(1-\eta\l
 \end{equation*}
 or
 \begin{equation*}
-\Big|\|e(t)\| -\frac{\lambda }{\lambda - \gamma/2}\|y\|\Big|\leq (1-\eta\lambda-\frac{\eta\gamma}{2})^t \Big|\|e_0\|- \frac{\lambda }{\lambda - \gamma/2}\|y\|\Big| \leq (1-\eta\lambda)^t(\|e_0\|+\|y\|)
+\|e(t)\| -\frac{\lambda }{\lambda - \gamma/2}\|y\|\leq (1-\eta\lambda-\frac{\eta\gamma}{2})^t \Big(\|e_0\|- \frac{\lambda }{\lambda - \gamma/2}\|y\|\Big) \leq (1-\eta\lambda)^t(\|e_0\|+\|y\|)
 \end{equation*}
 Notice that $\|y\|$ and $\|e(0)\|$ are in the same order, so when $t\in [\tau_1,T]$ with $\tau_1 = \frac{c_1}{\eta\lambda}$ and some constant $c_1$, we have
 \begin{equation}
@@ -300,9 +300,9 @@ First, notice that $\lambda(t)=0$ when $t>T$. By Theorem \ref{thm:lin_conv} we h
 \end{equation*}
 and 
 \begin{equation*}
-\hat{s}(\infty) = \sum_{i=0}^\infty(1-\eta\lambda)^{(T-i)_+}e(i)= \hat{s}(T)+ \sum_{i>T}e(i)
+\hat{s}(\infty) = \sum_{i=0}^\infty(1-\eta\lambda)^{(T-i)_+}e(i)= \hat{s}(T)+ \sum_{i>T}e(i),
 \end{equation*}
-By Lemma \ref{lma:ST_sT}, it suffices to show 
+by Lemma \ref{lma:ST_sT}, it suffices to show 
 \begin{equation}
 \label{eq:exxe_e_bd}
     \sum_{i>T}e(i)\transpose XX\transpose \sum_{j<i}e(j) \geq C\frac{\sqrt{p\gamma}}{\eta}\sum_{i>T}\|e(i)\|
