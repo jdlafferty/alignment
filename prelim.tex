@@ -7,7 +7,7 @@ In this paper, we consider a two-layer neural network $f:\Rd \to \RR$ with hidde
 \end{align}
 where $W = (w_1,...,w_p)\transpose\in\Rpd$ and $\beta = (\beta_1,...,\beta_p)\transpose\in\Rp$ represent the feed-forward weights for the first and the second layer, and $\psi$ denotes an element-wise activation function.
 Given $n$ input-label pairs $\{(x_i,y_i)\}_{i=1}^n$, we hope to minimize the squared error loss
-\begin{equation}
+\begin{equation}\label{eqn:squared-loss}
     \Loss(W,\beta) = \frac{1}{2}\sum_{i=1}^n \big(f(x_i)-y_i\big)^2.
 \end{equation}
 Vanilla gradient descent minimizes \eqref{eqn:nonlinear-network} through updating the feed-forward weights following gradient directions, \ie,
