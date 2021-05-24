@@ -109,17 +109,17 @@ where $c$ is a constant.
 \end{proof}
 
 \begin{proof}[Proof of Theorem \ref{thm:lin_conv}]  
-We show \eqref{eq:reg_error_bd} by induction. Assume \eqref{eq:reg_error_bd} holds for all $t=0,1,...,t'$, then for any $t\leq t'$, we apply \eqref{eq:reg_error_bd} repeatedly on the right hand side of itself to get
+We show \eqref{eq:reg_error_bd} by induction. Assume \eqref{eq:reg_error_bd} holds for all $t=0,1,...,t'$, we will show it hold for $t=t'+1$. For any $k\leq t'$, we apply \eqref{eq:reg_error_bd} repeatedly on the right hand side of itself to get
 \begin{equation*}
-    \|e(t)\|\leq \prod_{i=0}^{t-1}\Big(1-\frac{\eta\gamma}{2}-\eta\lambda(i)\Big)\|e(0)\| + \sum_{i=0}^{t-1}\eta\lambda(i)\prod_{i<j<t}\Big(1-\frac{\eta\gamma}{2}-\eta\lambda(j)\Big)\|y\|
+    \|e(k)\|\leq \prod_{i=0}^{k-1}\Big(1-\frac{\eta\gamma}{2}-\eta\lambda(i)\Big)\|e(0)\| + \sum_{i=0}^{k-1}\eta\lambda(i)\prod_{i<j<k}\Big(1-\frac{\eta\gamma}{2}-\eta\lambda(j)\Big)\|y\|
 \end{equation*}
-We take the sum over $t=0,..,T$ on both sides of above inequality 
+For $t\leq t'$, we take the sum over $k=0,..,t$ on both sides of above inequality 
 \begin{equation*}
 \begin{aligned}
-    \sum_{t=0}^{t'}\|e(t)\|
-    &\leq \sum_{t=0}^{t'}\prod_{i=0}^{t-1}\Big(1-\frac{\eta\gamma}{2}-\eta\lambda(i)\Big)\|e(0)\|  + \sum_{t=0}^{t'}\sum_{i=0}^{t-1}\eta\lambda(i)\prod_{i<j<t}\Big(1-\frac{\eta\gamma}{2}-\eta\lambda(j)\Big)\|y\| \\
-    &\leq \sum_{t=0}^{t'}\Big(1-\frac{\eta\gamma}{2}\Big)^{t-1}\|e(0)\|+ \sum_{t=0}^{t'}\sum_{i=0}^{t-1}\eta\lambda(i)\Big(1-\frac{\eta\gamma}{2}\Big)^{t-i-1}\|y\| \\
-    &\leq \sum_{t=0}^{t'}\Big(1-\frac{\eta\gamma}{2}\Big)^{t-1}\|e(0)\| + \eta\|y\|\sum_{t=0}^{t-1}\lambda(i)\sum_{t=i+1}^T\Big(1-\frac{\eta\gamma}{2}\Big)^{t-i-1} \\
+    \sum_{k=0}^{t}\|e(k)\|
+    &\leq \sum_{k=0}^{t}\prod_{i=0}^{k-1}\Big(1-\frac{\eta\gamma}{2}-\eta\lambda(i)\Big)\|e(0)\|  + \sum_{k=0}^{t}\sum_{i=0}^{k-1}\eta\lambda(i)\prod_{i<j<k}\Big(1-\frac{\eta\gamma}{2}-\eta\lambda(j)\Big)\|y\| \\
+    &\leq \sum_{k=0}^{t}\Big(1-\frac{\eta\gamma}{2}\Big)^{k-1}\|e(0)\|+ \sum_{k=0}^{t}\sum_{i=0}^{k-1}\eta\lambda(i)\Big(1-\frac{\eta\gamma}{2}\Big)^{k-i-1}\|y\| \\
+    &\leq \sum_{k=0}^{t}\Big(1-\frac{\eta\gamma}{2}\Big)^{k-1}\|e(0)\| + \eta\|y\|\sum_{k=0}^{t-1}\lambda(i)\sum_{k=i+1}^T\Big(1-\frac{\eta\gamma}{2}\Big)^{k-i-1} \\
     &\leq \frac{2}{\eta\gamma}\|e(0)\|+ \frac{2}{\gamma}S_\lambda\|y\| \\
     &\leq \frac{c\sqrt n}{\gamma}(\frac{1}{\eta}+S_\lambda)
 \end{aligned}
@@ -138,7 +138,7 @@ and
 \label{eq:J3_bd}
 \|J_3(t)\| \leq \frac{\eta^2}{p^2}\|b\|^2(\|XX\transpose\| |\hat{S}(t)|+\|XX\transpose\|^2 \|s(t-1)\|^2) \leq c\frac{\eta^2}{p}M^2 \frac{n}{\gamma^2}(\frac{1}{\eta}+S_\lambda)^2\leq \frac{\gamma}{16}
 \end{equation}
-hold if $p = \Omega(\frac{Md\log(d/\delta)}{\gamma})$ and $S_\lambda = O(\frac{\gamma\sqrt{\gamma p}}{\eta\sqrt{n}M})$. Furthermore, since $\|\frac{1}{p}W(0)W(0)\transpose-I_d\|\leq \epsilon_0$ with high probability when $p=\Omega(d)$, we have
+hold for all $t\leq t'$ if $p = \Omega(\frac{Md\log(d/\delta)}{\gamma})$ and $S_\lambda = O(\frac{\gamma\sqrt{\gamma p}}{\eta\sqrt{n}M})$. Furthermore, since $\|\frac{1}{p}W(0)W(0)\transpose-I_d\|\leq \epsilon_0$ with high probability when $p=\Omega(d)$, we have
 \begin{equation}
 \label{eq:xwwx_bd}
 \begin{aligned}
