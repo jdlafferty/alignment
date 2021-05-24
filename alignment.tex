@@ -10,10 +10,7 @@ In particular, the error signals $\dbp(h)$ and $\dfa(h)$ for the two-layer netwo
 \end{equation}
 and the alignment can be characterized by the angle between $\beta(t)$ and $b$ during training. We formalize this concept of alignment by the following definition.
 \begin{definition}\label{def:alignment}
-    A series of vectors $\{\beta(t)\}_{t=0}^\infty$ align with a fixed vector $b$ if there exists a constant $c>0$ and time $T_c$ such that for all $t > T_c$ it holds
-    \begin{align*}
-        \cos\angle(b, \beta(t)) = \frac{\langle b, \beta(t)\rangle}{\|b\|\|\beta(t)\|} \geq c.
-    \end{align*}
+    A series of vectors $\{\beta(t)\}_{t=0}^\infty$ align with a fixed vector $b$ if there exists a constant $c>0$ and time $T_c$ such that  $\cos\angle(b, \beta(t)) = \frac{\langle b, \beta(t)\rangle}{\|b\|\|\beta(t)\|} \geq c$ for all $t > T_c$.
 \end{definition}
 Unfortunately, this alignment between $\beta(t)$ and $b$ is not guaranteed for over-parameterized networks and the loss \eqref{eqn:squared-loss}. To further illustrate our point, we control the cosine value of the angle by inequalities \eqref{eq:weights} from \cref{thm:nonliner_conv}, \ie,
 \begin{equation}
@@ -45,12 +42,7 @@ In this section, we only focus on the theoretical analysis of alignment for line
 
 \begin{theorem}
 \label{thm:lin_conv}
-Assume
-\begin{enumerate}
-\item $\|y\| = \Theta(\sqrt n)$. $\lambda_{\min}(XX\transpose)>\gamma$ and $\lambda_{\max}(XX\transpose)<M$ for some constants $M>\gamma>0$,
-\item $\sum_{t=0}^\infty \lambda(t) \leq  S_\lambda = c_{S}\frac{\gamma\sqrt{\gamma p}}{\eta\sqrt{n}M}$ for some constant $c_{S}$,
-\item $\eta \leq 1/(\max \lambda(t)+M)$.
-\end{enumerate}
+Assume \textnormal{(1)}  $\|y\| = \Theta(\sqrt n)$, $\lambda_{\min}(XX\transpose)>\gamma$ and $\lambda_{\max}(XX\transpose)<M$ for some constants $M>\gamma>0$, \textnormal{(2)} $\sum_{t=0}^\infty \lambda(t) \leq  S_\lambda = c_{S}\frac{\gamma\sqrt{\gamma p}}{\eta\sqrt{n}M}$ for some constant $c_{S}$, \textnormal{(3)} $\eta \leq 1/(\max \lambda(t)+M)$.
 For any $\delta\in(0,1)$, if $p = \Omega(\frac{Md\log(d/\delta)}{\gamma})$, the following inequality holds for all $t\geq 0$ with probability at least $1-\delta$
 \begin{equation}
 \label{eq:reg_error_bd}
@@ -86,12 +78,13 @@ Assume all conditions from \cref{thm:lin_conv} hold and $X$ is $(\gamma, \eps)$-
 with $\lambda=\Omega(\gamma)$ and $T = \lfloor S_\lambda/\lambda\rfloor$. Then, for any $\delta\in(0,1)$, if $p = \Omega(d\log(d/\delta))$, with probability at least $1-\delta$, regularized feedback alignment on linear network achieves alignment. Specifically, there exist a positive constant $c=c_\delta$ and time $T_c$, such that $\cos\angle(b, \beta(t))\geq c$ for all $t>T_c$.
 \end{theorem}
 
-We also defer the proofs of \cref{prop:isom,thm:lin_conv,thm:lin_align} to Appendix. We remark that in \cref{thm:lin_align}, the cutoff schedule of $\lambda(t)$ is not essential to the proof. For other schedule such as inverse-squared decay or exponential decay, one could also obtain the same alignment result as long as the summation of $\lambda(t)$ is less than $S_\lambda$.
+We also defer the proofs of \cref{prop:isom,thm:lin_conv,thm:lin_align} to \cref{sec:appendix-alignment}. We remark that in \cref{thm:lin_align}, the cutoff schedule of $\lambda(t)$ is not essential to the proof. For other schedule such as inverse-squared decay or exponential decay, one could also obtain the same alignment result as long as the summation of $\lambda(t)$ is less than $S_\lambda$.
 
-\paragraph{Large sample scenario.} In \cref{thm:lin_conv,thm:lin_align}, we consider the case where sample size $n$ is less than input dimension $d$ so that the positive definiteness of $XX\transpose$ can be established. However, both results still hold for the case $n>d$. In fact, the squared error loss $\calL$ can be written as
+\paragraph{Large sample scenario.} In \cref{thm:lin_conv,thm:lin_align}, we consider the case where sample size $n$ is less than input dimension $d$ so that the positive definiteness of $XX\transpose$ can be established. However, both results still hold for $n>d$. In fact, the squared error loss $\calL$ can be written as
 \begin{equation*}
 \sum_{i=1}^n\big(f(x_i)-y\big)^2 = \big\|\frac{1}{\sqrt{p}}XW\transpose\beta-y\big\|^2 = \big\|\frac{1}{\sqrt{p}}XW\transpose\beta-\bar{y}\big\|^2+ \|\bar{y}-y\|^2,
 \end{equation*}
-where $\bar{y}$ denotes the projection of $y$ onto the column space of $X$. Without loss of generality, we assume $y=\bar{y}$. Under the case where $n>d$, $y$ and columns of $X$ are all in the same $d$-dimensional subspace of $\Rn$ and $XX\transpose$ is positive definite on this subspace as long as $X$ is full rank. Consequently, we can either work on this subspace of $\Rn$ or project all the vectors into $\Rd$ with a left multiplication of $X\transpose$.
+where $\bar{y}$ denotes the projection of $y$ onto the column space of $X$. Without loss of generality, we assume $y=\bar{y}$. As a result, $y$ and columns of $X$ are all in the same $d$-dimensional subspace of $\Rn$ and $XX\transpose$ is positive definite on this subspace as long as $X$ has full column rank. Consequently, we can either work on this subspace of $\Rn$ or project all the vectors onto $\Rd$.
+% with a left multiplication of $X\transpose$. (ganlin: actually U^T)
 
 

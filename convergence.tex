@@ -8,7 +8,8 @@ Among recent studies of over-parametrized networks under backpropagation, Neural
 	K_f(x,y) = \Big\langle \frac{\partial f (x,\theta)}{\partial \theta},\frac{\partial f (y,\theta)}{\partial \theta}\Big\rangle.
 \end{equation}
 Given a dataset $\{(x_i,y_i)\}_{i=1}^n$, we can also consider its corresponding Gram matrix $K = (K_f(x_i,x_j))_{n\times n}$. \citet{jacot2018neural} show that in the infinite width limit, $K_f$ converges to a constant at initialization and does not drift away from initialization throughout training. Under the over-parameterized regime, if the Gram matrix $K$ is positive definite, then $K$ is going to stay close to the initialization during training and thus results in a linear convergence of the squared error loss \citep{du2018gradient,du2019gradient,gao2020model}.
-However, after replacing the feed-forward weights $\beta$ with a random backpropagation weights $b$, feedback alignment algorithm no longer follows a strict gradient descent on the squared error loss and the previous argument cannot be applied directly to our case. In particular, for the two-layer network $f(x, \theta)$ defined in \eqref{eqn:nonlinear-network} with $\theta = (\beta,W)$, the kernel $K_f$ can be written in two parts, $G_f$ and $H_f$, which correspond to $\beta$ and $W$ respectively:
+% However, after replacing the feed-forward weights $\beta$ with a random backpropagation weights $b$, feedback alignment algorithm no longer follows a strict gradient descent on the squared error loss and the previous argument cannot be applied directly to our case. 
+For the two-layer network $f(x, \theta)$ defined in \eqref{eqn:nonlinear-network} with $\theta = (\beta,W)$, the kernel $K_f$ can be written in two parts, $G_f$ and $H_f$, which correspond to $\beta$ and $W$ respectively:
 \begin{equation}
 K_f(x,y) = G_f(x, y) + H_f(x,y) \defeq \Big\langle \frac{\partial f (x,\theta)}{\partial \beta},\frac{\partial f (y,\theta)}{\partial \beta}\Big\rangle + \sum_{r=1}^p\Big\langle \frac{\partial f (x,\theta)}{\partial w_r},\frac{\partial f (y,\theta)}{\partial w_r}\Big\rangle.
 \end{equation}
@@ -16,24 +17,11 @@ Under feedback alignment scheme with random backward weights $b$, $G_f$ remains 
 
 \begin{assumption}\label{assump:G}
 Define matrix $\overline{G} \in \R^{n\times n}$ with entries
-\begin{equation*}
-    \overline{G}_{i,j} = \E_{w\sim \calN(0,I_p)}\psi(w\transpose x_i) \psi(w\transpose  x_j),
-\end{equation*}
-we assume $\lambda_{\min}(\overline{G}) \geq \gamma$, where $\gamma$ is a positive constant.
+$\overline{G}_{i,j} = \E_{w\sim \calN(0,I_p)}\psi(w\transpose x_i) \psi(w\transpose  x_j)$, we assume $\lambda_{\min}(\overline{G}) \geq \gamma$, where $\gamma$ is a positive constant.
 \end{assumption}
 
 \begin{theorem}\label{thm:nonliner_conv}
-Let $W(0)$, $\beta(0)$ and $b$ have \iid standard Gaussian entries. Assume
-\begin{enumerate}
-    \item \cref{assump:G} holds,
-    \item $\psi$ is smooth, $\psi$, $\psi'$ and $\psi''$ are bounded,
-    \item $|y_i|$ and $\|x_i\|$ are bounded for all $i\in[n]$.
-\end{enumerate}
-Then there exists positive constants $c_1$, $c_2$, $C_1$ and $C_2$, such that for any $\delta\in(0,1)$, if 
-\begin{equation*}
-    p \geq \max(C_1\frac{n^2}{\delta\gamma^2}, C_2\frac{n^4\log p}{\gamma^4}),
-\end{equation*}
-with probability at least $1-\delta$, we have
+Let $W(0)$, $\beta(0)$ and $b$ have \iid standard Gaussian entries. Assume \textnormal{(1)} \cref{assump:G} holds, \textnormal{(2)} $\psi$ is smooth, $\psi$, $\psi'$ and $\psi''$ are bounded and \textnormal{(3)} $|y_i|$ and $\|x_i\|$ are bounded for all $i\in[n]$. Then there exists positive constants $c_1$, $c_2$, $C_1$ and $C_2$, such that for any $\delta\in(0,1)$, if $p \geq \max(C_1\frac{n^2}{\delta\gamma^2}, C_2\frac{n^4\log p}{\gamma^4})$, with probability at least $1-\delta$, we have
 \begin{equation}\label{eq:conv}
     \|e(t+1)\|^2 \leq (1-\frac{\eta\gamma}{4})^t\|e(t)\|^2.
 \end{equation}
