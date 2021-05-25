@@ -44,7 +44,7 @@ In \cref{algo:fa}, we summarize the feedback alignment algorithm on \eqref{eqn:n
         \State {\bf initialize} $W(0)$, $\beta(0)$ and $b$ with standard Gaussian entries
         \While{not converge}
             \State $\beta_r(t+1) \gets \beta_r(t) - \frac{\eta}{\sqrt p} \sum_{i=1}^n e_i(t)\psi(w_r(t)\transpose x_i)$ for $r\in[p]$
-            \State $w_r(t+1) = w_r(t) - \frac{\eta}{\sqrt{p}} \sum_{i=1}^n e_i(t) b_r\psi'(w_r(t)\transpose x_i)x_i$ for $r\in[p]$
+            \State $w_r(t+1) \gets w_r(t) - \frac{\eta}{\sqrt{p}} \sum_{i=1}^n e_i(t) b_r\psi'(w_r(t)\transpose x_i)x_i$ for $r\in[p]$
         \EndWhile
     \end{algorithmic}    
 \end{algorithm}%
