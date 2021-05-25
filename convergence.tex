@@ -23,7 +23,7 @@ $\overline{G}_{i,j} = \E_{w\sim \calN(0,I_p)}\psi(w\transpose x_i) \psi(w\transp
 \begin{theorem}\label{thm:nonliner_conv}
 Let $W(0)$, $\beta(0)$ and $b$ have \iid standard Gaussian entries. Assume \textnormal{(1)} \cref{assump:G} holds, \textnormal{(2)} $\psi$ is smooth, $\psi$, $\psi'$ and $\psi''$ are bounded and \textnormal{(3)} $|y_i|$ and $\|x_i\|$ are bounded for all $i\in[n]$. Then there exists positive constants $c_1$, $c_2$, $C_1$ and $C_2$, such that for any $\delta\in(0,1)$, if $p \geq \max(C_1\frac{n^2}{\delta\gamma^2}, C_2\frac{n^4\log p}{\gamma^4})$, with probability at least $1-\delta$, we have
 \begin{equation}\label{eq:conv}
-    \|e(t+1)\|^2 \leq (1-\frac{\eta\gamma}{4})^t\|e(t)\|^2.
+    \|e(t+1)\| \leq (1-\frac{\eta\gamma}{4})\|e(t)\|
 \end{equation}
 and 
 \begin{equation}
