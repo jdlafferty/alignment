@@ -1,6 +1,6 @@
 %!TEX root=./main.tex
 
-\section{Alignment of Parameters to Random Backpropagation Weights: Linear Case}\label{sec:alignment}
+\section{Alignment of Parameters to Random Backpropagation Weights}\label{sec:alignment}
 
 The most prominent characteristic of feedback alignment algorithm is its phenomenon of alignment between the error signals back-propagated with forward weights and those with fixed random backward weights during training. Specifically, if we denote $h\in \R^p$ to be the hidden layer of the network, then we write $\dbp(h) \defeq \frac{\partial \Loss}{\partial h}$ to represent the error signals with respect to the hidden layer that are backpropagated with the feed-forward weights and $\dfa(h)$ as the error signals computed with fixed random backward weights.
 \citet{lillicrap2016random} notice a decreasing angle between $\dbp(h)$ and $\dfa(h)$ during training, which suggests that feedback alignment algorithm can still carry gradient information back through layers even the signals are backpropagated through random weights.
@@ -12,6 +12,8 @@ and the alignment can be characterized by the angle between $\beta(t)$ and $b$ d
 \begin{definition}\label{def:alignment}
     A series of vectors $\{\beta(t)\}_{t=0}^\infty$ align with a fixed vector $b$ if there exists a constant $c>0$ and time $T_c$ such that  $\cos\angle(b, \beta(t)) = \frac{\langle b, \beta(t)\rangle}{\|b\|\|\beta(t)\|} \geq c$ for all $t > T_c$.
 \end{definition}
+
+\subsection{Regularized Feedback Alignment}
 Unfortunately, this alignment between $\beta(t)$ and $b$ is not guaranteed for over-parameterized networks and the loss \eqref{eqn:squared-loss}. To further illustrate our point, we control the cosine value of the angle by inequalities \eqref{eq:weights} from \cref{thm:nonliner_conv}, \ie,
 \begin{equation}
     \Big|\cos\angle(b, \beta(t))\Big| \leq \frac{|\langle \frac{b}{\|b\|}, \beta(0)\rangle|+ \|\beta(t)- \beta(0)\|}{\|\beta(0)\|-\|\beta(t)-\beta(0)\|} = O\big(\frac{n}{\sqrt p}\big),
@@ -21,7 +23,7 @@ which indicates that $\beta(t)$ and $b$ turn orthogonal as the network becomes w
 \label{eqn:loss-with-reg}
 \Loss(t, W, \beta) = \frac{1}{2}\sum_{i=1}^n\big(f(x_i)-y_i\big)^2 + \frac{1}{2}\lambda(t)\|\beta\|^2,
 \end{equation}
-where $\{\lambda(t)\}_{t=0}^\infty$ is a sequence of regularization rates, which defines a series of loss functions for different training steps $t$. The feedback alignment algorithm under the regularized loss are summarized in Algorithm \ref{algo:fa-reg}. Compared to \cref{algo:fa}, we would like to emphasize the extra contraction factor $1-\lambda(t)$ appearing in the update of $\beta(t)$, which shrinks the component of $\beta(0)$ in $\beta(t)$ and thus help the alignment.
+where $\{\lambda(t)\}_{t=0}^\infty$ is a sequence of regularization rates, which defines a series of loss functions for different training steps $t$. The feedback alignment algorithm under the regularized loss are summarized in Algorithm \ref{algo:fa-reg}. Compared to \cref{algo:fa}, an extra contraction factor $1-\lambda(t)$ has been added in the update of $\beta(t)$, which doesn't affect the locality of the algorithm but helps the alignment by shrinking the component of $\beta(0)$ in $\beta(t)$.
 
 %\begin{minipage}{\textwidth}
 \begin{algorithm}[H]
@@ -38,6 +40,7 @@ where $\{\lambda(t)\}_{t=0}^\infty$ is a sequence of regularization rates, which
 \end{algorithm}
 %\end{minipage}
 
+\subsection{Theoretical Results on Linear Networks}
 In this section, we only focus on the theoretical analysis of alignment for linear networks, which is equivalent to setting the activation function $\psi$ into an identity map. Before presenting our results on alignment, we first provide an upper bound for the prediction error $e(t)$, which forms the cornerstone for our proofs. \cref{thm:lin_conv} shows that the error can be upper bounded if $X = (x_1,\ldots,x_n)\transpose$ has full row rank and the summation of $\lambda(t)$ is upper bounded by $S_\lambda = O(\sqrt{p/n})$.
 
 \begin{theorem}
