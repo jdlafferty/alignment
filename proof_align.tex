@@ -105,7 +105,7 @@ where $c$ is a constant.
 \end{lemma}
 
 \begin{proof}
-\eqref{eq:bbeta_sqrtp} is derived from Lemma \ref{lem:inner-product-tail}. \eqref{eq:bW_sqrtp} is by \eqref{eq:bbeta_sqrtp} and a union bound argument. \eqref{eq:b_norm} is by Lemma \ref{lem:chi-squared-tail}. \eqref{eq:ww_p} is by Corollary \ref{cor:RIP}
+\eqref{eq:bbeta_sqrtp} is derived from \cref{lem:inner-product-tail}. \eqref{eq:bW_sqrtp} is by \eqref{eq:bbeta_sqrtp} and a union bound argument. \eqref{eq:b_norm} is by \cref{lem:chi-squared-tail}. \eqref{eq:ww_p} is by \cref{cor:RIP}
 \end{proof}
 
 \begin{proof}[Proof of Theorem \ref{thm:lin_conv}]  
@@ -124,7 +124,7 @@ For $t\leq t'$, we take the sum over $k=0,..,t$ on both sides of above inequalit
     &\leq \frac{c\sqrt n}{\gamma}(\frac{1}{\eta}+S_\lambda)
 \end{aligned}
 \end{equation*} 
-where we use $\|e(0)\|=O(\sqrt n)$ and $\|y\|=O(\sqrt n)$. With this bound and the inequalities from Lemma \ref{lma:ineqs_2}, we can bound the norms of $J_1(t)$, $J_2(t)$ and $J_3(t)$ from Lemma \ref{lma:one_step_update}. It follows that
+where we use $\|e(0)\|=O(\sqrt n)$ and $\|y\|=O(\sqrt n)$. With this bound and the inequalities from \cref{lma:ineqs_2}, we can bound the norms of $J_1(t)$, $J_2(t)$ and $J_3(t)$ from \cref{lma:one_step_update}. It follows that
 \begin{equation}
 \label{eq:J1_bd}
 \|J_1(t)\| \leq \frac{1}{p}|b\transpose\beta(0)|\|XX\transpose\|\leq c\frac{M\sqrt{\log \delta^{-1}}}{\sqrt p}\leq \frac{\gamma}{16},
@@ -162,7 +162,7 @@ which completes the proof.
 
 
 \begin{proof}[Proof of Proposition \ref{prop:isom}]
-By Corollary \ref{cor:RIP}, if $d=\Omega(\frac{1}{\epsilon}\log\frac{n}{\delta}+\frac{n}{\epsilon}\log \frac{1}{\epsilon})$, we have 
+By \cref{cor:RIP}, if $d=\Omega(\frac{1}{\epsilon}\log\frac{n}{\delta}+\frac{n}{\epsilon}\log \frac{1}{\epsilon})$, we have 
 \begin{equation*}
 \|XX\transpose - I_n\|\leq \epsilon 
 \end{equation*}
@@ -172,7 +172,7 @@ It follows that $\lambda_{\min}(XX\transpose)\geq 1-\epsilon$ and $\lambda_{\max
 
 \begin{lemma}
 \label{lma:suf_cond}
-Recall from Lemma \ref{lma:one_step_update} that
+Recall from \cref{lma:one_step_update} that
 \begin{equation*}
 \beta(t)=\prod_{i=0}^{t-1}(1-\eta\lambda(i))\beta(0) -\frac{\eta}{\sqrt p}W(0)X\transpose \hat{s}(t-1) +\frac{\eta^2}{p}b \hat{S}(t-1)
 \end{equation*}
@@ -260,7 +260,7 @@ Notice that
 \begin{equation*}
     e(i)\transpose XX\transpose e(j) \geq \gamma e(i)\transpose e(j) - \|e(i)\|\|e(j)\|\|XX\transpose-\gamma I\| \geq \gamma e(i)\transpose e(j) - \epsilon\gamma\|e(i)\|\|e(j)\|
 \end{equation*}
-For $i\in[T/2,T]$ and $\tau$ defined in Lemma \ref{lma:decomp_1}, we have
+For $i\in[T/2,T]$ and $\tau$ defined in \cref{lma:decomp_1}, we have
 \begin{equation}
 \label{eq:eXXe}
 \begin{aligned}
@@ -273,7 +273,7 @@ For $i\in[T/2,T]$ and $\tau$ defined in Lemma \ref{lma:decomp_1}, we have
     &\geq c\frac{\sqrt{p\gamma}}{\eta}\|y\|
 \end{aligned}
 \end{equation}
-The second inequality is by orthogonal decomposition of $e(i)$ and $\|e(i)\|\leq c\|y\|$ given by \eqref{eq:reg_error_bd}. The third inequality is by \eqref{eq:at_lbd}, \eqref{eq:xit_ubd} and \eqref{eq:et_y_bd} from Lemma \ref{lma:decomp_1}. The forth inequality is by $\lambda=\Omega(\gamma)$, $i-\tau \geq T/4$ and $\tau/(i-\tau)$ is small ($p=\Omega(n)$). The last inequality is by $\|y\|=\Theta(\sqrt n)$. Therefore,
+The second inequality is by orthogonal decomposition of $e(i)$ and $\|e(i)\|\leq c\|y\|$ given by \eqref{eq:reg_error_bd}. The third inequality is by \eqref{eq:at_lbd}, \eqref{eq:xit_ubd} and \eqref{eq:et_y_bd} from \cref{lma:decomp_1}. The forth inequality is by $\lambda=\Omega(\gamma)$, $i-\tau \geq T/4$ and $\tau/(i-\tau)$ is small ($p=\Omega(n)$). The last inequality is by $\|y\|=\Theta(\sqrt n)$. Therefore,
 \begin{equation*}
 \begin{aligned}
     \hat{S}(T) &= \sum_{i=0}^T(1-\eta\lambda)^{T-i}e(i)\transpose XX\transpose \sum_{j<i}e(j) \\
@@ -294,7 +294,7 @@ Combining the above inequalities gives the proof.
 \end{proof}
 
 \begin{proof}[Proof of Theorem \ref{thm:lin_align}]
-First, notice that $\lambda(t)=0$ when $t>T$. By Theorem \ref{thm:lin_conv} we have the prediction error converges to 0 exponentially fast, or $\|e(t+1)\|\leq (1-\eta\gamma/2)\|e(t)\|$. It follows $\hat{S}(t)\to \hat{S}(\infty)$ and $\hat{s}(t)\to \hat{s}(\infty)$ as $t\to\infty$. By Lemma \ref{lma:suf_cond}, we know it suffices to show $\hat{S}(\infty)\geq C\frac{\sqrt{p\gamma}}{\eta}\|\hat{s}(\infty)\|$ with some constant $C$. Since 
+First, notice that $\lambda(t)=0$ when $t>T$. By Theorem \ref{thm:lin_conv} we have the prediction error converges to 0 exponentially fast, or $\|e(t+1)\|\leq (1-\eta\gamma/2)\|e(t)\|$. It follows $\hat{S}(t)\to \hat{S}(\infty)$ and $\hat{s}(t)\to \hat{s}(\infty)$ as $t\to\infty$. By \cref{lma:suf_cond}, we know it suffices to show $\hat{S}(\infty)\geq C\frac{\sqrt{p\gamma}}{\eta}\|\hat{s}(\infty)\|$ with some constant $C$. Since 
 \begin{equation*}
 \hat{S}(\infty) = \sum_{i=0}^\infty(1-\eta\lambda)^{(T-i)_+}e(i)\transpose XX\transpose \sum_{j<i} e(j) = \hat{S}(T)+ \sum_{i>T}e(i)\transpose XX\transpose \sum_{j<i}e(j)
 \end{equation*}
@@ -302,7 +302,7 @@ and
 \begin{equation*}
 \hat{s}(\infty) = \sum_{i=0}^\infty(1-\eta\lambda)^{(T-i)_+}e(i)= \hat{s}(T)+ \sum_{i>T}e(i),
 \end{equation*}
-by Lemma \ref{lma:ST_sT}, it suffices to show 
+by \cref{lma:ST_sT}, it suffices to show 
 \begin{equation}
 \label{eq:exxe_e_bd}
     \sum_{i>T}e(i)\transpose XX\transpose \sum_{j<i}e(j) \geq C\frac{\sqrt{p\gamma}}{\eta}\sum_{i>T}\|e(i)\|
@@ -324,7 +324,7 @@ and
 &\leq (1+\epsilon)\gamma\Big[\tau c\|y\|+ (T-\tau)\Big(\frac{\lambda+\gamma/2}{\lambda-\gamma/2}\Big)\|y\|\Big]
 \end{aligned}
 \end{equation}
-where we use the bounds \eqref{eq:at_lbd} and \eqref{eq:et_y_bd} from Lemma \ref{lma:decomp_1}. We further denote $\alpha(t) = \bar{g}\transpose e(t)$ where $\bar{g} = g/\|g\|$. Following the same calculation in \eqref{eq:eXXe}, we have
+where we use the bounds \eqref{eq:at_lbd} and \eqref{eq:et_y_bd} from \cref{lma:decomp_1}. We further denote $\alpha(t) = \bar{g}\transpose e(t)$ where $\bar{g} = g/\|g\|$. Following the same calculation in \eqref{eq:eXXe}, we have
 \begin{equation*}
 \begin{aligned}
     g\transpose e(T) 

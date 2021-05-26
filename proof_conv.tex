@@ -35,7 +35,7 @@ In fact, if $\psi$ is sigmoid or tanh, for a standard Gaussian random variable $
 \begin{equation*}
     \gamma\defeq \frac{1}{2}(\E|\psi(Z)|^2-|\E\psi'(Z)|^2) >0.
 \end{equation*}
-From Lemma \ref{lma:G}, we know that with high probability $\lambda_{\min}(\overline{G}) \geq \lambda_{\min}(\widetilde{G})-\|\overline{G}-\widetilde{G}\|\geq 2\gamma - C(\sqrt{\frac{\log n}{d}} + \frac{n}{d}) \geq \gamma$.
+From \cref{lma:G}, we know that with high probability $\lambda_{\min}(\overline{G}) \geq \lambda_{\min}(\widetilde{G})-\|\overline{G}-\widetilde{G}\|\geq 2\gamma - C(\sqrt{\frac{\log n}{d}} + \frac{n}{d}) \geq \gamma$.
 \end{proof}
 
 \begin{lemma}
@@ -75,7 +75,7 @@ where we require $p=\Omega(n/\delta)$. With a union bound argument, we could sho
 
 \begin{lemma}
 \label{lma:GH}
-Under the assumption of Theorem \ref{thm:nonliner_conv}, we define matrix $G(0),H(0)\in\R^{n\times n}$ with entries
+Under the conditions of \cref{thm:nonliner_conv}, we define matrix $G(0),H(0)\in\R^{n\times n}$ with entries
 \begin{equation}
 \label{eq:def_G0}
 G_{ij}(0) = \frac{1}{p}\psi(W(0)x_i)\transpose \psi(W(0)x_j) = \frac{1}{p}\sum_{r=1}^p\psi(w_r(0)\transpose x_i)\psi(w_r(0)\transpose x_j) 
@@ -85,7 +85,7 @@ and
 \label{eq:def_H0}
 H_{ij}(0) = \frac{x_i\transpose x_j}{p}\beta(0)\transpose D_i(0)D_j(0)b = \frac{1}{p}\sum_{r=1}^p\beta_r(0)b_r\psi'(w_r(0)\transpose x_i)\psi'(w_r(0)\transpose x_j).
 \end{equation}
-For any $\delta \in (0,1)$, if $p=\Omega(\frac{n^2}{\delta\gamma^2})$, then with probability at least $1-\delta$, we have $\lambda_{\min}(G(0))\geq \frac{3}{4}\gamma$ and $\lambda_{\max}(\|H(0)\|)\leq \frac{\gamma}{4}$.
+For any $\delta \in (0,1)$, if $p=\Omega(\frac{n^2}{\delta\gamma^2})$, then with probability at least $1-\delta$, we have $\lambda_{\min}(G(0))\geq \frac{3}{4}\gamma$ and $\|H(0)\|\leq \frac{\gamma}{4}$.
 \end{lemma}
 \begin{proof}
 By independence and boundedness of $\psi$ and $\psi'$, we have $\Var(G_{ij}(0)) = O(1/p)$ and $\Var(H_{ij}(0)) = O(1/p)$. Since $\E(G(0))=\overline{G}$, we have
@@ -96,14 +96,14 @@ by Markov's inequality, when $p=\Omega(\frac{n^2}{\delta\gamma^2})$
 \begin{equation*}
     \prob(\|G(0)-\overline{G}\|>\frac{\gamma}{4})\leq O(\frac{n^2}{p\gamma^2})\leq\frac{\delta}{2}
 \end{equation*}
-Similarly we have $\prob(\|H(0)\|>\frac{\gamma}{4})\leq\frac{\delta}{2}$, since $\E(H(0))=0$. Then with probability at least $1-\delta$, $\lambda_{\min}(G(0)) \geq \lambda_{\min}(\overline{G}) -\gamma/4 \geq \frac{3}{4}\gamma$, and $\lambda_{\max}(\|H(0)\|)\leq \gamma/4$.
+Similarly we have $\prob(\|H(0)\|>\frac{\gamma}{4})\leq\frac{\delta}{2}$, since $\E(H(0))=0$. Then with probability at least $1-\delta$, $\lambda_{\min}(G(0)) \geq \lambda_{\min}(\overline{G}) -\gamma/4 \geq \frac{3}{4}\gamma$, and $\|H(0)\|\leq \gamma/4$.
 \end{proof}
 
 
 
 \begin{lemma}
 \label{lma:weights}
-Assume all the inequalities from Lemma \ref{lma:inqs} holds. If the error bound \eqref{eq:conv} holds for all $t=1,2,...,T-1$, then the bounds \eqref{eq:weights} hold for all $t\leq T$.
+Assume all the inequalities from \cref{lma:inqs} holds. Under the conditions of \cref{thm:nonliner_conv}, if the error bound \eqref{eq:conv} holds for all $t=1,2,...,T-1$, then the bounds \eqref{eq:weights} hold for all $t\leq T$.
 \end{lemma}
 
 \begin{proof}
@@ -133,7 +133,7 @@ where we use $\psi'$ is bounded, \eqref{eq:e0_bd} and \eqref{eq:maxb_bd}.
 
 \begin{lemma}
 \label{lma:induction}
-Assume all the inequalities from Lemma \ref{lma:inqs} holds. If the bound for weights difference \eqref{eq:weights} holds for all $t\leq T$ and error bound \eqref{eq:conv} holds for all $t\leq T-1$, then \eqref{eq:conv} holds for $t=T$.
+Assume all the inequalities from \cref{lma:inqs} holds. Under the conditions of \cref{thm:nonliner_conv}, if the bound for weights difference \eqref{eq:weights} holds for all $t\leq T$ and error bound \eqref{eq:conv} holds for all $t\leq T-1$, then \eqref{eq:conv} holds for $t=T$.
 \end{lemma}
 \begin{proof}
 We start with analyzing the error $e(t)$
@@ -222,9 +222,9 @@ Combining \cref{eq:et_iter,eq:bound_Gt,eq:bound_Ht,eq:bound_vt}, we have
 &\leq(1-\frac{\eta\gamma}{4})\|e(t)\|
 \end{aligned}
 \end{equation*}
-where we use the Lemma \ref{lma:GH} and $p=\Omega(\frac{n^4\log p}{\gamma^4})$.
+where we use the \cref{lma:GH} and $p=\Omega(\frac{n^4\log p}{\gamma^4})$.
 \end{proof}
 
-\begin{proof}[Proof of Theorem \ref{thm:nonliner_conv}]
-We prove the inequality \eqref{eq:conv} by induction. Suppose \eqref{eq:conv} holds for all $t=1,2,...,T-1$, by Lemma \ref{lma:weights} and Lemma \ref{lma:induction} we know \eqref{eq:conv} holds for $t=T$, which completes the proof.
+\begin{proof}[Proof of \cref{thm:nonliner_conv}]
+We prove the inequality \eqref{eq:conv} by induction. Suppose \eqref{eq:conv} holds for all $t=1,2,...,T-1$, by \cref{lma:weights} and \cref{lma:induction} we know \eqref{eq:conv} holds for $t=T$, which completes the proof.
 \end{proof}
