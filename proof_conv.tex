@@ -1,3 +1,5 @@
+%!TEX root=./main.tex
+
 \section{Convergence on Two-Layer Nonlinear Networks}\label{sec:appendix-convergence}
 We consider the following neural network
 \begin{equation}
@@ -17,6 +19,7 @@ The feedback alignment algorithm gives
 \end{equation}
 where $D_i(t) = \text{diag}(\psi'(W(t)x_i))$ and $e_i(t) = \frac{1}{\sqrt p}\beta(t)\transpose \psi(W(t)x_i)-y_i$. We also denote $u(t)\in\R^n$ with $u_i(t) = \frac{1}{\sqrt p}\beta(t)\transpose \psi(W(t)x_i)$, the network prediction on $x_i$ at time $t$. To make the proof clear, we use $c$, $C$ as the global constants whose values may vary from line to line.
 
+\subsection{Concentration Results}
 
 \begin{lemma}[Lemma A.7 in \citealp{gao2020model}]\label{lma:G}
 Assume $x_1,...,x_n \overset{\iid}{\sim} \calN(0,I_d/d)$. We define  matrix $\widetilde{G}\in \R^{n\times n}$ with entries
@@ -99,11 +102,11 @@ by Markov's inequality, when $p=\Omega(\frac{n^2}{\delta\gamma^2})$
 Similarly we have $\prob(\|H(0)\|>\frac{\gamma}{4})\leq\frac{\delta}{2}$, since $\E(H(0))=0$. Then with probability at least $1-\delta$, $\lambda_{\min}(G(0)) \geq \lambda_{\min}(\overline{G}) -\gamma/4 \geq \frac{3}{4}\gamma$, and $\|H(0)\|\leq \gamma/4$.
 \end{proof}
 
-
+\subsection{Proof of Theorem \ref{thm:nonliner_conv}}
 
 \begin{lemma}
 \label{lma:weights}
-Assume all the inequalities from \cref{lma:inqs} holds. Under the conditions of \cref{thm:nonliner_conv}, if the error bound \eqref{eq:conv} holds for all $t=1,2,...,T-1$, then the bounds \eqref{eq:weights} hold for all $t\leq T$.
+Assume all the inequalities from \cref{lma:inqs} holds. Under the conditions of \cref{thm:nonliner_conv}, if the error bound \eqref{eq:conv} holds for all $t=1,2,...,t'-1$, then the bounds \eqref{eq:weights} hold for all $t\leq t'$.
 \end{lemma}
 
 \begin{proof}
@@ -133,7 +136,7 @@ where we use $\psi'$ is bounded, \eqref{eq:e0_bd} and \eqref{eq:maxb_bd}.
 
 \begin{lemma}
 \label{lma:induction}
-Assume all the inequalities from \cref{lma:inqs} holds. Under the conditions of \cref{thm:nonliner_conv}, if the bound for weights difference \eqref{eq:weights} holds for all $t\leq T$ and error bound \eqref{eq:conv} holds for all $t\leq T-1$, then \eqref{eq:conv} holds for $t=T$.
+Assume all the inequalities from \cref{lma:inqs} holds. Under the conditions of \cref{thm:nonliner_conv}, if the bound for weights difference \eqref{eq:weights} holds for all $t\leq t'$ and error bound \eqref{eq:conv} holds for all $t\leq t'-1$, then \eqref{eq:conv} holds for $t=t'$.
 \end{lemma}
 \begin{proof}
 We start with analyzing the error $e(t)$
@@ -163,7 +166,7 @@ with $\xi_{ri}(t)$ between $w_r(t)\transpose x_i$ and $w_r(t+1)\transpose x_i$. 
 \begin{equation}\label{eq:et_iter}
      e(t+1) = e(t) - \eta(G(t)+H(t))e(t) + v(t)
 \end{equation} 
-Now we try to show that both $G(t)$ and $H(t)$ are close to their initialization. Notice that
+Now for $t=t'-1$, we try to show that both $G(t)$ and $H(t)$ are close to their initialization. Notice that
 \begin{equation*}
 \begin{aligned}
     |G_{ij}(t) - G_{ij}(0)| 
@@ -226,5 +229,121 @@ where we use the \cref{lma:GH} and $p=\Omega(\frac{n^4\log p}{\gamma^4})$.
 \end{proof}
 
 \begin{proof}[Proof of \cref{thm:nonliner_conv}]
-We prove the inequality \eqref{eq:conv} by induction. Suppose \eqref{eq:conv} holds for all $t=1,2,...,T-1$, by \cref{lma:weights} and \cref{lma:induction} we know \eqref{eq:conv} holds for $t=T$, which completes the proof.
+We prove the inequality \eqref{eq:conv} by induction. Suppose \eqref{eq:conv} and \eqref{eq:weights} hold for all $t=1,2,...,t'-1$, by \cref{lma:weights} and \cref{lma:induction} we know \eqref{eq:conv} and \eqref{eq:weights} hold for $t=t'$, which completes the proof.
+\end{proof}
+
+\subsection{Proof of Theorem \ref{thm:nonlinear_conv_reg}}
+
+\begin{lemma}
+\label{lma:weights_reg}
+Assume all the inequalities from \cref{lma:inqs} holds. Under the conditions of \cref{thm:nonlinear_conv_reg}, if the error bound \eqref{eq:conv_reg} holds for all $t=1,2,...,t'-1$, then 
+\begin{equation}
+\label{eq:weights_reg}
+\begin{aligned}
+    \|w_r(t)-w_r(0)\| &\leq c_1\frac{n\sqrt{\log p}}{\gamma\sqrt p}(1+\eta \tilde{S}_\lambda),\\
+    |\beta_r(t)-\beta_r(0)| &\leq c_2\frac{n}{\gamma\sqrt p}(1+\eta \tilde{S}_\lambda)
+\end{aligned}
+\end{equation}
+hold for all $t\leq t'$, where $c_1$, $c_2$ are constants.
+\end{lemma}
+
+\begin{proof}
+For any $k\leq t'-1$, we apply \eqref{eq:conv_reg} repeatedly on the right hand side of itself to get
+\begin{equation*}
+    \|e(k)\|\leq \prod_{i=0}^{k-1}\Big(1-\frac{\eta\gamma}{4}-\eta\lambda(i)\Big)\|e(0)\| + \sum_{i=0}^{k-1}\eta\lambda(i)\prod_{i<j<k}\Big(1-\frac{\eta\gamma}{4}-\eta\lambda(j)\Big)\|y\|
+\end{equation*}
+For $t\leq t'-1$, we take the sum over $k=0,..,t$ on both sides of above inequality 
+\begin{equation*}
+\begin{aligned}
+    \sum_{k=0}^{t}\|e(k)\|
+    &\leq \sum_{k=0}^{t}\prod_{i=0}^{k-1}\Big(1-\frac{\eta\gamma}{4}-\eta\lambda(i)\Big)\|e(0)\|  + \sum_{k=0}^{t}\sum_{i=0}^{k-1}\eta\lambda(i)\prod_{i<j<k}\Big(1-\frac{\eta\gamma}{4}-\eta\lambda(j)\Big)\|y\| \\
+    &\leq \sum_{k=0}^{t}\Big(1-\frac{\eta\gamma}{4}\Big)^{k-1}\|e(0)\|+ \sum_{k=0}^{t}\sum_{i=0}^{k-1}\eta\lambda(i)\Big(1-\frac{\eta\gamma}{4}\Big)^{k-i-1}\|y\| \\
+    &\leq \sum_{k=0}^{t}\Big(1-\frac{\eta\gamma}{4}\Big)^{k-1}\|e(0)\| + \eta\|y\|\sum_{k=0}^{t-1}\lambda(i)\sum_{k=i+1}^T\Big(1-\frac{\eta\gamma}{4}\Big)^{k-i-1} \\
+    &\leq \frac{4}{\eta\gamma}\|e(0)\|+ \frac{4}{\gamma}\tilde{S}_\lambda\|y\| \\
+    &\leq \frac{c\sqrt n}{\gamma}(\frac{1}{\eta}+\tilde{S}_\lambda)
+\end{aligned}
+\end{equation*} 
+where we use $\|e(0)\|=O(\sqrt n)$ and $\|y\|=O(\sqrt n)$. Then for all $t\leq t'$, we have
+\begin{equation*}
+\begin{aligned}
+    |\beta_r(t)-\beta_r(0)| &\leq \frac{\eta}{\sqrt p}\sum_{s=0}^{t-1}\sum_{i=1}^n |\psi(w_r(t)x_i)e_i(t)| \\
+    &\leq c\frac{\eta}{\sqrt p}\sum_{s=0}^{t-1}\sum_{i=1}^n |e_i(t)| \\
+    &\leq c\frac{\eta\sqrt n}{\sqrt p}\sum_{s=0}^{t-1} \|e(t)\| \\
+    &\leq c\frac{\eta\sqrt n}{\sqrt p}\frac{\sqrt n}{\gamma}(\frac{1}{\eta}+\tilde{S}_\lambda)  \\
+    &\leq c\frac{n}{\gamma\sqrt p} (1+\eta \tilde{S}_\lambda)
+\end{aligned}
+\end{equation*}
+where we use $\psi$ is bounded and \eqref{eq:e0_bd}. We also have
+\begin{equation*}
+\begin{aligned}
+    \|w_r(t)-w_r(0)\| &\leq \frac{\eta}{\sqrt p}\sum_{s=0}^{t-1}\sum_{i=1}^n \|\psi'(w_r(t)\transpose x_i)b_rx_i e_i(t)\| \\
+    & \leq c\frac{\eta}{\sqrt p}\sum_{s=0}^{t-1}\sum_{i=1}^n |b_r| |e_i(t)| \\
+    & \leq c|b_r|\frac{\eta\sqrt n}{\sqrt p}\sum_{s=0}^{t-1} \|e(t)\| \\
+    & \leq c|b_r|\frac{\eta\sqrt n}{\sqrt p}\frac{\sqrt n}{\gamma}(\frac{1}{\eta}+\tilde{S}_\lambda) \\
+    & \leq c\frac{n\sqrt{\log p}}{\gamma\sqrt p} (1+\eta \tilde{S}_\lambda)
+\end{aligned}
+\end{equation*}
+where we use $\psi'$ is bounded, \eqref{eq:e0_bd} and \eqref{eq:maxb_bd}.
+\end{proof}
+
+
+\begin{lemma}
+\label{lma:induction_reg}
+Assume all the inequalities from \cref{lma:inqs} holds. Under the conditions of \cref{thm:nonlinear_conv_reg}, if the bound for weights difference \eqref{eq:weights_reg} holds for all $t\leq t'$ and error bound \eqref{eq:conv_reg} holds for all $t\leq t'-1$, then \eqref{eq:conv_reg} holds for $t=t'$.
+\end{lemma}
+\begin{proof}
+We start with analyzing the error $e(t)$
+\begin{equation*}
+\begin{aligned}
+    e_i(t+1) 
+    &= \frac{1}{\sqrt p}\beta(t+1)\transpose\psi(W(t+1)x_i) - y_i \\
+    &= \frac{1}{\sqrt p}\beta(t+1)\transpose(\psi(W(t+1)x_i)-\psi(W(t)x_i))+ \frac{1}{\sqrt p}(\beta(t+1)-(1-\eta\lambda(t))\beta(t))\transpose \psi(W(t)x_i) \\
+    & \quad + (1-\eta\lambda(t))\Big(\frac{1}{\sqrt p}\beta(t)\transpose \psi(W(t)x_i) - y_i\Big) - \eta\lambda(t)y \\
+    &=(1-\eta\lambda(t))e_i(t) - \frac{\eta}{p}\beta(t+1)\transpose D_i(t)\sum_{j=1}^nD_j(t)b x_j\transpose x_i e_j(t)  - \frac{\eta}{p}\sum_{j=1}^n\psi(W(t)x_j)\transpose\psi(W(t)x_i)e_j(t) - \eta\lambda(t)y\\
+    & \quad + v_i(t) \\
+    & = (1-\eta\lambda(t))e_i(t)-\eta\sum_{j=1}^n\big(H_{ij}(t)+G_{ij}(t)\big)e_j(t) + v_i(t) - \eta\lambda(t)y
+\end{aligned}
+\end{equation*}
+where
+\begin{equation*}
+\begin{aligned}
+G_{ij}(t) &= \frac{1}{p}\psi(W(t)x_j)\transpose\psi(W(t)x_i) \\
+H_{ij}(t) &= \frac{x_i\transpose x_j}{p}\beta(t+1)\transpose D_i(t)D_j(t)b
+\end{aligned}
+\end{equation*}
+and $v_i(t)$ is the residual term from the Taylor's expansion
+\begin{equation*}
+    v_i(t) = \frac{1}{2\sqrt p}\sum_{r=1}^p\beta_r(t+1)|(w_r(t+1)-w_r(t))\transpose x_i|^2\psi''(\xi_{ri}(t))
+\end{equation*}
+with $\xi_{ri}(t)$ between $w_r(t)\transpose x_i$ and $w_r(t+1)\transpose x_i$. We can also rewrite the above iteration in a vector form
+\begin{equation}\label{eq:et_iter_reg}
+     e(t+1) = (1-\lambda(t))e(t) - \eta(G(t)+H(t))e(t) + v(t) -\eta\lambda(t)y
+\end{equation} 
+Now for $t=t'-1$, we try to show that both $G(t)$ and $H(t)$ are close to their initialization. Similar to the argument in \cref{lma:induction}, we can obtain the following bound
+\begin{equation}\label{eq:bound_Gt_reg}
+    \|G(t)-G(0)\| \leq c_1 \frac{n^2\sqrt{\log p}}{\gamma\sqrt p}(1+\eta \tilde{S}_\lambda)
+\end{equation}
+
+\begin{equation}\label{eq:bound_Ht_reg}
+    \|H(t)-H(0)\| \leq c_2\frac{n^2\sqrt{\log p}}{\gamma\sqrt p}(1+\eta \tilde{S}_\lambda)
+\end{equation}
+\begin{equation}\label{eq:bound_vt_reg}
+    \|v(t)\| \leq c_3\frac{\eta^2n^2}{\sqrt p}\|e(t)\|
+\end{equation}
+Combining \cref{eq:et_iter_reg,eq:bound_Gt_reg,eq:bound_Ht_reg,eq:bound_vt_reg}, we have
+\begin{equation*}
+\begin{aligned}
+\|e(t+1)\| 
+&\leq \|(1-\eta\lambda(t))I_n-\eta (G(t)+H(t))\|\|e(t)\|+\|v(t)\| \\
+&\leq \Big(\|(1-\eta\lambda(t))I_n-\eta G(0)\|+\eta\|G(t)-G(0)\|+\eta\|H(0)\| \\
+&\quad +\eta\|H(t)-H(0)\|\Big)\|e(t)\| + \|v(t)\| \\
+&\leq \Big( 1-\eta\lambda(t)-\frac{3\eta\gamma}{4}+(c_1+ c_2)\frac{\eta n^2\sqrt{\log p}}{\gamma\sqrt p}(1+\eta \tilde{S}_\lambda)+c_3\frac{\eta^2n\sqrt n}{\sqrt p}\Big)\|e(t)\|  \\
+&\leq(1-\eta\lambda(t)-\frac{\eta\gamma}{4})\|e(t)\|
+\end{aligned}
+\end{equation*}
+where we use the \cref{lma:GH}, $p=\Omega(\frac{n^4\log p}{\gamma^4})$ and $\tilde{S}_\lambda = O(\frac{\gamma^2\sqrt{p}}{\eta n^2\sqrt{\log p}})$.
+\end{proof}
+
+\begin{proof}[Proof of \cref{thm:nonlinear_conv_reg}]
+We prove the inequality \eqref{eq:conv_reg} by induction. Suppose \eqref{eq:conv_reg} holds for all $t=1,2,...,t'-1$, by \cref{lma:weights_reg} and \cref{lma:induction_reg} we know \eqref{eq:conv_reg} holds for $t=t'$, which completes the proof.
 \end{proof}

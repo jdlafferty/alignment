@@ -40,6 +40,18 @@ where $\{\lambda(t)\}_{t=0}^\infty$ is a sequence of regularization rates, which
 \end{algorithm}
 %\end{minipage}
 
+\begin{theorem}
+\label{thm:nonlinear_conv_reg}
+Assume all the conditions from \cref{thm:nonliner_conv}. For \cref{algo:fa-reg}, assume $\sum_{t=0}^\infty \lambda(t) \leq  \tilde{S}_\lambda = \tilde{c}_{S}\frac{\gamma^2\sqrt{p}}{\eta n^2\sqrt{\log p}}$ for some constant $\tilde{c}_{S}$. Then there exists positive constants $C_1$ and $C_2$, such that for any $\delta\in(0,1)$, if $p \geq \max(C_1\frac{n^2}{\delta\gamma^2}, C_2\frac{n^4\log p}{\gamma^4})$, with probability at least $1-\delta$, we have for all $t\geq 0$
+\begin{equation}
+\label{eq:conv_reg}
+    \|e(t+1)\| \leq \big(1-\frac{\eta\gamma}{4}-\eta\lambda(t)\big)\|e(t)\|+\lambda(t)\|y\|
+\end{equation}
+\end{theorem}
+
+The proof of \cref{thm:nonlinear_conv_reg} is deferred to \cref{sec:appendix-convergence}.
+
+
 \subsection{Theoretical Results on Linear Networks}
 In this section, we only focus on the theoretical analysis of alignment for linear networks, which is equivalent to setting the activation function $\psi$ into an identity map. Before presenting our results on alignment, we first provide an upper bound for the prediction error $e(t)$, which forms the cornerstone for our proofs. \cref{thm:lin_conv} shows that the error can be upper bounded if $X = (x_1,\ldots,x_n)\transpose$ has full row rank and the summation of $\lambda(t)$ is upper bounded by $S_\lambda = O(\sqrt{p/n})$.
 
