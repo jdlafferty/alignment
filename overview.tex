@@ -87,12 +87,10 @@ We next turn to the issue of alignment of the second layer parameters $\beta$ to
 \item The cosine of the angle between
 these $p$-dimensional vectors $\beta$ and $b$ satisfies $ \cos\angle(b, \beta(t)) = O\big(\frac{n}{\sqrt p}\big)$.
 \end{itemize}
-In particular, while the error may converge, ``feedback alignment'' may be a bit of a misnomer for the algorithm, in general. However, unexpectedly we found that regularizing the parameters will cause the parameters $\beta$ to align with $b$. Our next result establishes this precisely in the linear case, for a particular regularization schedule.
+In particular, while the error may converge, ``feedback alignment'' may be a bit of a misnomer for the algorithm, in general. However, we show that regularizing the parameters will cause the parameters $\beta$ to align with $b$. Our next result establishes this precisely in the linear case.
 \begin{itemize}
 \item Supposing that $\psi(u)=u$, then introducing a ridge penalty $\lambda(t) \|\beta\|^2$ where $\lambda(t) = \lambda$ for $t\leq T$ and $\lambda(t) = 0$ for $t > T$
 on $\beta$  causes the parameters to align, with $\cos\angle(b, \beta(t)) \geq c > 0$ for sufficiently large $t$.
 \end{itemize}
 The technical conditions are given in Theorem 4.6.
-Our simulations are consistent with this result, and also show alignment with simply a constant $\lambda(t)$, for both linear and nonlinear activation functions. Since $\beta(0)$ and $b$ are high dimensional Gaussian vectors, they are nearly orthogonal with high probability. The effect of regularization can be seen as shrinking the component of $\beta(0)$ in the parameters over time.
-
-Finally, we establish that convergence is preserved with regularization, for general activation functions. This result is presented in Theorem 4.2.
+Since $\beta(0)$ and $b$ are high dimensional Gaussian vectors, they are nearly orthogonal with high probability. The effect of regularization can be seen as shrinking the component of $\beta(0)$ in the parameters over time. Our simulations are consistent with this result, and also show alignment with a constant regularization $\lambda(t)\equiv \lambda$, for both linear and nonlinear activation functions. Finally, we complement this result by showing that convergence is preserved with regularization, for general activation functions. This is presented in Theorem 4.2.
