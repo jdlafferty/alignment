@@ -40,6 +40,9 @@ where $\{\lambda(t)\}_{t=0}^\infty$ is a sequence of regularization rates, which
 \end{algorithm}
 %\end{minipage}
 
+Following \cref{thm:nonliner_conv}, we also provide the error bound for regularized feedback alignment in \cref{thm:nonlinear_conv_reg}. Since regularization terms $\lambda(t)$ make additional contributions to the error $e(t)$ as well as to the kernel matrix $G$, an upper bound on $\sum_{t\geq 0}\lambda(t)$ is needed to ensure the positiveness of the minimal eigenvalue of $G$ during training, such that the error $e(t)$ can be controlled. In particular, if there is no regularization, \ie, $\lambda(t)=0$ for all $t\geq 0$, then we recover exponential convergence for the error $e(t)$ as in \cref{thm:nonliner_conv}. The proof of \cref{thm:nonlinear_conv_reg} is also deferred to \cref{sec:appendix-convergence}.
+% didn't use G(t) since it is not defined before
+
 \begin{theorem}
 \label{thm:nonlinear_conv_reg}
 Assume all the conditions from \cref{thm:nonliner_conv}. For \cref{algo:fa-reg}, assume $\sum_{t=0}^\infty \lambda(t) \leq  \tilde{S}_\lambda = \tilde{c}_{S}\frac{\gamma^2\sqrt{p}}{\eta n^2\sqrt{\log p}}$ for some constant $\tilde{c}_{S}$. Then there exists positive constants $C_1$ and $C_2$, such that for any $\delta\in(0,1)$, if $p \geq \max(C_1\frac{n^2}{\delta\gamma^2}, C_2\frac{n^4\log p}{\gamma^4})$, with probability at least $1-\delta$, we have for all $t\geq 0$
@@ -49,15 +52,19 @@ Assume all the conditions from \cref{thm:nonliner_conv}. For \cref{algo:fa-reg},
 \end{equation}
 \end{theorem}
 
-The proof of \cref{thm:nonlinear_conv_reg} is deferred to \cref{sec:appendix-convergence}.
 
 
-\subsection{Theoretical Results on Linear Networks}
-In this section, we only focus on the theoretical analysis of alignment for linear networks, which is equivalent to setting the activation function $\psi$ into an identity map. Before presenting our results on alignment, we first provide an upper bound for the prediction error $e(t)$, which forms the cornerstone for our proofs. \cref{thm:lin_conv} shows that the error can be upper bounded if $X = (x_1,\ldots,x_n)\transpose$ has full row rank and the summation of $\lambda(t)$ is upper bounded by $S_\lambda = O(\sqrt{p/n})$.
+\subsection{Alignment Analysis on Linear Networks}
+In this section, we focus on the theoretical analysis of alignment for linear networks, which is equivalent to setting the activation function $\psi$ into an identity map. The loss function can be written as
+\begin{equation*}
+    \Loss(t,W,\beta) = \frac{1}{2}\big\|\frac{1}{\sqrt{p}}XW\transpose\beta-y\big\|^2+\frac{\lambda(t)}{2}\|\beta\|^2,
+\end{equation*}
+where $X = (x_1,\ldots,x_n)\transpose$, and it is similar to the loss of ridge regression.
+Before presenting our results on alignment, we first provide a linear version of \cref{thm:nonlinear_conv_reg} that adopts slightly different conditions.
 
 \begin{theorem}
 \label{thm:lin_conv}
-Assume \textnormal{(1)}  $\|y\| = \Theta(\sqrt n)$, $\lambda_{\min}(XX\transpose)>\gamma$ and $\lambda_{\max}(XX\transpose)<M$ for some constants $M>\gamma>0$, \textnormal{(2)} $\sum_{t=0}^\infty \lambda(t) \leq  S_\lambda = c_{S}\frac{\gamma\sqrt{\gamma p}}{\eta\sqrt{n}M}$ for some constant $c_{S}$, \textnormal{(3)} $\eta \leq 1/(\max \lambda(t)+M)$.
+Assume \textnormal{(1)}  $\|y\| = \Theta(\sqrt n)$, $\lambda_{\min}(XX\transpose)>\gamma$ and $\lambda_{\max}(XX\transpose)<M$ for some constants $M>\gamma>0$, and \textnormal{(2)} $\sum_{t=0}^\infty \lambda(t) \leq  S_\lambda = c_{S}\frac{\gamma\sqrt{\gamma p}}{\eta\sqrt{n}M}$ for some constant $c_{S}$.
 For any $\delta\in(0,1)$, if $p = \Omega(\frac{Md\log(d/\delta)}{\gamma})$, the following inequality holds for all $t\geq 0$ with probability at least $1-\delta$
 \begin{equation}
 \label{eq:reg_error_bd}
@@ -65,7 +72,7 @@ For any $\delta\in(0,1)$, if $p = \Omega(\frac{Md\log(d/\delta)}{\gamma})$, the 
 \end{equation} 
 \end{theorem}
 
-We remark here some connections between \cref{thm:lin_conv} and \cref{thm:nonliner_conv}. In the linear case, the kernel matrix $G$ reduces to the form $X W\transpose W X\transpose$ and its expectation $\overline{G}$ at initialization also reduces to $X X\transpose$, so \cref{assump:G} holds if $XX\transpose$ is positive definite, which is equivalent to $x_i$'s being linearly independent. Since regularization terms $\lambda(t)$ make additional contributions to the error $e(t)$ as well as the kernel matrix $G(t)$, an upper bound on $\sum_{t\geq 0}\lambda(t)$ is needed to ensure the positiveness of the minimal eigenvalue of $G(t)$ during training, such that the error $e(t)$ can be controlled. In particular, if there is no regularization, \ie, $\lambda(t)=0$ for all $t\geq 0$, then we recover exponential convergence for the error $\|e(t)\|$ as in \cref{thm:nonliner_conv}.
+We remark that, in the linear case, the kernel matrix $G$ reduces to the form $X W\transpose W X\transpose$ and its expectation $\overline{G}$ at initialization also reduces to $X X\transpose$, so \cref{assump:G} holds if $XX\transpose$ is positive definite, which is equivalent to $x_i$'s being linearly independent. The result of \cref{thm:nonlinear_conv_reg} can not be directly applied to linear case since we assume $\psi$ is bounded, which is true for sigmoid or tanh but not for identity map. This results in a slightly different order for $S_\lambda$ and an improved order for $p$.
 
 Our results on alignment also rely on an isometric condition on $X$, which requires the minimum and the maximum eigenvalues of $XX\transpose$ to be close enough (\cf \cref{def:isom}). On the other hand, this condition is relatively mild and can be satisfied when $X$ has random Gaussian entries with a gentle dimensional constraint, as demonstrated by \cref{prop:isom}. Finally, we show in \cref{thm:lin_align} that under a simple regularization strategy where a constant regularization is adopted until a cutoff time $T$, regularized feedback alignment achieves alignment if $X$ satisfies the isometric condition.
 {}
