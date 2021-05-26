@@ -17,7 +17,7 @@ The feedback alignment algorithm gives
     \beta(t+1) &= \beta(t)- \eta \frac{1}{\sqrt p}\sum_{i=1}^n \psi(W(t)x_i)e_i(t)
 \end{aligned}
 \end{equation}
-where $D_i(t) = \text{diag}(\psi'(W(t)x_i))$ and $e_i(t) = \frac{1}{\sqrt p}\beta(t)\transpose \psi(W(t)x_i)-y_i$. We also denote $u(t)\in\R^n$ with $u_i(t) = \frac{1}{\sqrt p}\beta(t)\transpose \psi(W(t)x_i)$, the network prediction on $x_i$ at time $t$. To make the proof clear, we use $c$, $C$ as the global constants whose values may vary from line to line.
+where $D_i(t) = \text{diag}(\psi'(W(t)x_i))$ and $e_i(t) = \frac{1}{\sqrt p}\beta(t)\transpose \psi(W(t)x_i)-y_i$. To make the proof clear, we use $c$, $C$ to denote the global constants whose values may vary from line to line.
 
 \subsection{Concentration Results}
 

@@ -13,7 +13,7 @@ The regularized feedback alignment algorithm gives
     \beta(t+1) &= (1-\eta\lambda(t))\beta(t)- \frac{\eta}{\sqrt p} W(t)X\transpose e(t)
 \end{aligned}
 \end{equation}
-where $e(t)=u(t)-y$ is the error vector and $u(t) = \frac{1}{\sqrt p}XW(t)\transpose \beta$ is the network prediction at time t.
+where $e(t)=\frac{1}{\sqrt p}XW(t)\transpose \beta(t)-y$ is the error vector at time t.
 
 
 \begin{lemma}
