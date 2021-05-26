@@ -29,8 +29,7 @@ the gradients are expressed as
 \end{equation*}
 Here it is seen that the the gradient of the first-layer weights $\frac{\partial \Loss}{\partial w_r}$ involves not only the local input $x_i$ and the change in
 the response of the $r$-th neuron, but also the backpropagated error signal $e_i\beta_r$.
-The appearance of $\beta_r$ is, of course, due to the chain rule; but in effect it requires that the forward weights between layers are identical to the backward weights under error propagation. A sketch of this is shown in Figure~\ref{fig:algo}; there is no evidence of biological mechanisms
-that would enable such ``synaptic symmetry.''
+The appearance of $\beta_r$ is, of course, due to the chain rule; but in effect it requires that the forward weights between layers are identical to the backward weights under error propagation. There is no evidence of biological mechanisms that would enable such ``synaptic symmetry.''
 
 \begin{figure*}[t]
   \begin{tabular}{cc}
@@ -71,3 +70,29 @@ replaced by the terms
 Note, however, that this update rule does not correspond to the gradient with
 respect to a modified loss function. The use of a random weight $b_r$ when updating
 the first layer weights $w_r$ does not violate locality, and could conceivably be implemented by biological mechanisms; we refer to \cite{lillicrap2016random,bartunov,lillicrap2020backpropagation} for further discussion. A schematic of the relationship between the two algorithms is shown in Figure~\ref{fig:algo}.
+
+We can now summarize the main results and contributions of this paper. Our first result shows that the error converges to zero when using random backpropagation weights.
+
+\begin{itemize}
+  \item Under Gaussian initialization of the parameters, if the model is sufficiently over-parameterized with $p\gg n$, then the error converges to zero linearly. Moreover, the parameters satisfy $\|w_r(t) - w_0(t) \| = \widetilde O\bigl(\frac{n}{\sqrt{p}}\bigr)$
+    and $|\beta_r(t) - \beta_0(t) | = \widetilde O\bigl(\frac{n}{\sqrt{p}}\bigr)$.
+\end{itemize}
+The precise assumptions and statement of this result are given in Theorem 3.2. The proof
+shows that in the over-parameterized regime that the weights only change
+by a small amount. While related to results for standard gradient descent,
+new methods are required because the ``effective kernel'' is not positive semi-definite.
+
+We next turn to the issue of alignment of the second layer parameters $\beta$ to the random backpropagation weights $b$. Such alignment was first observed in the original simulations of \cite{lillicrap2016random}. Intuitively, the possibility for alignment is seen in the fact that while the updates for $W$ use the error weighted by the random weights $b$, the updates for $\beta$ indirectly involve $W$, allowing for the possibility that dependence on $b$ will be introduced into $\beta$. However, the analysis is challenging. Our first result shows that, in fact, alignment will \textit{not} occur in the over-parameterized setting.
+\begin{itemize}
+The cosine of the angle between
+these $p$-dimensional vectors $\beta$ and $b$ satisfies $ \cos\angle(b, \beta(t)) = O\big(\frac{n}{\sqrt p}\big)$.
+\end{itemize}
+In particular, while the error may converge, ``feedback alignment'' may be a bit of a misnomer for the algorithm, in general. However, unexpectedly we found that regularizing the parameters will cause the parameters $\beta$ to align with $b$. Our next result establishes this precisely in the linear case, for a particular regularization schedule.
+\begin{itemize}
+\item Supposing that $\psi(u)=u$, then introducing a ridge penalty $\lambda(t) \|\beta\|^2$ where $\lambda(t) = \lambda$ for $t\leq T$ and $\lambda(t) = 0$ for $t > T$
+on $\beta$  causes the parameters to align, with $\cos\angle(b, \beta(t)) \geq c > 0$ for sufficiently large $t$.
+\end{itemize}
+The technical conditions are given in Theorem 4.6.
+Our simulations are consistent with this result, and also show alignment with simply a constant $\lambda(t)$, for both linear and nonlinear activation functions. Since $\beta(0)$ and $b$ are high dimensional Gaussian vectors, they are nearly orthogonal with high probability. The effect of regularization can be seen as shrinking the component of $\beta(0)$ in the parameters over time.
+
+Finally, we establish that convergence is preserved with regularization, for general activation functions. This result is presented in Theorem 4.2.
