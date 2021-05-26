@@ -84,7 +84,7 @@ new methods are required because the ``effective kernel'' is not positive semi-d
 
 We next turn to the issue of alignment of the second layer parameters $\beta$ to the random backpropagation weights $b$. Such alignment was first observed in the original simulations of \cite{lillicrap2016random}. Intuitively, the possibility for alignment is seen in the fact that while the updates for $W$ use the error weighted by the random weights $b$, the updates for $\beta$ indirectly involve $W$, allowing for the possibility that dependence on $b$ will be introduced into $\beta$. However, the analysis is challenging. Our first result shows that, in fact, alignment will \textit{not} occur in the over-parameterized setting.
 \begin{itemize}
-The cosine of the angle between
+\item The cosine of the angle between
 these $p$-dimensional vectors $\beta$ and $b$ satisfies $ \cos\angle(b, \beta(t)) = O\big(\frac{n}{\sqrt p}\big)$.
 \end{itemize}
 In particular, while the error may converge, ``feedback alignment'' may be a bit of a misnomer for the algorithm, in general. However, unexpectedly we found that regularizing the parameters will cause the parameters $\beta$ to align with $b$. Our next result establishes this precisely in the linear case, for a particular regularization schedule.
