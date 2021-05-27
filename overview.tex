@@ -83,14 +83,15 @@ by a small amount. While related to results for standard gradient descent,
 new methods are required because the ``effective kernel'' is not positive semi-definite.
 
 We next turn to the issue of alignment of the second layer parameters $\beta$ to the random backpropagation weights $b$. Such alignment was first observed in the original simulations of \cite{lillicrap2016random}. Intuitively, the possibility for alignment is seen in the fact that while the updates for $W$ use the error weighted by the random weights $b$, the updates for $\beta$ indirectly involve $W$, allowing for the possibility that dependence on $b$ will be introduced into $\beta$. However, the analysis is challenging. Our first result shows that, in fact, alignment will \textit{not} occur in the over-parameterized setting.
+(So, while the error may converge, ``feedback alignment'' may be a bit of a misnomer for the algorithm.)
 \begin{itemize}
 \item The cosine of the angle between
 these $p$-dimensional vectors $\beta$ and $b$ satisfies $ \cos\angle(b, \beta(t)) = O\big(\frac{n}{\sqrt p}\big)$.
 \end{itemize}
-In particular, while the error may converge, ``feedback alignment'' may be a bit of a misnomer for the algorithm, in general. However, we show that regularizing the parameters will cause the parameters $\beta$ to align with $b$. Our next result establishes this precisely in the linear case.
+ However, we show that regularizing the parameters will cause the parameters $\beta$ to align with $b$. Since $\beta(0)$ and $b$ are high dimensional Gaussian vectors, they are nearly orthogonal with high probability. The effect of regularization can be seen as shrinking the component of $\beta(0)$ in the parameters over time.  Our next result establishes this precisely in the linear case.
 \begin{itemize}
 \item Supposing that $\psi(u)=u$, then introducing a ridge penalty $\lambda(t) \|\beta\|^2$ where $\lambda(t) = \lambda$ for $t\leq T$ and $\lambda(t) = 0$ for $t > T$
 on $\beta$  causes the parameters to align, with $\cos\angle(b, \beta(t)) \geq c > 0$ for sufficiently large $t$.
 \end{itemize}
 The technical conditions are given in \cref{thm:lin_align}.
-Since $\beta(0)$ and $b$ are high dimensional Gaussian vectors, they are nearly orthogonal with high probability. The effect of regularization can be seen as shrinking the component of $\beta(0)$ in the parameters over time. Our simulations are consistent with this result, and also show alignment with a constant regularization $\lambda(t)\equiv \lambda$, for both linear and nonlinear activation functions. Finally, we complement this result by showing that convergence is preserved with regularization, for general activation functions. This is presented in \cref{thm:nonlinear_conv_reg}.
+Our simulations are consistent with this result, and also show alignment with a constant regularization $\lambda(t)\equiv \lambda$, for both linear and nonlinear activation functions. Finally, we complement this result by showing that convergence is preserved with regularization, for general activation functions. This is presented in \cref{thm:nonlinear_conv_reg}.
