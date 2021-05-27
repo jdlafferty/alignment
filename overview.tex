@@ -77,7 +77,7 @@ We can now summarize the main results and contributions of this paper. Our first
   \item Under Gaussian initialization of the parameters, if the model is sufficiently over-parameterized with $p\gg n$, then the error converges to zero linearly. Moreover, the parameters satisfy $\|w_r(t) - w_0(t) \| = \widetilde O\bigl(\frac{n}{\sqrt{p}}\bigr)$
     and $|\beta_r(t) - \beta_0(t) | = \widetilde O\bigl(\frac{n}{\sqrt{p}}\bigr)$.
 \end{itemize}
-The precise assumptions and statement of this result are given in Theorem 3.2. The proof
+The precise assumptions and statement of this result are given in \cref{thm:nonliner_conv}. The proof
 shows that in the over-parameterized regime that the weights only change
 by a small amount. While related to results for standard gradient descent,
 new methods are required because the ``effective kernel'' is not positive semi-definite.
@@ -92,5 +92,5 @@ In particular, while the error may converge, ``feedback alignment'' may be a bit
 \item Supposing that $\psi(u)=u$, then introducing a ridge penalty $\lambda(t) \|\beta\|^2$ where $\lambda(t) = \lambda$ for $t\leq T$ and $\lambda(t) = 0$ for $t > T$
 on $\beta$  causes the parameters to align, with $\cos\angle(b, \beta(t)) \geq c > 0$ for sufficiently large $t$.
 \end{itemize}
-The technical conditions are given in Theorem 4.6.
-Since $\beta(0)$ and $b$ are high dimensional Gaussian vectors, they are nearly orthogonal with high probability. The effect of regularization can be seen as shrinking the component of $\beta(0)$ in the parameters over time. Our simulations are consistent with this result, and also show alignment with a constant regularization $\lambda(t)\equiv \lambda$, for both linear and nonlinear activation functions. Finally, we complement this result by showing that convergence is preserved with regularization, for general activation functions. This is presented in Theorem 4.2.
+The technical conditions are given in \cref{thm:lin_align}.
+Since $\beta(0)$ and $b$ are high dimensional Gaussian vectors, they are nearly orthogonal with high probability. The effect of regularization can be seen as shrinking the component of $\beta(0)$ in the parameters over time. Our simulations are consistent with this result, and also show alignment with a constant regularization $\lambda(t)\equiv \lambda$, for both linear and nonlinear activation functions. Finally, we complement this result by showing that convergence is preserved with regularization, for general activation functions. This is presented in \cref{thm:nonlinear_conv_reg}.
