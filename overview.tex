@@ -33,8 +33,8 @@ The appearance of $\beta_r$ is, of course, due to the chain rule; but in effect 
 
 \begin{figure*}[t]
   \begin{tabular}{cc}
-    \hskip-20pt
-    \includegraphics[width=.55\textwidth]{fig/fasketch}&\\[-1.8in]
+    \hskip-10pt
+    \includegraphics[width=.50\textwidth]{fig/fasketch}&\\[-1.6in]
     &
     \hskip-5pt
     \begin{minipage}{.47\textwidth}
@@ -61,8 +61,7 @@ The appearance of $\beta_r$ is, of course, due to the chain rule; but in effect 
 
 
 In the \textit{feedback alignment} procedure of \citep{lillicrap2016random},
-when updating the weights $w_r$, the error signal is weighted not by the second layer feedforward weights $\beta$, but rather by a random set of weights $b\in\reals^p$ that are
-fixed during the course of training. Equivalently, the gradients for the first layer are
+when updating the weights $w_r$, the error signal is weighted, and propagated backward, not by the second layer feedforward weights $\beta$, but rather by a random set of weights $b\in\reals^p$ that are fixed during the course of training. Equivalently, the gradients for the first layer are
 replaced by the terms
 \begin{align}\label{eqn:alignment-update}
   \widetilde{\frac{\partial\Loss}{\partial w_r}}   = \frac{1}{\sqrt{p}} \sum_{i=1}^n e_i b_r\psi'(w_r\transpose x_i)x_i.
@@ -82,13 +81,28 @@ shows that in the over-parameterized regime that the weights only change
 by a small amount. While related to results for standard gradient descent,
 new methods are required because the ``effective kernel'' is not positive semi-definite.
 
-We next turn to the issue of alignment of the second layer parameters $\beta$ to the random backpropagation weights $b$. Such alignment was first observed in the original simulations of \cite{lillicrap2016random}. Intuitively, the possibility for alignment is seen in the fact that while the updates for $W$ use the error weighted by the random weights $b$, the updates for $\beta$ indirectly involve $W$, allowing for the possibility that dependence on $b$ will be introduced into $\beta$. However, the analysis is challenging. Our first result shows that, in fact, alignment will \textit{not} occur in the over-parameterized setting.
-(So, while the error may converge, ``feedback alignment'' may be a bit of a misnomer for the algorithm.)
+We next turn to the issue of alignment of the second layer parameters $\beta$ with the random backpropagation weights $b$. Such alignment was first observed in the original simulations of \cite{lillicrap2016random}. With $h\in \R^p$ denoting the hidden layer of the two-layer network,  the term $\dbp(h) \defeq \frac{\partial \Loss}{\partial h}$ represents
+how the error signals are sent backward to update the feed-forward weights.
+It is easy to calculate that
+$\dbp(h) = \beta \sum_{i=1}^n e_i$ for error terms $e_i$. With the use of random backpropagation weights, the error is instead propagated backward as $\dfa(h) = b \sum_{i=1}^n e_i$.
+
+
+\citet{lillicrap2016random} notice a decreasing angle between $\dbp(h)$ and $\dfa(h)$ during training, which is a sufficient condition to ensure that the algorithm converges.
+In the case of $k$-way classification, the last layer has $k$ nodes,
+$\beta$ and $b$ are $p\times k$ matrices, and each error term $e_i$ is a $k$-vector.
+In the regression setting that we focus on $k=1$, so that the angle between
+$\dbp(h)$ and $\dfa(h)$ is the same as the angle between $\beta$ and $b$.
+Intuitively, the possibility for alignment is seen in the fact that while the updates for $W$ use the error weighted by the random weights $b$, the updates for $\beta$ indirectly involve $W$, allowing for the possibility that dependence on $b$ will be introduced into $\beta$.
+
+Our first result shows that, in fact, alignment will \textit{not} occur in the over-parameterized setting. (So, while the error may still converge, ``feedback alignment'' may be a bit of a misnomer for the algorithm.)
 \begin{itemize}
 \item The cosine of the angle between
-these $p$-dimensional vectors $\beta$ and $b$ satisfies $ \cos\angle(b, \beta(t)) = O\big(\frac{n}{\sqrt p}\big)$.
+the $p$-dimensional vectors $\dfa$ and $\dbp$ satisfies $
+\cos\angle(\dfa, \dbp(t)) = \cos\angle(b, \beta(t)) = O\big(\frac{n}{\sqrt p}\big)$.
+
 \end{itemize}
- However, we show that regularizing the parameters will cause the parameters $\beta$ to align with $b$. Since $\beta(0)$ and $b$ are high dimensional Gaussian vectors, they are nearly orthogonal with high probability. The effect of regularization can be seen as shrinking the component of $\beta(0)$ in the parameters over time.  Our next result establishes this precisely in the linear case.
+ However, we show that regularizing the parameters will cause
+ $\dbp$ to align with $\dfa$ and therefore the parameters $\beta$ to align with $b$. Since $\beta(0)$ and $b$ are high dimensional Gaussian vectors, they are nearly orthogonal with high probability. The effect of regularization can be seen as shrinking the component of $\beta(0)$ in the parameters over time.  Our next result establishes this precisely in the linear case.
 \begin{itemize}
 \item Supposing that $\psi(u)=u$, then introducing a ridge penalty $\lambda(t) \|\beta\|^2$ where $\lambda(t) = \lambda$ for $t\leq T$ and $\lambda(t) = 0$ for $t > T$
 on $\beta$  causes the parameters to align, with $\cos\angle(b, \beta(t)) \geq c > 0$ for sufficiently large $t$.
