@@ -12,26 +12,26 @@ For two-layer non-linear networks, the generation process of training datasets i
 \centering
 \begin{subfigure}[b]{.49\textwidth}
   \centering
-  \includegraphics[width=\linewidth]{figures/align_lr_non_autograd_l2_v4.pdf}
+  \includegraphics[width=\linewidth]{figures/align_lr_non_autograd_l2_v6.pdf}
   \caption{Feedback alignment and regularized feedback alignment with two-layer linear network on synthetic data.}
   \label{fig:align_lr_non_autograd_l2}
 \end{subfigure}\hfill
 \begin{subfigure}[b]{.49\textwidth}
   \centering
-  \includegraphics[width=\linewidth]{figures/align_nn_relu_autograd_l2_v4.pdf}
+  \includegraphics[width=\linewidth]{figures/align_nn_relu_autograd_l2_v6.pdf}
   \caption{Feedback alignment and regularized feedback alignment with two-layer ReLU network on synthetic data.}
   \label{fig:align_nn_relu_autograd_l2}
 \end{subfigure}
 \medskip
 \begin{subfigure}[b]{.49\textwidth}
   \centering
-  \includegraphics[width=\linewidth]{figures/align_nn_sigmoid_autograd_l2_v4.pdf}
+  \includegraphics[width=\linewidth]{figures/align_nn_sigmoid_autograd_l2_v6.pdf}
   \caption{Feedback alignment and regularized feedback alignment with two-layer sigmoid network on synthetic data.}
   \label{fig:align_nn_sigmoid_autograd_l2}
 \end{subfigure}\hfill
 \begin{subfigure}[b]{.49\textwidth}
   \centering
-  \includegraphics[width=\linewidth]{figures/align_nn_tanh_autograd_l2_v4.pdf}
+  \includegraphics[width=\linewidth]{figures/align_nn_tanh_autograd_l2_v6.pdf}
   \caption{Feedback alignment and regularized feedback alignment with two-layer Tanh network on synthetic data.}
   \label{fig:align_nn_tanh_autograd_l2}
 \end{subfigure}
@@ -39,7 +39,7 @@ For two-layer non-linear networks, the generation process of training datasets i
 \label{fig:synthetic-l2}
 \end{figure}
 
-In \cref{fig:synthetic-l2} we show numerically how alignment depends on the level of regularization and the hidden layer width $p$ when the (regularized) feedback alignment algorithm is applied to two-layer networks with different hidden layer width $p$ and activation $\psi$. In particular, we obtain \cref{fig:align_lr_non_autograd_l2} from performing feedback alignment on linear networks with linear regression data, and \cref{fig:align_nn_relu_autograd_l2,fig:align_nn_sigmoid_autograd_l2,fig:align_nn_tanh_autograd_l2} are the same numerical benchmarks on non-linear networks with ReLU, sigmoid, and tanh activation function, respectively. For each hidden layer width $p$, we randomly initialize a two-layer network with $p$ hidden neurons and randomly generate a corresponding synthetic dataset for training. Starting from the initialization, we then train the network with feedback alignment algorithm on different levels of regularization and record the alignment between feed-forward weights $\beta$ and backward weights $b$ after the loss converges. This procedure is then repeated $10$ times for each $p$, and the simulation results are summarized in their mean and standard deviation. In all four figures, \ie,  \cref{fig:align_lr_non_autograd_l2,fig:align_nn_relu_autograd_l2,fig:align_nn_sigmoid_autograd_l2,fig:align_nn_tanh_autograd_l2}, the level of alignment goes to zero when the hidden layer width $p$ is large for feedback alignment algorithm without regularization, while the level of alignment is always kept away from zero for regularized feedback alignment. Further, alignment grows along with the level of regularization $\lambda$ for the same network. Such numerical results strongly support our theoretical statements.
+In \cref{fig:synthetic-l2} we show numerically how alignment depends on the level of regularization and the hidden layer width $p$ when the (regularized) feedback alignment algorithm is applied to two-layer networks with different hidden layer width $p$ and activation $\psi$. In particular, we obtain \cref{fig:align_lr_non_autograd_l2} from performing feedback alignment on linear networks with linear regression data, and \cref{fig:align_nn_relu_autograd_l2,fig:align_nn_sigmoid_autograd_l2,fig:align_nn_tanh_autograd_l2} are the same numerical benchmarks on non-linear networks with ReLU, sigmoid, and tanh activation function, respectively. For each hidden layer width $p$, we randomly initialize a two-layer network with $p$ hidden neurons and randomly generate a corresponding synthetic dataset for training. Starting from the initialization, we then train the network with feedback alignment algorithm on different levels of regularization and record the alignment between feed-forward weights $\beta$ and backward weights $b$ after the loss converges. This procedure is then repeated $50$ times for each $p$, and the simulation results are summarized in their mean and standard deviation. In all the four figures, \ie,  \cref{fig:align_lr_non_autograd_l2,fig:align_nn_relu_autograd_l2,fig:align_nn_sigmoid_autograd_l2,fig:align_nn_tanh_autograd_l2}, the level of alignment goes to zero when the hidden layer width $p$ is large for feedback alignment algorithm without regularization, while the level of alignment is always kept away from zero for regularized feedback alignment. Further, alignment grows along with the level of regularization $\lambda$ for the same network. Such numerical results strongly support our theoretical statements.
 
 We would like to remark that dropout, a commonly used training technique, as a form of regularization can also help the alignment when used together with feedback alignment algorithm \citep{wager2013dropout}. To the best of our knowledge, there is no satisfying theoretical result available that could explain the underlying mechanism.
 
