@@ -1,6 +1,6 @@
 \section{Simulations}
 
-Our experiments apply feedback alignment algorithm to network training on both synthetic and real-world data, where a range of networks with different activation functions and levels of regularization are considered. In particular, we compare the regularized feedback alignment (\cref{algo:fa-reg}) with its non-regularized counterpart (\cref{algo:fa}) on two-layer networks. We also evaluate the regularized feedback alignment algorithm with two-layer classification networks on \texttt{MNIST} dataset.
+Our experiments apply feedback alignment algorithm to network training on both synthetic and real-world data, where a range of networks with different activation functions and levels of regularization are considered. In particular, we compare the regularized feedback alignment (\cref{algo:fa-reg}) with its non-regularized counterpart (\cref{algo:fa}) on two-layer networks. We also evaluate the regularized feedback alignment procedure with two-layer classification networks on \texttt{MNIST} dataset.
 
 \paragraph{Feedback alignment on synthetic dataset.}
 
@@ -10,49 +10,42 @@ For two-layer non-linear networks, the generation process of training datasets i
 
 \begin{figure}[h]
 \centering
-\begin{subfigure}[b]{.49\textwidth}
+\begin{subfigure}[b]{.33\textwidth}
   \centering
-  \includegraphics[width=\linewidth]{figures/align_lr_non_autograd_l2_v6.pdf}
-  \caption{Feedback alignment and regularized feedback alignment with two-layer linear network on synthetic data.}
+  \includegraphics[width=\linewidth]{figures/df_lr_non_autograd_l2_v6.pdf}
+  \caption{Linear network.}
   \label{fig:align_lr_non_autograd_l2}
 \end{subfigure}\hfill
-\begin{subfigure}[b]{.49\textwidth}
+\begin{subfigure}[b]{.33\textwidth}
   \centering
-  \includegraphics[width=\linewidth]{figures/align_nn_relu_autograd_l2_v6.pdf}
-  \caption{Feedback alignment and regularized feedback alignment with two-layer ReLU network on synthetic data.}
+  \includegraphics[width=\linewidth]{figures/df_nn_relu_autograd_l2_v6.pdf}
+  \caption{ReLU activation.}
   \label{fig:align_nn_relu_autograd_l2}
-\end{subfigure}
-\medskip
-\begin{subfigure}[b]{.49\textwidth}
-  \centering
-  \includegraphics[width=\linewidth]{figures/align_nn_sigmoid_autograd_l2_v6.pdf}
-  \caption{Feedback alignment and regularized feedback alignment with two-layer sigmoid network on synthetic data.}
-  \label{fig:align_nn_sigmoid_autograd_l2}
 \end{subfigure}\hfill
-\begin{subfigure}[b]{.49\textwidth}
+\begin{subfigure}[b]{.33\textwidth}
   \centering
-  \includegraphics[width=\linewidth]{figures/align_nn_tanh_autograd_l2_v6.pdf}
-  \caption{Feedback alignment and regularized feedback alignment with two-layer Tanh network on synthetic data.}
+  \includegraphics[width=\linewidth]{figures/df_nn_tanh_autograd_l2_v6.pdf}
+  \caption{Tanh activation.}
   \label{fig:align_nn_tanh_autograd_l2}
 \end{subfigure}
 \caption{Comparisons on the alignment for feedback alignment algorithm with different levels of $\ell_2$ regularization. In each figure, the $x$-axis denotes the width $p$ of hidden layer, and it is in logarithmic scale; the $y$-axis represents the level of alignment as the normalized inner product between $\beta_t$ and $b$. The data points are the mean value computed across simulations, and the error bars mark the standard deviation among different runs.}
 \label{fig:synthetic-l2}
 \end{figure}
 
-In \cref{fig:synthetic-l2} we show numerically how alignment depends on the level of regularization and the hidden layer width $p$ when the (regularized) feedback alignment algorithm is applied to two-layer networks with different hidden layer width $p$ and activation $\psi$. In particular, we obtain \cref{fig:align_lr_non_autograd_l2} from performing feedback alignment on linear networks with linear regression data, and \cref{fig:align_nn_relu_autograd_l2,fig:align_nn_sigmoid_autograd_l2,fig:align_nn_tanh_autograd_l2} are the same numerical benchmarks on non-linear networks with ReLU, sigmoid, and tanh activation function, respectively. For each hidden layer width $p$, we randomly initialize a two-layer network with $p$ hidden neurons and randomly generate a corresponding synthetic dataset for training. Starting from the initialization, we then train the network with feedback alignment algorithm on different levels of regularization and record the alignment between feed-forward weights $\beta$ and backward weights $b$ after the loss converges. This procedure is then repeated $50$ times for each $p$, and the simulation results are summarized in their mean and standard deviation. In all the four figures, \ie,  \cref{fig:align_lr_non_autograd_l2,fig:align_nn_relu_autograd_l2,fig:align_nn_sigmoid_autograd_l2,fig:align_nn_tanh_autograd_l2}, the level of alignment goes to zero when the hidden layer width $p$ is large for feedback alignment algorithm without regularization, while the level of alignment is always kept away from zero for regularized feedback alignment. Further, alignment grows along with the level of regularization $\lambda$ for the same network. Such numerical results strongly support our theoretical statements.
+In \cref{fig:synthetic-l2} we show numerically how alignment depends on regularization and the hidden layer width $p$ when the (regularized) feedback alignment algorithm is applied to two-layer networks with different hidden layer width $p$ and activation $\psi$. In particular, we obtain \cref{fig:align_lr_non_autograd_l2} from performing feedback alignment on linear networks with linear regression data, and \cref{fig:align_nn_relu_autograd_l2,fig:align_nn_tanh_autograd_l2} are the same numerical benchmarks on non-linear networks with ReLU and tanh activation function. For each hidden layer width $p$, we randomly initialize a two-layer network with $p$ hidden neurons and randomly generate a corresponding synthetic dataset for training. Starting from the initialization, we then train the network with feedback alignment algorithm on different levels of regularization and record the alignment between feed-forward weights $\beta$ and backward weights $b$ after the loss converges. For linear networks, we take step size $\eta = 10^{-4}$; for ReLU and Tanh networks, we take $\eta = 10^{-3},10^{-2}$ respectively. This procedure is repeated $50$ times for each $p$, and the simulation results are summarized by their mean and standard deviation. For all three types of networks, the level of alignment converges to zero when the hidden layer width $p$ goes to infinity for feedback alignment algorithm without regularization, while the level of alignment is always kept away from zero for regularized feedback alignment. Further, alignment grows along with the level of regularization $\lambda$ for the same network. Such numerical results strongly support our theoretical statements.
 
-We would like to remark that dropout, a commonly used training technique, as a form of regularization can also help the alignment when used together with feedback alignment algorithm \citep{wager2013dropout}. To the best of our knowledge, there is no satisfying theoretical result available that could explain the underlying mechanism.
+We would like to remark that dropout, a commonly used training technique, as a form of regularization can also help the alignment between forward and backward weights when used together with feedback alignment algorithm \citep{wager2013dropout}. To the best of our knowledge, there is no satisfying theoretical result available that could explain the underlying mechanism.
 
 
 \paragraph{Feedback alignment on MNIST dataset.}
 
-The training set of \texttt{MNIST} data consists of $6000$ black-and-white images of handwritten digits with dimension $28$ by $28$, and we flatten each of them into an one-dimensional vector of length $784$. The training data $x_i$'s are obtained after normalizing the vectors by their mean and standard deviation, and the test dataset with $1000$ samples can be similarly processed. We remark that the structure of the two-layer ReLU network we use for classification is slightly different from \eqref{eqn:nonlinear-network}. In particular, the output dimension for classification is $10$ instead of $1$ so that we are able to utilize the cross-entropy loss on the categorical label $y_i$. During training, we take a batch size of $60$ so that $100$ steps are taken in each epoch, and the whole training procedure takes $300$ epochs. 
+The training set of \texttt{MNIST} data consists of $6000$ black-and-white images of handwritten digits with dimension $28$ by $28$, and we reshape each of them into an one-dimensional vector of length $d = 784$. The training data $x_i$'s are obtained after normalizing the vectors by their mean and standard deviation. The test dataset with $1000$ samples can be similarly processed. We remark that the structure of the two-layer ReLU network we use for classification has a different output size compared to \eqref{eqn:nonlinear-network}. In particular, the output dimension for \texttt{MNIST} classification is $10$ instead of $1$, and we utilize cross-entropy loss on evaluating the predictions against the categorical labels $y$. During training, we choose a batch size $n = 600$ and there are $100$ steps taken within each epoch with step size $\eta = 10^{-2}$. The training procedure takes $300$ epochs in total. 
 
-\cref{fig:mnist} shows the performance of (regularized) feedback alignment under different levels of regularization. The figure on the right-hand side shows the development of test accuracy for the classifier during training, and the regularized feedback alignment converges faster to the maximum accuracy for larger regularization $\lambda$. In the first two figures, we show the development of alignment during training, and we can see that alignment grows much faster with larger regularization.
+\cref{fig:mnist} shows the performance of (regularized) feedback alignment under regularization $\lambda = 0, 0.1, 0.3$. The figure on the right-hand side shows the change on test accuracy for different classifiers during training, and the networks trained with regularization are able to outperform the one without regularization. The regularized feedback alignment quickly converges to the maximum accuracy for larger regularization $\lambda$. In the first two figures, we show the development of alignment during feedback alignment training procedure, and it grows faster with larger regularization. Recall that the second layer weights $\beta\in\RR^{p\times 10}$ is not a vector, and under such scenario the definition of alignment between backpropagated error signals $\dfa$ and $\dbp$ is no longer equivalent to that in \cref{def:alignment}. The first plot follows the definition from \citep{lillicrap2016random} and the second one follows \cref{def:alignment}, and it turns out they are very close to each other numerically.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\textwidth]{figures/mnist_2l_v2_horizontal.pdf}
-  \caption{\texttt{MNIST} data.}
+  \includegraphics[width=\textwidth]{figures/mnist_2l_v6_horizontal.pdf}
+  \caption{Comparisons on alignment and accuracy for feedback alignment algorithm with different levels of $\ell_2$ regularization. In each of the three plots, the $x$-axis represents the number of updates on model parameters. In particular, the $y$-axes in the left and the middle plots show two notions of alignment: alignment of backpropagated error signals and alignment of forward and backward weights, respectively. The plot on the right shows the accuracy achieved by networks on test dataset. The dashed lines and corresponding shaded areas represent the means and the standard deviations over $10$ runs with random initialization.}
   \label{fig:mnist}
 \end{figure}
