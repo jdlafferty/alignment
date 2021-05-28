@@ -1,1 +1,11 @@
+%!TEX root=./main.tex
 \section{Discussion}
+
+In this paper we have analyzed the feedback alignment algorithm of
+\cite{lillicrap2016random}, showing convergence of the algorithm. The convergence is subtle as the algorithm does not directly minimize the target loss function; rather, the error is transferred to to the hidden neurons through random weights that do not change during the course of learning.
+The supplement to \cite{lillicrap2016random} presents interesting insights on the dynamics of the algorithm, such as how the feedback weights act as pseudoinverse of the forward weights. After giving an analysis of convergence in the linear case, the authors state that
+``a general proof must be radically different from those used to demonstrate convergence for backprop'' (Supplementary note 16), observing that the algorithm does not minimize any loss function. Our proof of convergence in the general nonlinear case leverages techniques from
+the use of neural tangent kernel analysis in the over-parameterized setting, but requires more care because the kernel is not positive semi-definite at initialization. In particular, as a sum of two terms $G$ and $H$, the matrix $G$ is concentrated around its postive-definite mean, whilce  $H$ is not generally postive-semidefinite. However, we show that the entries of both matrices remain close to their initial values, due to over-parameterization, and analyze the error term in a Taylor expansion, which establishes convergence.
+
+
+Hebbian update to the backward rates?
