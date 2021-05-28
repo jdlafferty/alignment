@@ -1,15 +1,15 @@
 %!TEX root=./main.tex
 
 \section{Convergence on Two-Layer Nonlinear Networks}\label{sec:appendix-convergence}
-We consider the following neural network
+We consider the family of neural networks
 \begin{equation}
 f(x) = \frac{1}{\sqrt p}\sum_{r=1}^p \beta_r \psi(w_r\transpose x) = \frac{1}{\sqrt p}\beta\transpose \psi(Wx)
 \end{equation}
-where $\beta \in \R^p$, $W = (w_1,...,w_p)\transpose\in\R^{p\times d}$, and $\psi$ is activation function. Given data, the loss function is
+where $\beta \in \R^p$, $W = (w_1,...,w_p)\transpose\in\R^{p\times d}$, and $\psi$ is an activation function. Given data, the loss function is
 \begin{equation}
-\Loss(W, \beta) = \frac{1}{2}\sum_{i=1}^n(f(x_i)-y_i)^2 = \frac{1}{2}\sum_{i=1}^n\Big(\frac{1}{\sqrt p}\beta\transpose \psi(Wx_i)-y\Big)^2
+\Loss(W, \beta) = \frac{1}{2}\sum_{i=1}^n(f(x_i)-y_i)^2 = \frac{1}{2}\sum_{i=1}^n\Big(\frac{1}{\sqrt p}\beta\transpose \psi(Wx_i)-y\Big)^2.
 \end{equation}
-The feedback alignment algorithm gives
+The feedback alignment algorithm has updates
 \begin{equation}
 \label{eq:updates}
 \begin{aligned}
@@ -17,7 +17,7 @@ The feedback alignment algorithm gives
     \beta(t+1) &= \beta(t)- \eta \frac{1}{\sqrt p}\sum_{i=1}^n \psi(W(t)x_i)e_i(t)
 \end{aligned}
 \end{equation}
-where $D_i(t) = \text{diag}(\psi'(W(t)x_i))$ and $e_i(t) = \frac{1}{\sqrt p}\beta(t)\transpose \psi(W(t)x_i)-y_i$. To make the proof clear, we use $c$, $C$ to denote the global constants whose values may vary from line to line.
+where $D_i(t) = \text{diag}(\psi'(W(t)x_i))$ and $e_i(t) = \frac{1}{\sqrt p}\beta(t)\transpose \psi(W(t)x_i)-y_i$. To help make the proof more readable, we use $c$, $C$ to denote the global constants whose values may vary from line to line.
 
 \subsection{Concentration Results}
 
@@ -28,13 +28,13 @@ Assume $x_1,...,x_n \overset{\iid}{\sim} \calN(0,I_d/d)$. We define  matrix $\wi
 \end{equation*}
 where $Z\sim \calN(0,1)$. If $d = \Omega(\log n)$, then with high probability, we have
 \begin{equation*}
-\|\overline{G}-\widetilde{G}\|^2 \lesssim \frac{\log n}{d} + \frac{n^2}{d^2}
+\|\overline{G}-\widetilde{G}\|^2 \lesssim \frac{\log n}{d} + \frac{n^2}{d^2}.
 \end{equation*}
 \end{lemma}
 
 
 \begin{proof}[Proof of \cref{prop:positive-definiteness}]
-In fact, if $\psi$ is sigmoid or tanh, for a standard Gaussian random variable $Z$, we have
+If $\psi$ is sigmoid or tanh, for a standard Gaussian random variable $Z$, we have
 \begin{equation*}
     \gamma\defeq \frac{1}{2}(\E|\psi(Z)|^2-|\E\psi'(Z)|^2) >0.
 \end{equation*}
@@ -58,7 +58,7 @@ Assume $W(0)$, $\beta(0)$ and $b$ have \iid standard Gaussian entries. Given $\d
 \end{equation}
 \end{lemma}
 \begin{proof}
-We will show each inequality holds with probability at least $1-\frac{\delta}{4}$, then by a union bound, all of them hold with probability at least $1-\frac{\delta}{4}$. Since $\Var(\frac{1}{p}\sum_{r=1}^p|b_r|)\leq \frac{\Var(|b_0|)}{p}$, by Chebyshev's inequality, we have
+We will show each inequality holds with probability at least $1-\frac{\delta}{4}$, then by a union bound, all of them hold with probability at least $1-\delta$. Since $\Var(\frac{1}{p}\sum_{r=1}^p|b_r|)\leq \frac{\Var(|b_0|)}{p}$, by Chebyshev's inequality, we have
 \begin{equation*}
     \prob(\frac{1}{p}\sum_{r=1}^p|b_r| > \E(b_1) + 1) \leq \frac{\Var(|b_1|)}{p} \leq \delta/4
 \end{equation*}
@@ -70,15 +70,15 @@ By Chebyshev's inequality, we have for each $i\in [n]$
 \begin{equation*}
     \prob(|u_i(0)|> c) \leq \frac{\Var(u_i(0))}{c^2} \leq \frac{\delta}{4n}
 \end{equation*}
-where we require $p=\Omega(n/\delta)$. With a union bound argument, we could show \eqref{eq:e0_bd}. Finally, \eqref{eq:maxb_bd} is followed from standard Gaussian tail bound and union bound argument, \ie,
+where we require $p=\Omega(n/\delta)$. With a union bound argument, we can show \eqref{eq:e0_bd}. Finally, \eqref{eq:maxb_bd} followed from standard Gaussian tail bounds and union bound argument, yielding
 \begin{equation*}
-    \prob(\max_{r\in[p]}|b_r| > 2\sqrt{\log p}) \leq \sum_{r\in [p]}\prob(|b_r| > 2\sqrt{\log p}) \leq 2pe^{-2\log p} = \frac{2}{p} \leq \frac{\delta}{4}
+    \prob(\max_{r\in[p]}|b_r| > 2\sqrt{\log p}) \leq \sum_{r\in [p]}\prob(|b_r| > 2\sqrt{\log p}) \leq 2pe^{-2\log p} = \frac{2}{p} \leq \frac{\delta}{4}.
 \end{equation*}
 \end{proof}
 
 \begin{lemma}
 \label{lma:GH}
-Under the conditions of \cref{thm:nonliner_conv}, we define matrix $G(0),H(0)\in\R^{n\times n}$ with entries
+Under the conditions of \cref{thm:nonliner_conv}, we define matrices $G(0),H(0)\in\R^{n\times n}$ with entries
 \begin{equation}
 \label{eq:def_G0}
 G_{ij}(0) = \frac{1}{p}\psi(W(0)x_i)\transpose \psi(W(0)x_j) = \frac{1}{p}\sum_{r=1}^p\psi(w_r(0)\transpose x_i)\psi(w_r(0)\transpose x_j)
@@ -93,11 +93,11 @@ For any $\delta \in (0,1)$, if $p=\Omega(\frac{n^2}{\delta\gamma^2})$, then with
 \begin{proof}
 By independence and boundedness of $\psi$ and $\psi'$, we have $\Var(G_{ij}(0)) = O(1/p)$ and $\Var(H_{ij}(0)) = O(1/p)$. Since $\E(G(0))=\overline{G}$, we have
 \begin{equation*}
-\E\|G(0)-\overline{G}\|^2 \leq \E\|G(0)-\overline{G}\|^2_F = O(\frac{n^2}{p})
+\E\|G(0)-\overline{G}\|^2 \leq \E\|G(0)-\overline{G}\|^2_F = O(\frac{n^2}{p}).
 \end{equation*}
-by Markov's inequality, when $p=\Omega(\frac{n^2}{\delta\gamma^2})$
+By Markov's inequality, when $p=\Omega(\frac{n^2}{\delta\gamma^2})$
 \begin{equation*}
-    \prob(\|G(0)-\overline{G}\|>\frac{\gamma}{4})\leq O(\frac{n^2}{p\gamma^2})\leq\frac{\delta}{2}
+    \prob(\|G(0)-\overline{G}\|>\frac{\gamma}{4})\leq O(\frac{n^2}{p\gamma^2})\leq\frac{\delta}{2}.
 \end{equation*}
 Similarly we have $\prob(\|H(0)\|>\frac{\gamma}{4})\leq\frac{\delta}{2}$, since $\E(H(0))=0$. Then with probability at least $1-\delta$, $\lambda_{\min}(G(0)) \geq \lambda_{\min}(\overline{G}) -\gamma/4 \geq \frac{3}{4}\gamma$, and $\|H(0)\|\leq \gamma/4$.
 \end{proof}
@@ -106,11 +106,11 @@ Similarly we have $\prob(\|H(0)\|>\frac{\gamma}{4})\leq\frac{\delta}{2}$, since 
 
 \begin{lemma}
 \label{lma:weights}
-Assume all the inequalities from \cref{lma:inqs} holds. Under the conditions of \cref{thm:nonliner_conv}, if the error bound \eqref{eq:conv} holds for all $t=1,2,...,t'-1$, then the bounds \eqref{eq:weights} hold for all $t\leq t'$.
+Assume all the inequalities from \cref{lma:inqs} hold. Under the conditions of \cref{thm:nonliner_conv}, if the error bound \eqref{eq:conv} holds for all $t=1,2,...,t'-1$, then the bounds \eqref{eq:weights} hold for all $t\leq t'$.
 \end{lemma}
 
 \begin{proof}
-From the feedback alignment updates \eqref{eq:updates}, we have for all $t\leq T$.
+From the feedback alignment updates \eqref{eq:updates}, we have for all $t\leq T$
 \begin{equation*}
 \begin{aligned}
     |\beta_r(t)-\beta_r(0)| &\leq \frac{\eta}{\sqrt p}\sum_{s=0}^{t-1}\sum_{i=1}^n |\psi(w_r(t)x_i)e_i(t)| \\
@@ -121,7 +121,7 @@ From the feedback alignment updates \eqref{eq:updates}, we have for all $t\leq T
     &\leq c\frac{n}{\gamma\sqrt p}
 \end{aligned}
 \end{equation*}
-where we use $\psi$ is bounded and \eqref{eq:e0_bd}. We also have
+where we use the fact that $\psi$ is bounded and \eqref{eq:e0_bd}. We also have
 \begin{equation*}
 \begin{aligned}
     \|w_r(t)-w_r(0)\| &\leq \frac{\eta}{\sqrt p}\sum_{s=0}^{t-1}\sum_{i=1}^n \|\psi'(w_r(t)\transpose x_i)b_rx_i e_i(t)\| \\
@@ -131,15 +131,15 @@ where we use $\psi$ is bounded and \eqref{eq:e0_bd}. We also have
     & \leq c\frac{n\sqrt{\log p}}{\gamma\sqrt p}
 \end{aligned}
 \end{equation*}
-where we use $\psi'$ is bounded, \eqref{eq:e0_bd} and \eqref{eq:maxb_bd}.
+where we use that $\psi'$ is bounded, \eqref{eq:e0_bd} and \eqref{eq:maxb_bd}.
 \end{proof}
 
 \begin{lemma}
 \label{lma:induction}
-Assume all the inequalities from \cref{lma:inqs} holds. Under the conditions of \cref{thm:nonliner_conv}, if the bound for weights difference \eqref{eq:weights} holds for all $t\leq t'$ and error bound \eqref{eq:conv} holds for all $t\leq t'-1$, then \eqref{eq:conv} holds for $t=t'$.
+Assume all the inequalities from \cref{lma:inqs} hold. Under the conditions of \cref{thm:nonliner_conv}, if the bound for the weights difference \eqref{eq:weights} holds for all $t\leq t'$ and error bound \eqref{eq:conv} holds for all $t\leq t'-1$, then \eqref{eq:conv} holds for $t=t'$.
 \end{lemma}
 \begin{proof}
-We start with analyzing the error $e(t)$
+We start with analyzing the error $e(t)$ according to
 \begin{equation*}
 \begin{aligned}
     e_i(t+1)
@@ -158,15 +158,15 @@ G_{ij}(t) &= \frac{1}{p}\psi(W(t)x_j)\transpose\psi(W(t)x_i) \\
 H_{ij}(t) &= \frac{x_i\transpose x_j}{p}\beta(t+1)\transpose D_i(t)D_j(t)b
 \end{aligned}
 \end{equation*}
-and $v_i(t)$ is the residual term from the Taylor's expansion
+and $v_i(t)$ is the residual term from the Taylor expansion
 \begin{equation*}
     v_i(t) = \frac{1}{2\sqrt p}\sum_{r=1}^p\beta_r(t+1)|(w_r(t+1)-w_r(t))\transpose x_i|^2\psi''(\xi_{ri}(t))
 \end{equation*}
-with $\xi_{ri}(t)$ between $w_r(t)\transpose x_i$ and $w_r(t+1)\transpose x_i$. We can also rewrite the above iteration in a vector form
+with $\xi_{ri}(t)$ between $w_r(t)\transpose x_i$ and $w_r(t+1)\transpose x_i$. We can also rewrite the above iteration in vector form as
 \begin{equation}\label{eq:et_iter}
-     e(t+1) = e(t) - \eta(G(t)+H(t))e(t) + v(t)
+     e(t+1) = e(t) - \eta(G(t)+H(t))e(t) + v(t).
 \end{equation}
-Now for $t=t'-1$, we that both $G(t)$ and $H(t)$ are close to their initialization. Notice that
+Now for $t=t'-1$, we wish to show that both $G(t)$ and $H(t)$ are close to their initialization. Notice that
 \begin{equation*}
 \begin{aligned}
     |G_{ij}(t) - G_{ij}(0)|
@@ -177,11 +177,11 @@ Now for $t=t'-1$, we that both $G(t)$ and $H(t)$ are close to their initializati
     &\leq c_0 \frac{n\sqrt{\log p}}{\gamma\sqrt p} (\|x_i\|+\|x_j\|)
 \end{aligned}
 \end{equation*}
-where the second inequality is due to the boundedness of $\psi$ and $\psi'$, the last inequality is by \eqref{eq:weights}, then we have
+where the second inequality is due to the boundedness of $\psi$ and $\psi'$, and the last inequality is by \eqref{eq:weights}. Then we have
 \begin{equation}\label{eq:bound_Gt}
-    \|G(t)-G(0)\| \leq \max_{j \in [n]}\sum_{i=1}^n|G_{ij}(t) - G_{ij}(0)| \leq c_0 \frac{n^2\sqrt{\log p}}{\gamma\sqrt p}
+    \|G(t)-G(0)\| \leq \max_{j \in [n]}\sum_{i=1}^n|G_{ij}(t) - G_{ij}(0)| \leq c_0 \frac{n^2\sqrt{\log p}}{\gamma\sqrt p}.
 \end{equation}
-For matrix $H(t)$, similarly we have
+For matrix $H(t)$, we similarly have
 \begin{equation*}
 \begin{aligned}
     |H_{ij}(t)-H_{ij}(0)|
@@ -195,9 +195,9 @@ For matrix $H(t)$, similarly we have
     &\leq c_1 \frac{n}{\gamma\sqrt p} + c_2\frac{n\sqrt{\log p}}{\gamma\sqrt p}.
 \end{aligned}
 \end{equation*}
-It follows
+It follows that
 \begin{equation}\label{eq:bound_Ht}
-    \|H(t)-H(0)\| \leq \max_{j \in [n]}\sum_{i=1}^n|H_{ij}(t) - H_{ij}(0)| \leq c_1 \frac{n^2}{\gamma\sqrt p} + c_2\frac{n^2\sqrt{\log p}}{\gamma\sqrt p}
+    \|H(t)-H(0)\| \leq \max_{j \in [n]}\sum_{i=1}^n|H_{ij}(t) - H_{ij}(0)| \leq c_1 \frac{n^2}{\gamma\sqrt p} + c_2\frac{n^2\sqrt{\log p}}{\gamma\sqrt p}.
 \end{equation}
 Next, we bound the residual term $v_i(t)$. Since $\psi''$ is bounded, we have
 \begin{equation*}
@@ -207,12 +207,12 @@ Next, we bound the residual term $v_i(t)$. Since $\psi''$ is bounded, we have
     &\leq c\frac{1}{\sqrt p}\frac{\eta^2}{p}\sum_{r=1}^p|\beta_r(t+1)|\Big(\sum_{i=1}^n\|\psi'(w_r(t)\transpose x_i)b_rx_ie_i(t)\|\Big)^2 \\
     &\leq c\frac{1}{\sqrt p}\frac{\eta^2}{p}\sum_{r=1}^p|\beta_r(t+1)||b_r|^2\Big(\sum_{i=1}^n|e_i(t)|\Big)^2 \\
     &\leq c\frac{\eta^2n}{\sqrt p}\|e(t)\|^2 \\
-    &\leq c_3\frac{\eta^2n\sqrt n}{\sqrt p}\|e(t)\|
+    &\leq c_3\frac{\eta^2n\sqrt n}{\sqrt p}\|e(t)\|.
 \end{aligned}
 \end{equation*}
-It gives the bound
+This leads to the bound
 \begin{equation}\label{eq:bound_vt}
-    \|v(t)\| =\Big(\sum_{i=1}^n|v_i(t)|^2\Big)^{1/2} \leq c_3\frac{\eta^2n^2}{\sqrt p}\|e(t)\|
+    \|v(t)\| =\Big(\sum_{i=1}^n|v_i(t)|^2\Big)^{1/2} \leq c_3\frac{\eta^2n^2}{\sqrt p}\|e(t)\|.
 \end{equation}
 Combining \cref{eq:et_iter,eq:bound_Gt,eq:bound_Ht,eq:bound_vt}, we have
 \begin{equation*}
@@ -225,7 +225,7 @@ Combining \cref{eq:et_iter,eq:bound_Gt,eq:bound_Ht,eq:bound_vt}, we have
 &\leq(1-\frac{\eta\gamma}{4})\|e(t)\|
 \end{aligned}
 \end{equation*}
-where we use the \cref{lma:GH} and $p=\Omega(\frac{n^4\log p}{\gamma^4})$.
+where we use \cref{lma:GH} and $p=\Omega(\frac{n^4\log p}{\gamma^4})$.
 \end{proof}
 
 \begin{proof}[Proof of \cref{thm:nonliner_conv}]
@@ -236,7 +236,7 @@ We prove the inequality \eqref{eq:conv} by induction. Suppose \eqref{eq:conv} an
 
 \begin{lemma}
 \label{lma:weights_reg}
-Assume all the inequalities from \cref{lma:inqs} holds. Under the conditions of \cref{thm:nonlinear_conv_reg}, if the error bound \eqref{eq:conv_reg} holds for all $t=1,2,...,t'-1$, then
+Assume all the inequalities from \cref{lma:inqs} hold. Under the conditions of \cref{thm:nonlinear_conv_reg}, if the error bound \eqref{eq:conv_reg} holds for all $t=1,2,...,t'-1$, then
 \begin{equation}
 \label{eq:weights_reg}
 \begin{aligned}
@@ -250,9 +250,10 @@ hold for all $t\leq t'$, where $c_1$, $c_2$ are constants.
 \begin{proof}
 For any $k\leq t'-1$, we apply \eqref{eq:conv_reg} repeatedly on the right hand side of itself to get
 \begin{equation*}
-    \|e(k)\|\leq \prod_{i=0}^{k-1}\Big(1-\frac{\eta\gamma}{4}-\eta\lambda(i)\Big)\|e(0)\| + \sum_{i=0}^{k-1}\eta\lambda(i)\prod_{i<j<k}\Big(1-\frac{\eta\gamma}{4}-\eta\lambda(j)\Big)\|y\|
+    \|e(k)\|\leq \prod_{i=0}^{k-1}\Big(1-\frac{\eta\gamma}{4}-\eta\lambda(i)\Big)\|e(0)\| + \sum_{i=0}^{k-1}\eta\lambda(i)\prod_{i<j<k}\Big(1-\frac{\eta\gamma}{4}-\eta\lambda(j)\Big)\|y\|.
 \end{equation*}
 For $t\leq t'-1$, we take the sum over $k=0,..,t$ on both sides of above inequality
+to obtain
 \begin{equation*}
 \begin{aligned}
     \sum_{k=0}^{t}\|e(k)\|
@@ -283,16 +284,16 @@ where we use $\psi$ is bounded and \eqref{eq:e0_bd}. We also have
     & \leq c\frac{n\sqrt{\log p}}{\gamma\sqrt p} (1+\eta \tilde{S}_\lambda)
 \end{aligned}
 \end{equation*}
-where we use $\psi'$ is bounded, \eqref{eq:e0_bd} and \eqref{eq:maxb_bd}.
+where we use the fact that $\psi'$ is bounded, \eqref{eq:e0_bd} and \eqref{eq:maxb_bd}.
 \end{proof}
 
 
 \begin{lemma}
 \label{lma:induction_reg}
-Assume all the inequalities from \cref{lma:inqs} holds. Under the conditions of \cref{thm:nonlinear_conv_reg}, if the bound for weights difference \eqref{eq:weights_reg} holds for all $t\leq t'$ and error bound \eqref{eq:conv_reg} holds for all $t\leq t'-1$, then \eqref{eq:conv_reg} holds for $t=t'$.
+Assume all the inequalities from \cref{lma:inqs} hold. Under the conditions of \cref{thm:nonlinear_conv_reg}, if the bound for weights difference \eqref{eq:weights_reg} holds for all $t\leq t'$ and error bound \eqref{eq:conv_reg} holds for all $t\leq t'-1$, then \eqref{eq:conv_reg} holds for $t=t'$.
 \end{lemma}
 \begin{proof}
-We start with analyzing the error $e(t)$
+We start by analyzing the error $e(t)$ according to 
 \begin{equation*}
 \begin{aligned}
     e_i(t+1)
@@ -311,15 +312,15 @@ G_{ij}(t) &= \frac{1}{p}\psi(W(t)x_j)\transpose\psi(W(t)x_i) \\
 H_{ij}(t) &= \frac{x_i\transpose x_j}{p}\beta(t+1)\transpose D_i(t)D_j(t)b
 \end{aligned}
 \end{equation*}
-and $v_i(t)$ is the residual term from the Taylor's expansion
+and $v_i(t)$ is the residual term from a Taylor expansion
 \begin{equation*}
     v_i(t) = \frac{1}{2\sqrt p}\sum_{r=1}^p\beta_r(t+1)|(w_r(t+1)-w_r(t))\transpose x_i|^2\psi''(\xi_{ri}(t))
 \end{equation*}
-with $\xi_{ri}(t)$ between $w_r(t)\transpose x_i$ and $w_r(t+1)\transpose x_i$. We can also rewrite the above iteration in a vector form
+with $\xi_{ri}(t)$ between $w_r(t)\transpose x_i$ and $w_r(t+1)\transpose x_i$. We can also rewrite the above iteration in vector form as
 \begin{equation}\label{eq:et_iter_reg}
-     e(t+1) = (1-\lambda(t))e(t) - \eta(G(t)+H(t))e(t) + v(t) -\eta\lambda(t)y
+     e(t+1) = (1-\lambda(t))e(t) - \eta(G(t)+H(t))e(t) + v(t) -\eta\lambda(t)y.
 \end{equation}
-Now for $t=t'-1$, we show that both $G(t)$ and $H(t)$ are close to their initialization. Similar to the argument in \cref{lma:induction}, we can obtain the following bound
+Now for $t=t'-1$, we show that both $G(t)$ and $H(t)$ are close to their initialization. Using the argument in \cref{lma:induction}, we can obtain following bounds
 \begin{equation}\label{eq:bound_Gt_reg}
     \|G(t)-G(0)\| \leq c_1 \frac{n^2\sqrt{\log p}}{\gamma\sqrt p}(1+\eta \tilde{S}_\lambda)
 \end{equation}
@@ -328,7 +329,7 @@ Now for $t=t'-1$, we show that both $G(t)$ and $H(t)$ are close to their initial
     \|H(t)-H(0)\| \leq c_2\frac{n^2\sqrt{\log p}}{\gamma\sqrt p}(1+\eta \tilde{S}_\lambda)
 \end{equation}
 \begin{equation}\label{eq:bound_vt_reg}
-    \|v(t)\| \leq c_3\frac{\eta^2n^2}{\sqrt p}\|e(t)\|
+    \|v(t)\| \leq c_3\frac{\eta^2n^2}{\sqrt p}\|e(t)\|.
 \end{equation}
 Combining \cref{eq:et_iter_reg,eq:bound_Gt_reg,eq:bound_Ht_reg,eq:bound_vt_reg}, we have
 \begin{equation*}
@@ -341,9 +342,9 @@ Combining \cref{eq:et_iter_reg,eq:bound_Gt_reg,eq:bound_Ht_reg,eq:bound_vt_reg},
 &\leq(1-\eta\lambda(t)-\frac{\eta\gamma}{4})\|e(t)\|
 \end{aligned}
 \end{equation*}
-where we use the \cref{lma:GH}, $p=\Omega(\frac{n^4\log p}{\gamma^4})$ and $\tilde{S}_\lambda = O(\frac{\gamma^2\sqrt{p}}{\eta n^2\sqrt{\log p}})$.
+where we use \cref{lma:GH}, $p=\Omega(\frac{n^4\log p}{\gamma^4})$ and $\tilde{S}_\lambda = O(\frac{\gamma^2\sqrt{p}}{\eta n^2\sqrt{\log p}})$.
 \end{proof}
 
 \begin{proof}[Proof of \cref{thm:nonlinear_conv_reg}]
-We prove the inequality \eqref{eq:conv_reg} by induction. Suppose \eqref{eq:conv_reg} holds for all $t=1,2,...,t'-1$, by \cref{lma:weights_reg} and \cref{lma:induction_reg} we know \eqref{eq:conv_reg} holds for $t=t'$, which completes the proof.
+We prove the inequality \eqref{eq:conv_reg} by induction. Suppose \eqref{eq:conv_reg} holds for all $t=1,2,...,t'-1$. Then by \cref{lma:weights_reg} and \cref{lma:induction_reg} we know \eqref{eq:conv_reg} holds for $t=t'$, which completes the proof.
 \end{proof}

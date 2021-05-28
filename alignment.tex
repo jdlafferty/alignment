@@ -9,7 +9,7 @@ In particular, the error signals $\dbp(h)$ and $\dfa(h)$ for the two-layer netwo
 \end{equation*}
 \citet{lillicrap2016random} notice a decreasing angle between $\dbp(h)$ and $\dfa(h)$ during training. We formalize this concept of alignment by the following definition.
 \begin{definition}\label{def:alignment}
-    A series of vectors $\{\beta(t)\}_{t=0}^\infty$ align with a fixed vector $b$ if there exists a constant $c>0$ and time $T_c$ such that  $\cos\angle(\dfa, \dbp(t)) = \cos\angle(b, \beta(t)) = \frac{\langle b, \beta(t)\rangle}{\|b\|\|\beta(t)\|} \geq c$ for all $t > T_c$.
+    We say a two-layer network \textit{aligns} with the random weights $b$ during training if there exists a constant $c>0$ and time $T_c$ such that  $\cos\angle(\dfa, \dbp(t)) = \cos\angle(b, \beta(t)) = \frac{\langle b, \beta(t)\rangle}{\|b\|\|\beta(t)\|} \geq c$ for all $t > T_c$.
 \end{definition}
 
 \subsection{Regularized feedback alignment}

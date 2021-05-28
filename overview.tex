@@ -21,7 +21,7 @@ Standard gradient descent attempts to minimize \eqref{eqn:squared-loss} by updat
 \begin{align*}
     \beta_r(t+1) &= \beta_r(t)-\eta\frac{\partial\Loss}{\partial \beta_r}(W(t),\beta(t)) \quad\\ w_r(t+1) &= w_r(t)-\eta\frac{\partial\Loss}{\partial w_r}(W(t),\beta(t)),
 \end{align*}
-for each $r\in[p]$, where $\eta>0$ denotes the step size. We initialize $\beta(0)$ and $w_r(0)$  standard Gaussian vectors. We introduce the notation $f(t), e(t)\in \R^n$, with $f_i(t) = f(x_i)$ denoting the network output on input $x_i$ when the weights are $W(t)$ and $\beta(t)$, and $e_i(t) = y_i-f_i(t)$ denoting the corresponding prediction error or residual. With this notation,
+for each $r\in[p]$, where $\eta>0$ denotes the step size. We initialize $\beta(0)$ and $w_r(0)$ as standard Gaussian vectors. We introduce the notation $f(t), e(t)\in \R^n$, with $f_i(t) = f(x_i)$ denoting the network output on input $x_i$ when the weights are $W(t)$ and $\beta(t)$, and $e_i(t) = y_i-f_i(t)$ denoting the corresponding prediction error or residual. With this notation,
 the gradients are expressed as
 \begin{equation*}
     \frac{\partial\Loss}{\partial \beta_r} = \frac{1}{\sqrt p}\sum_{i=1}^n e_i\psi(w_r\transpose x_i), \quad
@@ -73,17 +73,17 @@ the first layer weights $w_r$ does not violate locality, and could conceivably b
 We can now summarize the main results and contributions of this paper. Our first result shows that the error converges to zero when using random backpropagation weights.
 
 \begin{itemize}
-  \item Under Gaussian initialization of the parameters, if the model is sufficiently over-parameterized with $p\gg n$, then the error converges to zero linearly. Moreover, the parameters satisfy $\|w_r(t) - w_0(t) \| = \widetilde O\bigl(\frac{n}{\sqrt{p}}\bigr)$
-    and $|\beta_r(t) - \beta_0(t) | = \widetilde O\bigl(\frac{n}{\sqrt{p}}\bigr)$.
+  \item Under Gaussian initialization of the parameters, if the model is sufficiently over-parameterized with $p\gg n$, then the error converges to zero linearly. Moreover, the parameters satisfy $\|w_r(t) - w_r(0) \| = \widetilde O\bigl(\frac{n}{\sqrt{p}}\bigr)$
+    and $|\beta_r(t) - \beta_r(0) | = \widetilde O\bigl(\frac{n}{\sqrt{p}}\bigr)$.
 \end{itemize}
 The precise assumptions and statement of this result are given in \cref{thm:nonliner_conv}. The proof
-shows that in the over-parameterized regime that the weights only change
+shows in the over-parameterized regime that the weights only change
 by a small amount. While related to results for standard gradient descent,
 new methods are required because the ``effective kernel'' is not positive semi-definite.
 
-We next turn to the issue of alignment of the second layer parameters $\beta$ with the random backpropagation weights $b$. Such alignment was first observed in the original simulations of \cite{lillicrap2016random}. With $h\in \R^p$ denoting the hidden layer of the two-layer network,  the term $\dbp(h) \defeq \frac{\partial \Loss}{\partial h} = \beta \sum_{i=1}^n e_i$ represents
+We next turn to the issue of alignment of the second layer parameters $\beta$ with the random backpropagation weights $b$. Such alignment was first observed in the original simulations of \cite{lillicrap2016random}. With $h\in \R^p$ denoting the hidden layer of the two-layer network,  the term $\dbp(h) \defeq \frac{\partial \Loss}{\partial h} = \frac{1}{\sqrt{p}} \beta \sum_{i=1}^n e_i$ represents
 how the error signals $e_i$ are sent backward to update the feed-forward weights.
-With the use of random backpropagation weights, the error is instead propagated backward as $\dfa(h) = b \sum_{i=1}^n e_i$.
+With the use of random backpropagation weights, the error is instead propagated backward as $\dfa(h) = \frac{1}{\sqrt{p}} b \sum_{i=1}^n e_i$.
 
 
 \citet{lillicrap2016random} notice a decreasing angle between $\dbp(h)$ and $\dfa(h)$ during training, which is a sufficient condition to ensure that the algorithm converges.

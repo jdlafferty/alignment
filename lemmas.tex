@@ -1,7 +1,8 @@
 \section{Technical Lemmas}
 
-In this section, we present some of the technical lemmas that will be used in proofs.
-We will first introduce a variant of the Restricted Isometry Property that bounds the spectral norm of a random Gaussian matrix towards $1$ with high probability.
+In this section, we list technical lemmas that are used in our proofs, 
+with references. 
+The first is a variant of the Restricted Isometry Property that bounds the spectral norm of a random Gaussian matrix around $1$ with high probability.
 
 \begin{lemma}[\citealp{hand2018global}]\label{lem:RIP}
     Let $A\in \Rmn$ has \iid $\calN(0,1/m)$ entries. Fix $0<\eps<1$, $k < m$, and a subspace $T\subseteq \R^n$ of dimension $k$, then there exists universal constants $c_1$ and $\gamma_1$, such that with probability at least $1-(c_1/\varepsilon)^k e^{-\gamma_1\eps m}$,
@@ -17,7 +18,7 @@ Let us take $k = n$ in \cref{lem:RIP} to get the following corollary.
     \end{align*}
 \end{corollary}
 
-Following lemma gives tail bounds for $\chi^2$ random variables.
+Then following lemma gives tail bounds for $\chi^2$ random variables.
 \begin{lemma}[\citealp{laurent2000adaptive}]\label{lem:chi-squared-tail}
     Suppose $X\sim \chi^2_p$, then for all $t\geq 0$ it holds
     \begin{align*}

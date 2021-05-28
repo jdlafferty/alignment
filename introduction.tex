@@ -12,11 +12,9 @@ firing of the postsynapic neuron will result in an increased strength in the con
 between the two cells \citep{hebb1,paulsen}. Several variants of Hebbian learning, some making connections to principal components analysis, have been proposed
 \citep{oja,sejnowski1,sejnowski2}. In this paper, our focus is on a formulation of \cite{lillicrap2016random} based on random
 backpropagation weights that are fixed during the learning process.
-Related proposals, including methods based on the use of differences of neuron activities, have been made in a series recent papers \citep{akrout,bellec,lillicrap2020backpropagation}. A comparison of some of these methods is made by \cite{bartunov}.
+Related proposals, including methods based on the use of differences of neuron activities, have been made in a series of recent papers \citep{akrout,bellec,lillicrap2020backpropagation}. A comparison of some of these methods is made by \cite{bartunov}.
 
 
 The use of random feedback weights, which are not directly tied to the forward weights, removes issues of non-locality. However, it is not clear under what conditions optimization of error and learning can be successful. While \citet{lillicrap2016random} give suggestive simulations and some analysis for the linear case, it has been an open problem to explain the behavior of this algorithm for training the weights of a neural network.
-In this paper we study the mathematical properties of the feedback alignment procedure by analyzing convergence and alignment for two-layer networks under squared error loss. In the overparameterized setting, we prove that the error converges to zero exponentially fast. We also show, unexpectedly, that the parameters become aligned with the random backpropagation weights only when regularization is used. Simulations are given that are consistent with this analysis and suggest further generalizations.
+In this paper we study the mathematical properties of the feedback alignment procedure by analyzing convergence and alignment for two-layer networks under squared error loss. In the overparameterized setting, we prove that the error converges to zero exponentially fast. We also show, unexpectedly, that the parameters become aligned with the random backpropagation weights only when regularization is used. Simulations are given that are consistent with this analysis and suggest further generalizations. The following section gives further background and an overview of our results.
 
-In the following section we frame the problem in the context of previous work, and give
-a high level summary of our technical results. [Other sections briefly summarized here.]

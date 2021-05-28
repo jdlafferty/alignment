@@ -13,12 +13,11 @@ For the two-layer network $f(x, \theta)$ defined in \eqref{eqn:nonlinear-network
 \begin{equation*}
 K_f(x,y) = G_f(x, y) + H_f(x,y) \defeq \Big\langle \frac{\partial f (x,\theta)}{\partial \beta},\frac{\partial f (y,\theta)}{\partial \beta}\Big\rangle + \sum_{r=1}^p\Big\langle \frac{\partial f (x,\theta)}{\partial w_r},\frac{\partial f (y,\theta)}{\partial w_r}\Big\rangle.
 \end{equation*}
-Under the feedback alignment scheme with random backward weights $b$, $G_f$ remains the same as for standard backpropagation, while the gradient terms $\frac{\partial f}{\partial w_r}$ in $H_f$
-are replaced by
-\begin{align}\label{eqn:alignment-update-f}
-  \widetilde{\frac{\partial f(x_i, \theta)}{\partial w_r}}   = \frac{1}{\sqrt{p}} b_r \psi'(w_r\transpose x_i)x_i.
-\end{align}
-As a result, $H_f$ it is no longer positive semi-definite and close to $0$ at initialization if the network is over-parameterized. However, if $G = (G_f(x_i,x_j))_{n\times n}$ is positive definite and $H = (H_f(x_i,x_j))_{n\times n}$ remains small during training, we are still able to show that the loss $\Loss$ will converge to zero exponentially fast.
+Under the feedback alignment scheme with random backward weights $b$, $G_f$ remains the same as for standard backpropagation, while one of the gradient terms $\frac{\partial f}{\partial w_r}$ in $H_f$ changes to
+$\widetilde{\frac{\partial f(x, \theta)}{\partial w_r}}   = \frac{1}{\sqrt{p}} b_r \psi'(w_r\transpose x)x,
+$
+with $H_f$ replaced by $H_f = \sum_{r=1}^p\Big\langle \widetilde{\frac{\partial f (x,\theta)}{\partial w_r}},\frac{\partial f (y,\theta)}{\partial w_r}\Big\rangle$.
+As a result, $H_f$ is no longer positive semi-definite and close to $0$ at initialization if the network is over-parameterized. However, if $G = (G_f(x_i,x_j))_{n\times n}$ is positive definite and $H = (H_f(x_i,x_j))_{n\times n}$ remains small during training, we are still able to show that the loss $\Loss$ will converge to zero exponentially fast.
 
 \begin{assumption}\label{assump:G}
 Define the matrix $\overline{G} \in \R^{n\times n}$ with entries
@@ -37,7 +36,7 @@ and
 \label{eq:weights}
     \|w_r(t)-w_r(0)\| \leq c_1\frac{n\sqrt{\log p}}{\gamma\sqrt p}, \quad |\beta_r(t)-\beta_r(0)| \leq c_2\frac{n}{\gamma\sqrt p}
 \end{equation}
-for all $r=1,\ldots, p$ and $t>0$.
+for all $r\in[p]$ and $t>0$.
 \end{theorem}
 
 We note that the matrix $\overline{G}$ in \cref{assump:G} is the expectation of $G$ with respect to the random initialization, and is thus close to $\overline{G}$ due to concentration. To justify the assumption, we provide the following proposition, which states that \cref{assump:G} holds when the inputs $x_i$ are drawn independently from a Gaussian distribution. The proofs of \cref{thm:nonliner_conv,prop:positive-definiteness} are deferred to \cref{sec:appendix-convergence}.
