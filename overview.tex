@@ -17,7 +17,7 @@ Given $n$ input-response pairs $\{(x_i,y_i)\}_{i=1}^n$, the training objective i
 \begin{equation}\label{eqn:squared-loss}
     \Loss(W,\beta) = \frac{1}{2}\sum_{i=1}^n \big(y_i - f(x_i)\big)^2.
 \end{equation}
-Standard gradient descent attempts to minimize \eqref{eqn:nonlinear-network} by updating the feed-forward weights following gradient directions according to
+Standard gradient descent attempts to minimize \eqref{eqn:squared-loss} by updating the feed-forward weights following gradient directions according to
 \begin{align*}
     \beta_r(t+1) &= \beta_r(t)-\eta\frac{\partial\Loss}{\partial \beta_r}(W(t),\beta(t)) \quad\\ w_r(t+1) &= w_r(t)-\eta\frac{\partial\Loss}{\partial w_r}(W(t),\beta(t)),
 \end{align*}
