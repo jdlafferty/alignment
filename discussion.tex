@@ -7,5 +7,13 @@ The supplement to \cite{lillicrap2016random} presents interesting insights on th
 ``a general proof must be radically different from those used to demonstrate convergence for backprop'' (Supplementary note 16), observing that the algorithm does not minimize any loss function. Our proof of convergence in the general nonlinear case leverages techniques from
 the use of neural tangent kernel analysis in the over-parameterized setting, but requires more care because the kernel is not positive semi-definite at initialization. In particular, as a sum of two terms $G$ and $H$, the matrix $G$ is concentrated around its postive-definite mean, whilce  $H$ is not generally postive-semidefinite. However, we show that the entries of both matrices remain close to their initial values, due to over-parameterization, and analyze the error term in a Taylor expansion, which establishes convergence.
 
+In analyzing alignment, we unexpectedly found that regularization is essential; without it, the alignment may not persist as the network becomes wider, as our simulations clearly show.
+Our analysis in the linear case proceeds by essentially showing that
+$$\beta(t) = (1-\eta \lambda)^{t-1} \beta(0) + \frac{\eta}{\sqrt{p}} W(0) X^T \alpha_1(t-1) +
+\left(\frac{\eta}{\sqrt{p}} \right) b \alpha_2(t-1)$$
+and controlling $\alpha_1$ while showing that $\alpha_2$ remains sufficiently large; the
+regularization kills off the first term.
+Although we see no obstacle, in principle, to carrying out this proof strategy in the nonlinear
+case, the calculations are more complex. While convergence requires analysis of the norm of the error, alignment requires understanding the direction of the error. But our simulations strongly suggest this result will go through.
 
-Hebbian update to the backward rates?
+In terms of future research, a technical direction is to extend our results to multilayer networks. It would be interesting to explore local methods to update the backward weights $b$, rather than fixing them, perhaps using a Hebbian update rule in combination with the forward weights $W$. More generally, it is important to study other biologically plausible learning rules that can be implemented in deep learning frameworks at scale and without loss of performance.  The results presented here offer evidence that this can be a fruitful line of research.
