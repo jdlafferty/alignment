@@ -2,23 +2,22 @@
 
 \section{Alignment with Random Backpropagation Weights}\label{sec:alignment}
 
-The most prominent characteristic of feedback alignment algorithm is its phenomenon of alignment between the error signals back-propagated with forward weights and those with fixed random backward weights during training. Specifically, if we denote $h\in \R^p$ to be the hidden layer of the network, then we write $\dbp(h) \defeq \frac{\partial \Loss}{\partial h}$ to represent the error signals with respect to the hidden layer that are backpropagated with the feed-forward weights and $\dfa(h)$ as the error signals computed with fixed random backward weights.
-\citet{lillicrap2016random} notice a decreasing angle between $\dbp(h)$ and $\dfa(h)$ during training, which suggests that feedback alignment algorithm can still carry gradient information back through layers even the signals are backpropagated through random weights.
+The most prominent characteristic of the feedback alignment algorithm is the phenomenon that the error signals propagated with the forward weights align with those propagated with fixed random backward weights during training. Specifically, if we denote $h\in \R^p$ to be the hidden layer of the network, then we write $\dbp(h) \defeq \frac{\partial \Loss}{\partial h}$ to represent the error signals with respect to the hidden layer that are backpropagated with the feed-forward weights and $\dfa(h)$ as the error signals computed with fixed random backward weights.
 In particular, the error signals $\dbp(h)$ and $\dfa(h)$ for the two-layer network \eqref{eqn:nonlinear-network} are given by
 \begin{equation}
-    \dbp(h) = \frac{1}{\sqrt{p}}\beta\sum_{i=1}^ne_i \quad\text{and}\quad \dfa(h) = \frac{1}{\sqrt{p}}b\sum_{i=1}^ne_i,
+    \dbp(h) = \frac{1}{\sqrt{p}}\beta\sum_{i=1}^ne_i \quad\text{and}\quad \dfa(h) = \frac{1}{\sqrt{p}}b\sum_{i=1}^ne_i.
 \end{equation}
-and the alignment can be characterized by the angle between $\beta(t)$ and $b$ during training. We formalize this concept of alignment by the following definition.
+\citet{lillicrap2016random} notice a decreasing angle between $\dbp(h)$ and $\dfa(h)$ during training. We formalize this concept of alignment by the following definition.
 \begin{definition}\label{def:alignment}
     A series of vectors $\{\beta(t)\}_{t=0}^\infty$ align with a fixed vector $b$ if there exists a constant $c>0$ and time $T_c$ such that  $\cos\angle(\dfa, \dbp(t)) = \cos\angle(b, \beta(t)) = \frac{\langle b, \beta(t)\rangle}{\|b\|\|\beta(t)\|} \geq c$ for all $t > T_c$.
 \end{definition}
 
 \subsection{Regularized feedback alignment}
-Unfortunately, this alignment between $\beta(t)$ and $b$ is not guaranteed for over-parameterized networks and the loss \eqref{eqn:squared-loss}. To further illustrate our point, we control the cosine value of the angle by inequalities \eqref{eq:weights} from \cref{thm:nonliner_conv}, \ie,
+Unfortunately, alignment between $\beta(t)$ and $b$ is not guaranteed for over-parameterized networks and the loss \eqref{eqn:squared-loss}. In particular,  we control the cosine value of the angle by inequalities \eqref{eq:weights} from \cref{thm:nonliner_conv}, \ie,
 \begin{equation}
-    \Big|\cos\angle(b, \beta(t))\Big| \leq \frac{|\langle \frac{b}{\|b\|}, \beta(0)\rangle|+ \|\beta(t)- \beta(0)\|}{\|\beta(0)\|-\|\beta(t)-\beta(0)\|} = O\big(\frac{n}{\sqrt p}\big),
+    \Big|\cos\angle(b, \beta(t))\Big| \leq \frac{|\langle \frac{b}{\|b\|}, \beta(0)\rangle|+ \|\beta(t)- \beta(0)\|}{\|\beta(0)\|-\|\beta(t)-\beta(0)\|} = O\left(\frac{n}{\sqrt p}\right),
 \end{equation}
-which indicates that $\beta(t)$ and $b$ become orthogonal as the network becomes wider. Intuitively, this can be understood as resulting from the parameters staying near their initializations during training when $p$ is large, where $\beta(0)$ and $b$ are almost orthogonal to each other. This motivates us to regularize the network parameters. We consider in this work the squared error loss with a $\ell_2$ regularization term on $\beta$:
+which indicates that $\beta(t)$ and $b$ become orthogonal as the network becomes wider. Intuitively, this can be understood as resulting from the parameters staying near their initializations during training when $p$ is large, where $\beta(0)$ and $b$ are almost orthogonal to each other. This motivates us to regularize the network parameters. We consider in this work the squared error loss with an $\ell_2$ regularization term on $\beta$:
 \begin{equation}
 \label{eqn:loss-with-reg}
 \Loss(t, W, \beta) = \frac{1}{2}\sum_{i=1}^n\big(f(x_i)-y_i\big)^2 + \frac{1}{2}\lambda(t)\|\beta\|^2,
@@ -45,7 +44,7 @@ Comparing to \cref{algo:fa}, an extra contraction factor $1-\lambda(t)$ is added
 %\end{algorithm}
 %%\end{minipage}
 
-Following \cref{thm:nonliner_conv}, we provide an error bound for regularized feedback alignment in \cref{thm:nonlinear_conv_reg}. Since regularization terms $\lambda(t)$ make additional contributions to the error $e(t)$ as well as to the kernel matrix $G$, an upper bound on $\sum_{t\geq 0}\lambda(t)$ is needed to ensure the positivity of the minimal eigenvalue of $G$ during training, in order for the error $e(t)$ to be controlled. In particular, if there is no regularization, \ie, $\lambda(t)=0$ for all $t\geq 0$, then we recover exponential convergence for the error $e(t)$ as in \cref{thm:nonliner_conv}. The proof of \cref{thm:nonlinear_conv_reg} is also deferred to \cref{sec:appendix-convergence}.
+Following \cref{thm:nonliner_conv}, we provide an error bound for regularized feedback alignment in \cref{thm:nonlinear_conv_reg}. Since regularization terms $\lambda(t)$ make additional contributions to the error $e(t)$ as well as to the kernel matrix $G$, an upper bound on $\sum_{t\geq 0}\lambda(t)$ is needed to ensure positivity of the minimal eigenvalue of $G$ during training, in order for the error $e(t)$ to be controlled. In particular, if there is no regularization, \ie, $\lambda(t)=0$ for all $t\geq 0$, then we recover exponential convergence for the error $e(t)$ as in \cref{thm:nonliner_conv}. The proof of \cref{thm:nonlinear_conv_reg} is also deferred to \cref{sec:appendix-convergence}.
 % didn't use G(t) since it is not defined before
 
 \begin{theorem}

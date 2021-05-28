@@ -13,9 +13,9 @@ We mainly consider two-layer neural networks in the regression setting, specifie
 \end{align}
 where $W = (w_1,...,w_p)\transpose\in\Rpd$ and $\beta = (\beta_1,...,\beta_p)\transpose\in\Rp$ represent the feed-forward weights in the first and second layers, and $\psi$ denotes an element-wise activation function. The scaling by $\sqrt{p}$ is simply for convenience in the analysis.
 
-Given $n$ input-response pairs $\{(x_i,y_i)\}_{i=1}^n$, the training objective is to minimize the mean squared error
+Given $n$ input-response pairs $\{(x_i,y_i)\}_{i=1}^n$, the training objective is to minimize the squared error
 \begin{equation}\label{eqn:squared-loss}
-    \Loss(W,\beta) = \frac{1}{2n}\sum_{i=1}^n \big(y_i - f(x_i)\big)^2.
+    \Loss(W,\beta) = \frac{1}{2}\sum_{i=1}^n \big(y_i - f(x_i)\big)^2.
 \end{equation}
 Standard gradient descent attempts to minimize \eqref{eqn:nonlinear-network} by updating the feed-forward weights following gradient directions according to
 \begin{align*}
@@ -81,16 +81,15 @@ shows that in the over-parameterized regime that the weights only change
 by a small amount. While related to results for standard gradient descent,
 new methods are required because the ``effective kernel'' is not positive semi-definite.
 
-We next turn to the issue of alignment of the second layer parameters $\beta$ with the random backpropagation weights $b$. Such alignment was first observed in the original simulations of \cite{lillicrap2016random}. With $h\in \R^p$ denoting the hidden layer of the two-layer network,  the term $\dbp(h) \defeq \frac{\partial \Loss}{\partial h}$ represents
-how the error signals are sent backward to update the feed-forward weights.
-It is easy to calculate that
-$\dbp(h) = \beta \sum_{i=1}^n e_i$ for error terms $e_i$. With the use of random backpropagation weights, the error is instead propagated backward as $\dfa(h) = b \sum_{i=1}^n e_i$.
+We next turn to the issue of alignment of the second layer parameters $\beta$ with the random backpropagation weights $b$. Such alignment was first observed in the original simulations of \cite{lillicrap2016random}. With $h\in \R^p$ denoting the hidden layer of the two-layer network,  the term $\dbp(h) \defeq \frac{\partial \Loss}{\partial h} = \beta \sum_{i=1}^n e_i$ represents
+how the error signals $e_i$ are sent backward to update the feed-forward weights.
+With the use of random backpropagation weights, the error is instead propagated backward as $\dfa(h) = b \sum_{i=1}^n e_i$.
 
 
 \citet{lillicrap2016random} notice a decreasing angle between $\dbp(h)$ and $\dfa(h)$ during training, which is a sufficient condition to ensure that the algorithm converges.
 In the case of $k$-way classification, the last layer has $k$ nodes,
 $\beta$ and $b$ are $p\times k$ matrices, and each error term $e_i$ is a $k$-vector.
-In the regression setting that we focus on $k=1$, so that the angle between
+In the regression setting, $k=1$ so the angle between
 $\dbp(h)$ and $\dfa(h)$ is the same as the angle between $\beta$ and $b$.
 Intuitively, the possibility for alignment is seen in the fact that while the updates for $W$ use the error weighted by the random weights $b$, the updates for $\beta$ indirectly involve $W$, allowing for the possibility that dependence on $b$ will be introduced into $\beta$.
 
