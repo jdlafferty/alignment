@@ -60,7 +60,7 @@ for all $t\geq 0$.
 
 
 \subsection{Alignment analysis for linear networks}
-In this section, we focus on the theoretical analysis of alignment for linear networks, which is equivalent to setting the activation function $\psi$ into an identity map. The loss function can be written as
+In this section, we focus on the theoretical analysis of alignment for linear networks, which is equivalent to setting the activation function $\psi$ to the identity map. The loss function can be written as
 \begin{equation*}
     \Loss(t,W,\beta) = \frac{1}{2}\big\|\frac{1}{\sqrt{p}}XW\transpose\beta-y\big\|^2+\frac{\lambda(t)}{2}\|\beta\|^2,
 \end{equation*}
@@ -89,7 +89,7 @@ $\lambda_{\min}(XX\transpose)\geq\gamma$ and $\lambda_{\max}(XX\transpose)\leq(1
 
 \begin{proposition}
 \label{prop:isom}
-Assume $X\in\R^{n\times d}$ has independent entries drawn from $N(0,1/d)$. For any $\eps \in (0,1/2)$ and $\delta \in (0,1)$, if $d=\Omega(\frac{1}{\eps}\log\frac{n}{\delta}+\frac{n}{\eps}\log \frac{1}{\eps})$, $X$ is $(1-\eps, 4\eps)$-isometric with probability $1-\delta$.
+Assume $X\in\R^{n\times d}$ has independent entries drawn from $N(0,1/d)$. For any $\eps \in (0,1/2)$ and $\delta \in (0,1)$, if $d=\Omega(\frac{1}{\eps}\log\frac{n}{\delta}+\frac{n}{\eps}\log \frac{1}{\eps})$, then $X$ is $(1-\eps, 4\eps)$-isometric with probability $1-\delta$.
 \end{proposition}
 
 \begin{theorem}
