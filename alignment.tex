@@ -64,26 +64,26 @@ In this section, we focus on the theoretical analysis of alignment for linear ne
 \begin{equation*}
     \Loss(t,W,\beta) = \frac{1}{2}\big\|\frac{1}{\sqrt{p}}XW\transpose\beta-y\big\|^2+\frac{\lambda(t)}{2}\|\beta\|^2,
 \end{equation*}
-where $X = (x_1,\ldots,x_n)\transpose$, and it is similar to the loss of ridge regression.
+where $X = (x_1,\ldots,x_n)\transpose$; this is a form of over-parameterized ridge regression.
 Before presenting our results on alignment, we first provide a linear version of \cref{thm:nonlinear_conv_reg} that adopts slightly different conditions.
 
 \begin{theorem}
 \label{thm:lin_conv}
 Assume \textnormal{(1)}  $\|y\| = \Theta(\sqrt n)$, $\lambda_{\min}(XX\transpose)>\gamma$ and $\lambda_{\max}(XX\transpose)<M$ for some constants $M>\gamma>0$, and \textnormal{(2)} $\sum_{t=0}^\infty \lambda(t) \leq  S_\lambda = c_{S}\frac{\gamma\sqrt{\gamma p}}{\eta\sqrt{n}M}$ for some constant $c_{S}$.
-For any $\delta\in(0,1)$, if $p = \Omega(\frac{Md\log(d/\delta)}{\gamma})$, the following inequality holds for all $t\geq 0$ with probability at least $1-\delta$
+Then for any $\delta\in(0,1)$, if $p = \Omega(\frac{Md\log(d/\delta)}{\gamma})$, the following inequality holds for all $t\geq 0$ with probability at least $1-\delta$:
 \begin{equation}
 \label{eq:reg_error_bd}
 \|e(t+1)\|\leq \big(1-\frac{\eta\gamma}{2}-\eta\lambda(t)\big)\|e(t)\| + \lambda(t)\|y\|.
 \end{equation}
 \end{theorem}
 
-We remark that, in the linear case, the kernel matrix $G$ reduces to the form $X W\transpose W X\transpose$ and its expectation $\overline{G}$ at initialization also reduces to $X X\transpose$, so \cref{assump:G} holds if $XX\transpose$ is positive definite, which is equivalent to $x_i$'s being linearly independent. The result of \cref{thm:nonlinear_conv_reg} can not be directly applied to linear case since we assume $\psi$ is bounded, which is true for sigmoid or tanh but not for identity map. This results in a slightly different order for $S_\lambda$ and an improved order for $p$.
+We remark that in the linear case, the kernel matrix $G$ reduces to the form $X W\transpose W X\transpose$ and its expectation $\overline{G}$ at initialization also reduces to $X X\transpose$. Thus, \cref{assump:G} holds if $XX\transpose$ is positive definite, which is equivalent to the $x_i$'s being linearly independent. The result of \cref{thm:nonlinear_conv_reg} can not be directly applied to the linear case since we assume that $\psi$ is bounded, which is true for sigmoid or $\tanh$ but not for the identity map. This results in a slightly different order for $S_\lambda$ and an improved order for $p$.
 
-Our results on alignment also rely on an isometric condition on $X$, which requires the minimum and the maximum eigenvalues of $XX\transpose$ to be close enough (\cf \cref{def:isom}). On the other hand, this condition is relatively mild and can be satisfied when $X$ has random Gaussian entries with a gentle dimensional constraint, as demonstrated by \cref{prop:isom}. Finally, we show in \cref{thm:lin_align} that under a simple regularization strategy where a constant regularization is adopted until a cutoff time $T$, regularized feedback alignment achieves alignment if $X$ satisfies the isometric condition.
+Our results on alignment also rely on an isometric condition on $X$, which requires the minimum and the maximum eigenvalues of $XX\transpose$ to be sufficiently close (\cf \cref{def:isom}). On the other hand, this condition is relatively mild and can be satisfied when $X$ has random Gaussian entries with a gentle dimensional constraint, as demonstrated by \cref{prop:isom}. Finally, we show in \cref{thm:lin_align} that under a simple regularization strategy where a constant regularization is adopted until a cutoff time $T$, regularized feedback alignment achieves alignment if $X$ satisfies the isometric condition.
 {}
-\begin{definition}[$(\gamma, \eps)$-Isometric]
+\begin{definition}[$(\gamma, \eps)$-Isometry]
 \label{def:isom}
-Given positive constant $\gamma$ and $\eps$, we say $X$ is $(\gamma, \eps)$-isometric if
+Given positive constants $\gamma$ and $\eps$, we say $X$ is $(\gamma, \eps)$-isometric if
 $\lambda_{\min}(XX\transpose)\geq\gamma$ and $\lambda_{\max}(XX\transpose)\leq(1+\eps)\gamma$.
 \end{definition}
 
@@ -102,14 +102,16 @@ Assume all conditions from \cref{thm:lin_conv} hold and $X$ is $(\gamma, \eps)$-
     0, \quad t > T,
 \end{cases}
 \end{align*}
-with $\lambda=L\gamma$ and $T = \lfloor S_\lambda/\lambda\rfloor$ for some large constant $L$. Then, for any $\delta\in(0,1)$, if $p = \Omega(d\log(d/\delta))$, with probability at least $1-\delta$, regularized feedback alignment on linear network achieves alignment. Specifically, there exist a positive constant $c=c_\delta$ and time $T_c$, such that $\cos\angle(b, \beta(t))\geq c$ for all $t>T_c$.
+with $\lambda=L\gamma$ and $T = \lfloor S_\lambda/\lambda\rfloor$ for some large constant $L$. Then for any $\delta\in(0,1)$, if $p = \Omega(d\log(d/\delta))$, with probability at least $1-\delta$, regularized feedback alignment  achieves alignment. Specifically, there exist a positive constant $c=c_\delta$ and time $T_c$, such that $\cos\angle(b, \beta(t))\geq c$ for all $t>T_c$.
 \end{theorem}
 
-We defer the proofs of \cref{prop:isom}, \cref{thm:lin_conv} and \cref{thm:lin_align} to \cref{sec:appendix-alignment}. In fact, we prove \cref{thm:lin_align} by directly computing $\beta(t)$ and the cosine of the angle. Although $b$ doesn't show up in the update of $\beta$, it could still propagate to $\beta$ through $W$. Since the amount of component of $b$ in $\beta(t)$ depends on the inner-product $\langle e(t), e(t')\rangle$ for all previous steps $t'\leq t$, the norm bound \eqref{eq:reg_error_bd} from \cref{thm:lin_conv} is insufficient so a more careful study on $e(t)$ is provided to accomplish the proof. We should point out that the constant $c$ in the lower bound is independent of the sample size $n$, input dimension $d$, network width $p$ and learning rate $\eta$. We also remark that the cutoff schedule of $\lambda(t)$ is just chosen for simplicity of the proof. For other schedules such as inverse-squared decay or exponential decay, one could also obtain the same alignment result as long as the summation of $\lambda(t)$ is less than $S_\lambda$.
+We defer the proofs of \cref{prop:isom}, \cref{thm:lin_conv} and \cref{thm:lin_align} to \cref{sec:appendix-alignment}. In fact, we prove \cref{thm:lin_align} by directly computing $\beta(t)$ and the cosine of the angle. Although $b$ doesn't show up in the update of $\beta$, it can still propagate to $\beta$ through $W$. Since the size of the component of $b$ in $\beta(t)$ depends on the inner-product $\langle e(t), e(t')\rangle$ for all previous steps $t'\leq t$, the norm bound \eqref{eq:reg_error_bd} from \cref{thm:lin_conv} is insufficient; thus, a more careful analysis of $e(t)$ is required.
 
-\paragraph{Large sample scenario.} In \cref{thm:lin_conv,thm:lin_align}, we consider the case where sample size $n$ is less than input dimension $d$ so that the positive definiteness of $XX\transpose$ can be established. However, both results still hold for $n>d$. In fact, the squared error loss $\calL$ can be written as
+We should point out that the constant $c$ in the lower bound is independent of the sample size $n$, input dimension $d$, network width $p$ and learning rate $\eta$. We also remark that the cutoff schedule of $\lambda(t)$ is just chosen for simplicity. For other schedules such as inverse-squared decay or exponential decay, one could also obtain the same alignment result as long as the summation of $\lambda(t)$ is less than $S_\lambda$.
+
+\paragraph{Large sample scenario.} In \cref{thm:lin_conv,thm:lin_align}, we consider the case where the sample size $n$ is less than the input dimension $d$, so that positive definiteness of $XX\transpose$ can be established. However, both results still hold for $n>d$. In fact, the squared error loss $\calL$ can be written as
 \begin{equation*}
 \sum_{i=1}^n\big(f(x_i)-y\big)^2 = \big\|\frac{1}{\sqrt{p}}XW\transpose\beta-y\big\|^2 = \big\|\frac{1}{\sqrt{p}}XW\transpose\beta-\bar{y}\big\|^2+ \|\bar{y}-y\|^2,
 \end{equation*}
-where $\bar{y}$ denotes the projection of $y$ onto the column space of $X$. Without loss of generality, we assume $y=\bar{y}$. As a result, $y$ and columns of $X$ are all in the same $d$-dimensional subspace of $\Rn$ and $XX\transpose$ is positive definite on this subspace as long as $X$ has full column rank. Consequently, we can either work on this subspace of $\Rn$ or project all the vectors onto $\Rd$, and the isometric condition are revised to only consider the $d$ nonzero eigenvalues of $XX\transpose$.
+where $\bar{y}$ denotes the projection of $y$ onto the column space of $X$. Without loss of generality, we assume $y=\bar{y}$. As a result, $y$ and the columns of $X$ are all in the same $d$-dimensional subspace of $\Rn$ and $XX\transpose$ is positive definite on this subspace, as long as $X$ has full column rank. Consequently, we can either work on this subspace of $\Rn$ or project all the vectors onto $\Rd$, and the isometric condition is revised to only consider the $d$ nonzero eigenvalues of $XX\transpose$.
 % with a left multiplication of $X\transpose$. (ganlin: actually U^T)
