@@ -5,7 +5,7 @@ We consider the following neural network
 \begin{equation}
 f(x) = \frac{1}{\sqrt p}\sum_{r=1}^p \beta_r \psi(w_r\transpose x) = \frac{1}{\sqrt p}\beta\transpose \psi(Wx)
 \end{equation}
-where $\beta \in \R^p$, $W = (w_1,...,w_p)\transpose\in\R^{p\times d}$, and $\psi$ is activation function. Given data, the loss function is 
+where $\beta \in \R^p$, $W = (w_1,...,w_p)\transpose\in\R^{p\times d}$, and $\psi$ is activation function. Given data, the loss function is
 \begin{equation}
 \Loss(W, \beta) = \frac{1}{2}\sum_{i=1}^n(f(x_i)-y_i)^2 = \frac{1}{2}\sum_{i=1}^n\Big(\frac{1}{\sqrt p}\beta\transpose \psi(Wx_i)-y\Big)^2
 \end{equation}
@@ -58,10 +58,10 @@ Assume $W(0)$, $\beta(0)$ and $b$ have \iid standard Gaussian entries. Given $\d
 \end{equation}
 \end{lemma}
 \begin{proof}
-We will show each inequality holds with probability at least $1-\frac{\delta}{4}$, then by a union bound, all of them hold with probability at least $1-\frac{\delta}{4}$. Since $\Var(\frac{1}{p}\sum_{r=1}^p|b_r|)\leq \frac{\Var(|b_0|)}{p}$, by Chebyshev's inequality, we have 
+We will show each inequality holds with probability at least $1-\frac{\delta}{4}$, then by a union bound, all of them hold with probability at least $1-\frac{\delta}{4}$. Since $\Var(\frac{1}{p}\sum_{r=1}^p|b_r|)\leq \frac{\Var(|b_0|)}{p}$, by Chebyshev's inequality, we have
 \begin{equation*}
     \prob(\frac{1}{p}\sum_{r=1}^p|b_r| > \E(b_1) + 1) \leq \frac{\Var(|b_1|)}{p} \leq \delta/4
-\end{equation*} 
+\end{equation*}
 if $p\geq 4\Var(|b_1|)/\delta$, which gives \eqref{eq:sumb_bd}. The proof for \eqref{eq:sumbbet_bd} is similar since $\Var(\frac{1}{p}\sum_{r=1}^p|b_r\beta_r(0)|)=O(1/p)$. To prove \eqref{eq:e0_bd}, since $|y_i|$ and $\|x_i\|$ are bounded, it suffices to show $|u_i(0)|\leq c$ for all $i\in [n]$. Actually, by independence, we have
 \begin{equation*}
     \Var(u_i(0)) = \Var \Big(\frac{1}{p}\sum_{r=1}^p \beta_r(0)\psi(w_r(0)\transpose x_i)\Big) = \frac{1}{p}\Var\Big(\beta_1(0)\psi(w_1(0)\transpose x_i)\Big) = O(1/p).
@@ -81,9 +81,9 @@ where we require $p=\Omega(n/\delta)$. With a union bound argument, we could sho
 Under the conditions of \cref{thm:nonliner_conv}, we define matrix $G(0),H(0)\in\R^{n\times n}$ with entries
 \begin{equation}
 \label{eq:def_G0}
-G_{ij}(0) = \frac{1}{p}\psi(W(0)x_i)\transpose \psi(W(0)x_j) = \frac{1}{p}\sum_{r=1}^p\psi(w_r(0)\transpose x_i)\psi(w_r(0)\transpose x_j) 
+G_{ij}(0) = \frac{1}{p}\psi(W(0)x_i)\transpose \psi(W(0)x_j) = \frac{1}{p}\sum_{r=1}^p\psi(w_r(0)\transpose x_i)\psi(w_r(0)\transpose x_j)
 \end{equation}
-and 
+and
 \begin{equation}
 \label{eq:def_H0}
 H_{ij}(0) = \frac{x_i\transpose x_j}{p}\beta(0)\transpose D_i(0)D_j(0)b = \frac{1}{p}\sum_{r=1}^p\beta_r(0)b_r\psi'(w_r(0)\transpose x_i)\psi'(w_r(0)\transpose x_j).
@@ -142,7 +142,7 @@ Assume all the inequalities from \cref{lma:inqs} holds. Under the conditions of 
 We start with analyzing the error $e(t)$
 \begin{equation*}
 \begin{aligned}
-    e_i(t+1) 
+    e_i(t+1)
     &= \frac{1}{\sqrt p}\beta(t+1)\transpose\psi(W(t+1)x_i) - y_i \\
     &= \frac{1}{\sqrt p}\beta(t+1)\transpose(\psi(W(t+1)x_i)-\psi(W(t)x_i))+ \frac{1}{\sqrt p}(\beta(t+1)-\beta(t))\transpose \psi(W(t)x_i) \\
     & \quad + \frac{1}{\sqrt p}\beta(t)\transpose \psi(W(t)x_i) - y_i \\
@@ -165,11 +165,11 @@ and $v_i(t)$ is the residual term from the Taylor's expansion
 with $\xi_{ri}(t)$ between $w_r(t)\transpose x_i$ and $w_r(t+1)\transpose x_i$. We can also rewrite the above iteration in a vector form
 \begin{equation}\label{eq:et_iter}
      e(t+1) = e(t) - \eta(G(t)+H(t))e(t) + v(t)
-\end{equation} 
-Now for $t=t'-1$, we try to show that both $G(t)$ and $H(t)$ are close to their initialization. Notice that
+\end{equation}
+Now for $t=t'-1$, we that both $G(t)$ and $H(t)$ are close to their initialization. Notice that
 \begin{equation*}
 \begin{aligned}
-    |G_{ij}(t) - G_{ij}(0)| 
+    |G_{ij}(t) - G_{ij}(0)|
     & = \frac{1}{p}\Big|\psi(W(t)x_j)\transpose\psi(W(t)x_i) -\psi(W(t)x_j)\transpose\psi(W(t)x_i)\Big| \\
     & \leq \frac{1}{p} \sum_{r=1}^p |\psi(w_r(t)\transpose x_j)||\psi(w_r(t)\transpose x_i)-\psi(w_r(0)\transpose x_i)| \\
     &\quad + \frac{1}{p} \sum_{r=1}^p |\psi(w_r(0)\transpose x_i)||\psi(w_r(t)\transpose x_j)-\psi(w_r(0)\transpose x_j)| \\
@@ -217,7 +217,7 @@ It gives the bound
 Combining \cref{eq:et_iter,eq:bound_Gt,eq:bound_Ht,eq:bound_vt}, we have
 \begin{equation*}
 \begin{aligned}
-\|e(t+1)\| 
+\|e(t+1)\|
 &\leq \|I_n-\eta (G(t)+H(t))\|\|e(t)\|+\|v(t)\| \\
 &\leq \Big(\|I_n-\eta G(0)\|+\eta\|G(t)-G(0)\|+\eta\|H(0)\| \\
 &\quad +\eta\|H(t)-H(0)\|\Big)\|e(t)\| + \|v(t)\| \\
@@ -236,7 +236,7 @@ We prove the inequality \eqref{eq:conv} by induction. Suppose \eqref{eq:conv} an
 
 \begin{lemma}
 \label{lma:weights_reg}
-Assume all the inequalities from \cref{lma:inqs} holds. Under the conditions of \cref{thm:nonlinear_conv_reg}, if the error bound \eqref{eq:conv_reg} holds for all $t=1,2,...,t'-1$, then 
+Assume all the inequalities from \cref{lma:inqs} holds. Under the conditions of \cref{thm:nonlinear_conv_reg}, if the error bound \eqref{eq:conv_reg} holds for all $t=1,2,...,t'-1$, then
 \begin{equation}
 \label{eq:weights_reg}
 \begin{aligned}
@@ -252,7 +252,7 @@ For any $k\leq t'-1$, we apply \eqref{eq:conv_reg} repeatedly on the right hand 
 \begin{equation*}
     \|e(k)\|\leq \prod_{i=0}^{k-1}\Big(1-\frac{\eta\gamma}{4}-\eta\lambda(i)\Big)\|e(0)\| + \sum_{i=0}^{k-1}\eta\lambda(i)\prod_{i<j<k}\Big(1-\frac{\eta\gamma}{4}-\eta\lambda(j)\Big)\|y\|
 \end{equation*}
-For $t\leq t'-1$, we take the sum over $k=0,..,t$ on both sides of above inequality 
+For $t\leq t'-1$, we take the sum over $k=0,..,t$ on both sides of above inequality
 \begin{equation*}
 \begin{aligned}
     \sum_{k=0}^{t}\|e(k)\|
@@ -262,7 +262,7 @@ For $t\leq t'-1$, we take the sum over $k=0,..,t$ on both sides of above inequal
     &\leq \frac{4}{\eta\gamma}\|e(0)\|+ \frac{4}{\gamma}\tilde{S}_\lambda\|y\| \\
     &\leq \frac{c\sqrt n}{\gamma}(\frac{1}{\eta}+\tilde{S}_\lambda)
 \end{aligned}
-\end{equation*} 
+\end{equation*}
 where we use $\|e(0)\|=O(\sqrt n)$ and $\|y\|=O(\sqrt n)$. Then for all $t\leq t'$, we have
 \begin{equation*}
 \begin{aligned}
@@ -295,7 +295,7 @@ Assume all the inequalities from \cref{lma:inqs} holds. Under the conditions of 
 We start with analyzing the error $e(t)$
 \begin{equation*}
 \begin{aligned}
-    e_i(t+1) 
+    e_i(t+1)
     &= \frac{1}{\sqrt p}\beta(t+1)\transpose\psi(W(t+1)x_i) - y_i \\
     &= \frac{1}{\sqrt p}\beta(t+1)\transpose(\psi(W(t+1)x_i)-\psi(W(t)x_i))+ \frac{1}{\sqrt p}(\beta(t+1)-(1-\eta\lambda(t))\beta(t))\transpose \psi(W(t)x_i) \\
     & \quad + (1-\eta\lambda(t))\Big(\frac{1}{\sqrt p}\beta(t)\transpose \psi(W(t)x_i) - y_i\Big) - \eta\lambda(t)y \\
@@ -318,8 +318,8 @@ and $v_i(t)$ is the residual term from the Taylor's expansion
 with $\xi_{ri}(t)$ between $w_r(t)\transpose x_i$ and $w_r(t+1)\transpose x_i$. We can also rewrite the above iteration in a vector form
 \begin{equation}\label{eq:et_iter_reg}
      e(t+1) = (1-\lambda(t))e(t) - \eta(G(t)+H(t))e(t) + v(t) -\eta\lambda(t)y
-\end{equation} 
-Now for $t=t'-1$, we try to show that both $G(t)$ and $H(t)$ are close to their initialization. Similar to the argument in \cref{lma:induction}, we can obtain the following bound
+\end{equation}
+Now for $t=t'-1$, we show that both $G(t)$ and $H(t)$ are close to their initialization. Similar to the argument in \cref{lma:induction}, we can obtain the following bound
 \begin{equation}\label{eq:bound_Gt_reg}
     \|G(t)-G(0)\| \leq c_1 \frac{n^2\sqrt{\log p}}{\gamma\sqrt p}(1+\eta \tilde{S}_\lambda)
 \end{equation}
@@ -333,7 +333,7 @@ Now for $t=t'-1$, we try to show that both $G(t)$ and $H(t)$ are close to their 
 Combining \cref{eq:et_iter_reg,eq:bound_Gt_reg,eq:bound_Ht_reg,eq:bound_vt_reg}, we have
 \begin{equation*}
 \begin{aligned}
-\|e(t+1)\| 
+\|e(t+1)\|
 &\leq \|(1-\eta\lambda(t))I_n-\eta (G(t)+H(t))\|\|e(t)\|+\|v(t)\| \\
 &\leq \Big(\|(1-\eta\lambda(t))I_n-\eta G(0)\|+\eta\|G(t)-G(0)\|+\eta\|H(0)\| \\
 &\quad +\eta\|H(t)-H(0)\|\Big)\|e(t)\| + \|v(t)\| \\
