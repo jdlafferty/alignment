@@ -1,60 +1,66 @@
 %!TEX root=./main.tex
 
-\section{Alignment of Parameters to Random Backpropagation Weights}\label{sec:alignment}
+\section{Alignment with Random Backpropagation Weights}\label{sec:alignment}
 
 The most prominent characteristic of feedback alignment algorithm is its phenomenon of alignment between the error signals back-propagated with forward weights and those with fixed random backward weights during training. Specifically, if we denote $h\in \R^p$ to be the hidden layer of the network, then we write $\dbp(h) \defeq \frac{\partial \Loss}{\partial h}$ to represent the error signals with respect to the hidden layer that are backpropagated with the feed-forward weights and $\dfa(h)$ as the error signals computed with fixed random backward weights.
 \citet{lillicrap2016random} notice a decreasing angle between $\dbp(h)$ and $\dfa(h)$ during training, which suggests that feedback alignment algorithm can still carry gradient information back through layers even the signals are backpropagated through random weights.
-In particular, the error signals $\dbp(h)$ and $\dfa(h)$ for the two-layer network \eqref{eqn:nonlinear-network} are given by 
+In particular, the error signals $\dbp(h)$ and $\dfa(h)$ for the two-layer network \eqref{eqn:nonlinear-network} are given by
 \begin{equation}
     \dbp(h) = \frac{1}{\sqrt{p}}\beta\sum_{i=1}^ne_i \quad\text{and}\quad \dfa(h) = \frac{1}{\sqrt{p}}b\sum_{i=1}^ne_i,
 \end{equation}
 and the alignment can be characterized by the angle between $\beta(t)$ and $b$ during training. We formalize this concept of alignment by the following definition.
 \begin{definition}\label{def:alignment}
-    A series of vectors $\{\beta(t)\}_{t=0}^\infty$ align with a fixed vector $b$ if there exists a constant $c>0$ and time $T_c$ such that  $\cos\angle(b, \beta(t)) = \frac{\langle b, \beta(t)\rangle}{\|b\|\|\beta(t)\|} \geq c$ for all $t > T_c$.
+    A series of vectors $\{\beta(t)\}_{t=0}^\infty$ align with a fixed vector $b$ if there exists a constant $c>0$ and time $T_c$ such that  $\cos\angle(\dfa, \dbp(t)) = \cos\angle(b, \beta(t)) = \frac{\langle b, \beta(t)\rangle}{\|b\|\|\beta(t)\|} \geq c$ for all $t > T_c$.
 \end{definition}
 
-\subsection{Regularized Feedback Alignment}
+\subsection{Regularized feedback alignment}
 Unfortunately, this alignment between $\beta(t)$ and $b$ is not guaranteed for over-parameterized networks and the loss \eqref{eqn:squared-loss}. To further illustrate our point, we control the cosine value of the angle by inequalities \eqref{eq:weights} from \cref{thm:nonliner_conv}, \ie,
 \begin{equation}
     \Big|\cos\angle(b, \beta(t))\Big| \leq \frac{|\langle \frac{b}{\|b\|}, \beta(0)\rangle|+ \|\beta(t)- \beta(0)\|}{\|\beta(0)\|-\|\beta(t)-\beta(0)\|} = O\big(\frac{n}{\sqrt p}\big),
 \end{equation}
-which indicates that $\beta(t)$ and $b$ turn orthogonal as the network becomes wider. Intuitively, this can be understood as the parameters stay near their initializations during training when $p$ is large, where $\beta(0)$ and $b$ are almost orthogonal with each other. This motivates us to regularize the network parameters. Especially, we consider in this work the squared error loss with a $\ell_2$ regularization term on $\beta$:
+which indicates that $\beta(t)$ and $b$ become orthogonal as the network becomes wider. Intuitively, this can be understood as resulting from the parameters staying near their initializations during training when $p$ is large, where $\beta(0)$ and $b$ are almost orthogonal to each other. This motivates us to regularize the network parameters. We consider in this work the squared error loss with a $\ell_2$ regularization term on $\beta$:
 \begin{equation}
 \label{eqn:loss-with-reg}
 \Loss(t, W, \beta) = \frac{1}{2}\sum_{i=1}^n\big(f(x_i)-y_i\big)^2 + \frac{1}{2}\lambda(t)\|\beta\|^2,
 \end{equation}
-where $\{\lambda(t)\}_{t=0}^\infty$ is a sequence of regularization rates, which defines a series of loss functions for different training steps $t$. The feedback alignment algorithm under the regularized loss are summarized in Algorithm \ref{algo:fa-reg}. Compared to \cref{algo:fa}, an extra contraction factor $1-\lambda(t)$ has been added in the update of $\beta(t)$, which doesn't affect the locality of the algorithm but helps the alignment by shrinking the component of $\beta(0)$ in $\beta(t)$.
+where $\{\lambda(t)\}_{t=0}^\infty$ is a sequence of regularization rates, which defines a series of loss functions for different training steps $t$.
+%The feedback alignment algorithm under the regularized loss are summarized in Algorithm %\ref{algo:fa-reg}.
+Thus, the update for $w_r$ remains the same and the
+update for $\beta$ changes to
+$$\beta_r(t+1) \gets (1-\lambda(t))\beta_r(t) - \frac{\eta}{\sqrt p} \sum_{i=1}^n e_i(t)\psi(w_r(t)\transpose x_i), \;\;\mbox{for $r\in[p]$.}$$
+Comparing to \cref{algo:fa}, an extra contraction factor $1-\lambda(t)$ is added in the update of $\beta(t)$, which doesn't affect the locality of the algorithm but helps the alignment by shrinking the component of $\beta(0)$ in $\beta(t)$.
 
-%\begin{minipage}{\textwidth}
-\begin{algorithm}[H]
-\centering
-\caption{Regularized Feedback Alignment on Two-Layer Networks}\label{algo:fa-reg}
-    \begin{algorithmic}[1]
-        \Require activation $\psi$, dataset $\{(x_i,y_i)\}_{i=1}^n$, and step size $\eta$, and regularization $\{\lambda(t)\}_t$.
-        \State {\bf initialize} $W(0)$, $\beta(0)$ and $b$ with standard Gaussian entries
-        \While{not converge}
-            \State $\beta_r(t+1) \gets (1-\lambda(t))\beta_r(t) - \frac{\eta}{\sqrt p} \sum_{i=1}^n e_i(t)\psi(w_r(t)\transpose x_i)$ for $r\in[p]$
-            \State $w_r(t+1) \gets w_r(t) - \frac{\eta}{\sqrt{p}} \sum_{i=1}^n e_i(t) b_r\psi'(w_r(t)\transpose x_i)x_i$ for $r\in[p]$
-        \EndWhile
-    \end{algorithmic}    
-\end{algorithm}
-%\end{minipage}
+%%\begin{minipage}{\textwidth}
+%\begin{algorithm}[H]
+%\centering
+%\caption{Regularized Feedback Alignment on Two-Layer Networks}\label{algo:fa-reg}
+%    \begin{algorithmic}[1]
+%        \Require activation $\psi$, dataset $\{(x_i,y_i)\}_{i=1}^n$, and step size $\eta$, and regularization $\{\lambda(t)\}_t$.
+%        \State {\bf initialize} $W(0)$, $\beta(0)$ and $b$ with standard Gaussian entries
+%        \While{not converge}
+%            \State $\beta_r(t+1) \gets (1-\lambda(t))\beta_r(t) - \frac{\eta}{\sqrt p} \sum_{i=1}^n e_i(t)\psi(w_r(t)\transpose x_i)$ for $r\in[p]$
+%            \State $w_r(t+1) \gets w_r(t) - \frac{\eta}{\sqrt{p}} \sum_{i=1}^n e_i(t) b_r\psi'(w_r(t)\transpose x_i)x_i$ for $r\in[p]$
+%        \EndWhile
+%    \end{algorithmic}
+%\end{algorithm}
+%%\end{minipage}
 
-Following \cref{thm:nonliner_conv}, we also provide the error bound for regularized feedback alignment in \cref{thm:nonlinear_conv_reg}. Since regularization terms $\lambda(t)$ make additional contributions to the error $e(t)$ as well as to the kernel matrix $G$, an upper bound on $\sum_{t\geq 0}\lambda(t)$ is needed to ensure the positiveness of the minimal eigenvalue of $G$ during training, such that the error $e(t)$ can be controlled. In particular, if there is no regularization, \ie, $\lambda(t)=0$ for all $t\geq 0$, then we recover exponential convergence for the error $e(t)$ as in \cref{thm:nonliner_conv}. The proof of \cref{thm:nonlinear_conv_reg} is also deferred to \cref{sec:appendix-convergence}.
+Following \cref{thm:nonliner_conv}, we provide an error bound for regularized feedback alignment in \cref{thm:nonlinear_conv_reg}. Since regularization terms $\lambda(t)$ make additional contributions to the error $e(t)$ as well as to the kernel matrix $G$, an upper bound on $\sum_{t\geq 0}\lambda(t)$ is needed to ensure the positivity of the minimal eigenvalue of $G$ during training, in order for the error $e(t)$ to be controlled. In particular, if there is no regularization, \ie, $\lambda(t)=0$ for all $t\geq 0$, then we recover exponential convergence for the error $e(t)$ as in \cref{thm:nonliner_conv}. The proof of \cref{thm:nonlinear_conv_reg} is also deferred to \cref{sec:appendix-convergence}.
 % didn't use G(t) since it is not defined before
 
 \begin{theorem}
 \label{thm:nonlinear_conv_reg}
-Assume all the conditions from \cref{thm:nonliner_conv}. For \cref{algo:fa-reg}, assume $\sum_{t=0}^\infty \lambda(t) \leq  \tilde{S}_\lambda = \tilde{c}_{S}\frac{\gamma^2\sqrt{p}}{\eta n^2\sqrt{\log p}}$ for some constant $\tilde{c}_{S}$. Then there exists positive constants $C_1$ and $C_2$, such that for any $\delta\in(0,1)$, if $p \geq \max(C_1\frac{n^2}{\delta\gamma^2}, C_2\frac{n^4\log p}{\gamma^4})$, with probability at least $1-\delta$, we have for all $t\geq 0$
+Assume all the conditions from \cref{thm:nonliner_conv}. Assume $\sum_{t=0}^\infty \lambda(t) \leq  \tilde{S}_\lambda = \tilde{c}_{S}\frac{\gamma^2\sqrt{p}}{\eta n^2\sqrt{\log p}}$ for some constant $\tilde{c}_{S}$. Then there exist positive constants $C_1$ and $C_2$, such that for any $\delta\in(0,1)$, if $p \geq \max\bigl(C_1\frac{n^2}{\delta\gamma^2}, C_2\frac{n^4\log p}{\gamma^4}\bigr)$, then with probability at least $1-\delta$, we have
 \begin{equation}
 \label{eq:conv_reg}
-    \|e(t+1)\| \leq \big(1-\frac{\eta\gamma}{4}-\eta\lambda(t)\big)\|e(t)\|+\lambda(t)\|y\|
+    \|e(t+1)\| \leq \Bigl(1-\frac{\eta\gamma}{4}-\eta\lambda(t)\Bigr)\|e(t)\|+\lambda(t)\|y\|
 \end{equation}
+for all $t\geq 0$.
 \end{theorem}
 
 
 
-\subsection{Alignment Analysis on Linear Networks}
+\subsection{Alignment analysis for linear networks}
 In this section, we focus on the theoretical analysis of alignment for linear networks, which is equivalent to setting the activation function $\psi$ into an identity map. The loss function can be written as
 \begin{equation*}
     \Loss(t,W,\beta) = \frac{1}{2}\big\|\frac{1}{\sqrt{p}}XW\transpose\beta-y\big\|^2+\frac{\lambda(t)}{2}\|\beta\|^2,
@@ -69,7 +75,7 @@ For any $\delta\in(0,1)$, if $p = \Omega(\frac{Md\log(d/\delta)}{\gamma})$, the 
 \begin{equation}
 \label{eq:reg_error_bd}
 \|e(t+1)\|\leq \big(1-\frac{\eta\gamma}{2}-\eta\lambda(t)\big)\|e(t)\| + \lambda(t)\|y\|.
-\end{equation} 
+\end{equation}
 \end{theorem}
 
 We remark that, in the linear case, the kernel matrix $G$ reduces to the form $X W\transpose W X\transpose$ and its expectation $\overline{G}$ at initialization also reduces to $X X\transpose$, so \cref{assump:G} holds if $XX\transpose$ is positive definite, which is equivalent to $x_i$'s being linearly independent. The result of \cref{thm:nonlinear_conv_reg} can not be directly applied to linear case since we assume $\psi$ is bounded, which is true for sigmoid or tanh but not for identity map. This results in a slightly different order for $S_\lambda$ and an improved order for $p$.
@@ -78,7 +84,7 @@ Our results on alignment also rely on an isometric condition on $X$, which requi
 {}
 \begin{definition}[$(\gamma, \eps)$-Isometric]
 \label{def:isom}
-Given positive constant $\gamma$ and $\eps$, we say $X$ is $(\gamma, \eps)$-isometric if 
+Given positive constant $\gamma$ and $\eps$, we say $X$ is $(\gamma, \eps)$-isometric if
 $\lambda_{\min}(XX\transpose)\geq\gamma$ and $\lambda_{\max}(XX\transpose)\leq(1+\eps)\gamma$.
 \end{definition}
 
@@ -91,7 +97,7 @@ Assume $X\in\R^{n\times d}$ has independent entries drawn from $N(0,1/d)$. For a
 \label{thm:lin_align}
 Assume all conditions from \cref{thm:lin_conv} hold and $X$ is $(\gamma, \eps)$-isometric with a small constant $\eps$. Let the regularization weights satisfy
 \begin{align*}
-\lambda(t) = 
+\lambda(t) =
 \begin{cases}
     \lambda, \quad t\leq T,\\
     0, \quad t > T,
@@ -108,5 +114,3 @@ We defer the proofs of \cref{prop:isom}, \cref{thm:lin_conv} and \cref{thm:lin_a
 \end{equation*}
 where $\bar{y}$ denotes the projection of $y$ onto the column space of $X$. Without loss of generality, we assume $y=\bar{y}$. As a result, $y$ and columns of $X$ are all in the same $d$-dimensional subspace of $\Rn$ and $XX\transpose$ is positive definite on this subspace as long as $X$ has full column rank. Consequently, we can either work on this subspace of $\Rn$ or project all the vectors onto $\Rd$, and the isometric condition are revised to only consider the $d$ nonzero eigenvalues of $XX\transpose$.
 % with a left multiplication of $X\transpose$. (ganlin: actually U^T)
-
-
