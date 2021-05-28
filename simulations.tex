@@ -13,20 +13,39 @@ For two-layer non-linear networks, the generation process of training datasets i
 \begin{subfigure}[b]{.33\textwidth}
   \centering
   \includegraphics[width=\linewidth]{figures/df_lr_non_autograd_l2_v6.pdf}
-  \caption{Linear network.}
+  \caption{Alignment on linear network.}
   \label{fig:align_lr_non_autograd_l2}
 \end{subfigure}\hfill
 \begin{subfigure}[b]{.33\textwidth}
   \centering
   \includegraphics[width=\linewidth]{figures/df_nn_relu_autograd_l2_v6.pdf}
-  \caption{ReLU activation.}
+  \caption{Alignment on ReLU network.}
   \label{fig:align_nn_relu_autograd_l2}
 \end{subfigure}\hfill
 \begin{subfigure}[b]{.33\textwidth}
   \centering
   \includegraphics[width=\linewidth]{figures/df_nn_tanh_autograd_l2_v6.pdf}
-  \caption{Tanh activation.}
+  \caption{Alignment on Tanh network.}
   \label{fig:align_nn_tanh_autograd_l2}
+\end{subfigure}
+\medskip
+\begin{subfigure}[b]{.33\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figures/loss_lr_non_autograd_l2_v1.pdf}
+  \caption{Loss on linear network.}
+  \label{fig:loss_lr_non_autograd_l2}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{.33\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figures/loss_nn_relu_autograd_l2_v1.pdf}
+  \caption{Loss on ReLU network.}
+  \label{fig:loss_nn_relu_autograd_l2}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{.33\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figures/loss_nn_tanh_autograd_l2_v1.pdf}
+  \caption{Loss on Tanh network.}
+  \label{fig:loss_nn_tanh_autograd_l2}
 \end{subfigure}
 \caption{Comparisons on the alignment for feedback alignment algorithm with different levels of $\ell_2$ regularization. In each figure, the $x$-axis denotes the width $p$ of hidden layer, and it is in logarithmic scale; the $y$-axis represents the level of alignment as the normalized inner product between $\beta_t$ and $b$. The data points are the mean value computed across simulations, and the error bars mark the standard deviation among different runs.}
 \label{fig:synthetic-l2}
