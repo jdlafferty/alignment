@@ -10,9 +10,9 @@ Among recent studies of over-parametrized networks under backpropagation, the ne
 Given a dataset $\{(x_i,y_i)\}_{i=1}^n$, we can also consider its corresponding Gram matrix $K = (K_f(x_i,x_j))_{n\times n}$. \citet{jacot2018neural} show that in the infinite width limit, $K_f$ converges to a constant at initialization and does not drift away from initialization throughout training. In the over-parameterized setting, if the Gram matrix $K$ is positive definite, then $K$ will remain close to its initialization during training, resulting in linear convergence of the squared error loss \citep{du2018gradient,du2019gradient,gao2020model}.
 % However, after replacing the feed-forward weights $\beta$ with a random backpropagation weights $b$, feedback alignment algorithm no longer follows a strict gradient descent on the squared error loss and the previous argument cannot be applied directly to our case.
 For the two-layer network $f(x, \theta)$ defined in \eqref{eqn:nonlinear-network} with $\theta = (\beta,W)$, the kernel $K_f$ can be written in two parts, $G_f$ and $H_f$, which correspond to $\beta$ and $W$ respectively:
-\begin{equation}
+\begin{equation*}
 K_f(x,y) = G_f(x, y) + H_f(x,y) \defeq \Big\langle \frac{\partial f (x,\theta)}{\partial \beta},\frac{\partial f (y,\theta)}{\partial \beta}\Big\rangle + \sum_{r=1}^p\Big\langle \frac{\partial f (x,\theta)}{\partial w_r},\frac{\partial f (y,\theta)}{\partial w_r}\Big\rangle.
-\end{equation}
+\end{equation*}
 Under the feedback alignment scheme with random backward weights $b$, $G_f$ remains the same as for standard backpropagation, while the gradient terms $\frac{\partial f}{\partial w_r}$ in $H_f$
 are replaced by
 \begin{align}\label{eqn:alignment-update-f}

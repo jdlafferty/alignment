@@ -4,9 +4,9 @@
 
 The most prominent characteristic of the feedback alignment algorithm is the phenomenon that the error signals propagated with the forward weights align with those propagated with fixed random backward weights during training. Specifically, if we denote $h\in \R^p$ to be the hidden layer of the network, then we write $\dbp(h) \defeq \frac{\partial \Loss}{\partial h}$ to represent the error signals with respect to the hidden layer that are backpropagated with the feed-forward weights and $\dfa(h)$ as the error signals computed with fixed random backward weights.
 In particular, the error signals $\dbp(h)$ and $\dfa(h)$ for the two-layer network \eqref{eqn:nonlinear-network} are given by
-\begin{equation}
+\begin{equation*}
     \dbp(h) = \frac{1}{\sqrt{p}}\beta\sum_{i=1}^ne_i \quad\text{and}\quad \dfa(h) = \frac{1}{\sqrt{p}}b\sum_{i=1}^ne_i.
-\end{equation}
+\end{equation*}
 \citet{lillicrap2016random} notice a decreasing angle between $\dbp(h)$ and $\dfa(h)$ during training. We formalize this concept of alignment by the following definition.
 \begin{definition}\label{def:alignment}
     A series of vectors $\{\beta(t)\}_{t=0}^\infty$ align with a fixed vector $b$ if there exists a constant $c>0$ and time $T_c$ such that  $\cos\angle(\dfa, \dbp(t)) = \cos\angle(b, \beta(t)) = \frac{\langle b, \beta(t)\rangle}{\|b\|\|\beta(t)\|} \geq c$ for all $t > T_c$.
@@ -14,9 +14,9 @@ In particular, the error signals $\dbp(h)$ and $\dfa(h)$ for the two-layer netwo
 
 \subsection{Regularized feedback alignment}
 Unfortunately, alignment between $\beta(t)$ and $b$ is not guaranteed for over-parameterized networks and the loss \eqref{eqn:squared-loss}. In particular,  we control the cosine value of the angle by inequalities \eqref{eq:weights} from \cref{thm:nonliner_conv}, \ie,
-\begin{equation}
+\begin{equation*}
     \Big|\cos\angle(b, \beta(t))\Big| \leq \frac{|\langle \frac{b}{\|b\|}, \beta(0)\rangle|+ \|\beta(t)- \beta(0)\|}{\|\beta(0)\|-\|\beta(t)-\beta(0)\|} = O\left(\frac{n}{\sqrt p}\right),
-\end{equation}
+\end{equation*}
 which indicates that $\beta(t)$ and $b$ become orthogonal as the network becomes wider. Intuitively, this can be understood as resulting from the parameters staying near their initializations during training when $p$ is large, where $\beta(0)$ and $b$ are almost orthogonal to each other. This motivates us to regularize the network parameters. We consider in this work the squared error loss with an $\ell_2$ regularization term on $\beta$:
 \begin{equation}
 \label{eqn:loss-with-reg}
@@ -26,7 +26,7 @@ where $\{\lambda(t)\}_{t=0}^\infty$ is a sequence of regularization rates, which
 %The feedback alignment algorithm under the regularized loss are summarized in Algorithm %\ref{algo:fa-reg}.
 Thus, the update for $w_r$ remains the same and the
 update for $\beta$ changes to
-$$\beta_r(t+1) \gets (1-\lambda(t))\beta_r(t) - \frac{\eta}{\sqrt p} \sum_{i=1}^n e_i(t)\psi(w_r(t)\transpose x_i), \;\;\mbox{for $r\in[p]$.}$$
+$$\beta_r(t+1) = (1-\lambda(t))\beta_r(t) - \frac{\eta}{\sqrt p} \sum_{i=1}^n e_i(t)\psi(w_r(t)\transpose x_i), \;\;\mbox{for $r\in[p]$.}$$
 Comparing to \cref{algo:fa}, an extra contraction factor $1-\lambda(t)$ is added in the update of $\beta(t)$, which doesn't affect the locality of the algorithm but helps the alignment by shrinking the component of $\beta(0)$ in $\beta(t)$.
 
 %%\begin{minipage}{\textwidth}
