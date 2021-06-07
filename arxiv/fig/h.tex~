@@ -1,0 +1,176 @@
+
+\documentclass[pdftex]{article}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usetikzlibrary{shapes}
+\usetikzlibrary{arrows,decorations.markings}
+
+\input{honey2}
+
+\newenvironment{region}{
+    \begin{tikzpicture} [hexa/.style={shape=regular polygon,
+    regular polygon sides=6,minimum size=1cm, draw,inner sep=0,anchor=south,fill=lightgray,rotate=30},
+    hexb/.style= {shape=regular polygon,regular polygon sides=6,minimum size=1cm, draw,inner sep=0,
+    anchor=south,fill=white,rotate=30}]\comb{}}
+   {\end{tikzpicture}
+}
+
+
+\begin{document}
+
+
+\tikzset{circ/.style={circle, draw, fill=none, scale=.75}}
+\vskip.5in
+\hskip-3.75in
+\begin{tabular}{c}
+\hskip-15pt
+%\begin{tikzpicture}
+\begin{tikzpicture}[transform canvas={scale=.75}]
+\node (L11) at (1,1) [circ]{};
+\node (L12) at (1,-1) [circ]{};
+
+\node (L21) at (4,-2) [circ]{};
+\node (L22) at (4,-1) [circ]{};
+\node (L20) at (4,0) [circ]{};
+\node (L23) at (4,1) [circ]{};
+\node (L24) at (4,2) [circ]{};
+
+\draw[->] (L11) to node [auto] {} (L21);
+\draw[->] (L11) to node [auto] {} (L22);
+\draw[->] (L11) to node [auto] {} (L20);
+\draw[->] (L11) to node [auto] {} (L23);
+\draw[->] (L11) to node [auto] {} (L24);
+\draw[->] (L12) to node [auto] {} (L21);
+\draw[->] (L12) to node [auto] {} (L22);
+\draw[->] (L12) to node [auto] {} (L20);
+\draw[->] (L12) to node [auto] {} (L23);
+\draw[->] (L12) to node [auto] {} (L24);
+
+\node (L30) at (8,0) [circ]{};
+\node (L31) at (8,-2) [circ]{};
+\node (L32) at (8,-1) [circ]{};
+\node (L33) at (8,1) [circ]{};
+\node (L34) at (8,2) [circ]{};
+\node (L35) at (8,-3) [circ]{};
+\node (L36) at (8,3) [circ]{};
+\node (L37) at (8,-4) [circ]{};
+\node (L38) at (8,4) [circ]{};
+
+\draw[->] (L20) to node [auto] {} (L31);
+\draw[->] (L20) to node [auto] {} (L32);
+\draw[->] (L20) to node [auto] {} (L30);
+\draw[->] (L20) to node [auto] {} (L33);
+\draw[->] (L20) to node [auto] {} (L34);
+\draw[->] (L20) to node [auto] {} (L35);
+\draw[->] (L20) to node [auto] {} (L36);
+\draw[->] (L20) to node [auto] {} (L37);
+\draw[->] (L20) to node [auto] {} (L38);
+
+\draw[->] (L21) to node [auto] {} (L31);
+\draw[->] (L21) to node [auto] {} (L32);
+\draw[->] (L21) to node [auto] {} (L30);
+\draw[->] (L21) to node [auto] {} (L33);
+\draw[->] (L21) to node [auto] {} (L34);
+\draw[->] (L21) to node [auto] {} (L35);
+\draw[->] (L21) to node [auto] {} (L36);
+\draw[->] (L21) to node [auto] {} (L37);
+\draw[->] (L21) to node [auto] {} (L38);
+
+\draw[->] (L22) to node [auto] {} (L31);
+\draw[->] (L22) to node [auto] {} (L32);
+\draw[->] (L22) to node [auto] {} (L30);
+\draw[->] (L22) to node [auto] {} (L33);
+\draw[->] (L22) to node [auto] {} (L34);
+\draw[->] (L22) to node [auto] {} (L35);
+\draw[->] (L22) to node [auto] {} (L36);
+\draw[->] (L22) to node [auto] {} (L37);
+\draw[->] (L22) to node [auto] {} (L38);
+
+\draw[->] (L22) to node [auto] {} (L31);
+\draw[->] (L22) to node [auto] {} (L32);
+\draw[->] (L22) to node [auto] {} (L30);
+\draw[->] (L22) to node [auto] {} (L33);
+\draw[->] (L22) to node [auto] {} (L34);
+\draw[->] (L22) to node [auto] {} (L35);
+\draw[->] (L22) to node [auto] {} (L36);
+\draw[->] (L22) to node [auto] {} (L37);
+\draw[->] (L22) to node [auto] {} (L38);
+
+\draw[->] (L23) to node [auto] {} (L31);
+\draw[->] (L23) to node [auto] {} (L32);
+\draw[->] (L23) to node [auto] {} (L30);
+\draw[->] (L23) to node [auto] {} (L33);
+\draw[->] (L23) to node [auto] {} (L34);
+\draw[->] (L23) to node [auto] {} (L35);
+\draw[->] (L23) to node [auto] {} (L36);
+\draw[->] (L23) to node [auto] {} (L37);
+\draw[->] (L23) to node [auto] {} (L38);
+
+
+\draw[->] (L24) to node [auto] {} (L31);
+\draw[->] (L24) to node [auto] {} (L32);
+\draw[->] (L24) to node [auto] {} (L30);
+\draw[->] (L24) to node [auto] {} (L33);
+\draw[->] (L24) to node [auto] {} (L34);
+\draw[->] (L24) to node [auto] {} (L35);
+\draw[->] (L24) to node [auto] {} (L36);
+\draw[->] (L24) to node [auto] {} (L37);
+\draw[->] (L24) to node [auto] {} (L38);
+
+\node at (-.55,0) {$x\in{\mathbb R}^k$};
+\node at (.5,1) {$x_1$};
+\node at (.5,-1) {$x_2$};
+\node at (2.5,-2.5) {$W_1$};
+\node at (5.5,-3.5) {$W_2$};
+
+\node (L40) at (12,0) [circ]{};
+\node (L41) at (12,-1) [circ]{};
+\node (L42) at (12,1) [circ]{};
+
+\draw[->] (L30) to node [auto] {} (L41);
+\draw[->] (L30) to node [auto] {} (L42);
+\draw[->] (L30) to node [auto] {} (L40);
+
+\draw[->] (L31) to node [auto] {} (L41);
+\draw[->] (L31) to node [auto] {} (L42);
+\draw[->] (L31) to node [auto] {} (L40);
+
+\draw[->] (L32) to node [auto] {} (L41);
+\draw[->] (L32) to node [auto] {} (L42);
+\draw[->] (L32) to node [auto] {} (L40);
+
+\draw[->] (L33) to node [auto] {} (L41);
+\draw[->] (L33) to node [auto] {} (L42);
+\draw[->] (L33) to node [auto] {} (L40);
+
+\draw[->] (L34) to node [auto] {} (L41);
+\draw[->] (L34) to node [auto] {} (L42);
+\draw[->] (L34) to node [auto] {} (L40);
+
+\draw[->] (L35) to node [auto] {} (L41);
+\draw[->] (L35) to node [auto] {} (L42);
+\draw[->] (L35) to node [auto] {} (L40);
+
+\draw[->] (L36) to node [auto] {} (L41);
+\draw[->] (L36) to node [auto] {} (L42);
+\draw[->] (L36) to node [auto] {} (L40);
+
+\draw[->] (L37) to node [auto] {} (L41);
+\draw[->] (L37) to node [auto] {} (L42);
+\draw[->] (L37) to node [auto] {} (L40);
+
+\draw[->] (L38) to node [auto] {} (L41);
+\draw[->] (L38) to node [auto] {} (L42);
+\draw[->] (L38) to node [auto] {} (L40);
+
+
+\node at (10.5,-3.0) {$A$};
+\node at (13.5,0) {$AG_\theta(x)\in{\mathbb R}^m$};
+
+\node at (7,-5.5) {$f_{\widehat \theta, A}(x) = \frac{1}{2} \| AG_{\widehat\theta}(x) - Ay\|^2$};
+
+\end{tikzpicture}
+\end{tabular}
+
+\end{document}

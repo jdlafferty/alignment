@@ -1,0 +1,147 @@
+\documentclass[12pt,pdftex,noinfoline]{imsart}
+
+\RequirePackage[OT1]{fontenc}
+\usepackage{amsthm,amsbsy,amsmath,amsfonts,natbib,mathtools,amssymb}
+\usepackage{mathrsfs}
+\RequirePackage{hypernat}
+\usepackage[ruled, vlined, lined, commentsnumbered]{algorithm2e}
+%\usepackage[ruled,section]{algorithm}
+%\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{times}
+\usepackage{hyperref}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\hypersetup{citecolor=MidnightBlue}
+\hypersetup{linkcolor=MidnightBlue}
+\hypersetup{urlcolor=MidnightBlue}
+\usepackage{enumerate}
+\usepackage{fullpage}
+\usepackage[margin=1in,footskip=.40in]{geometry}
+\usepackage{dsfont}
+
+
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\E}{\operatorname{\mathbb E}}
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+%\DeclareMathOperator*{\argmin}{\arg\min}
+%\DeclareMathOperator*{\argmax}{\arg\max}
+
+\numberwithin{equation}{section}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{prop}{Proposition}[section]
+\theoremstyle{remark}
+\newtheorem{example}{Example}[section]
+\newtheorem{remark}{Remark}[section]
+
+\newtheorem*{thm1}{Claim A}
+\newtheorem*{thm2}{Claim B}
+\newtheorem*{thm3}{Claim C}
+\newtheorem*{thm4}{Claim D}
+\def\conditionA{Condition $A$}
+\def\conditionAp{Condition $\tilde A$}
+\def\conditionB{Condition $B$}
+\newtheorem*{con0}{\conditionA}
+\newtheorem*{con1}{\conditionAp}
+\newtheorem*{con2}{\conditionB}
+
+\def\given{\,|\,}
+\def\P{\mathbb{P}}
+\def\E{\mathbb{E}}
+\def\reals{\mathbb{R}}
+%\def\argmin{\mathop{\text{arg\,min}}}
+\def\ones{\mathds{1}}
+\def\indicator{}
+\let\hat\widehat
+\let\what\widehat
+\let\tilde\widetilde
+\def\Var{\textsf{Var}}
+
+\newcommand{\argmin}{\mathop{\rm argmin}}
+\newcommand{\ess}{\mathop{\rm ess}}
+\newcommand{\argmax}{\mathop{\rm argmax}}
+\newcommand{\lnorm}[2]{\|{#1} \|_{{#2}}}
+\newcommand{\indc}[1]{{\mathbf{1}_{\left\{{#1}\right\}}}}
+%\newcommand{\norm}[1]{\|{#1} \|}
+\newcommand{\norm}[1]{\left\|{#1} \right\|}
+\newcommand{\hf}{{1/2}}
+\newcommand{\wh}{\widehat}
+\newcommand{\wt}{\widetilde}
+\newcommand{\Norm}[1]{\|{#1} \|}
+\newcommand{\Fnorm}[1]{\lnorm{#1}{\rm F}}
+\newcommand{\fnorm}[1]{\|#1\|_{\rm F}}
+\newcommand{\opnorm}[1]{\|#1\|_{\rm op}}
+\newcommand{\nnorm}[1]{\|#1\|_{\rm *}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Expect}{\mathbb{E}}
+\newcommand{\Span}{{\rm span}}
+\newcommand{\rank}{\mathop{\sf rank}}
+\newcommand{\sgn}{\mathop{\rm sign}}
+\newcommand{\rt}{\mathop{\sf root}}
+\newcommand{\R}{\mathop{\sf R}}
+\newcommand{\Tr}{\mathop{\sf Tr}}
+\newcommand{\diag}{\mathop{\text{diag}}}
+\newcommand{\supp}{{\rm supp}}
+\newcommand{\iprod}[2]{\left \langle #1, #2 \right\rangle}
+\newcommand{\pth}[1]{\left( #1 \right)}
+\newcommand{\qth}[1]{\left[ #1 \right]}
+\newcommand{\sth}[1]{\left\{ #1 \right\}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\floor}[1]{{\left\lfloor {#1} \right \rfloor}}
+\newcommand{\TV}{{\sf TV}}
+\newcommand{\blue}{\color{blue}}
+\newcommand{\nb}[1]{\texttt{\blue[#1]}}
+
+\renewcommand{\baselinestretch}{1.05}
+
+\begin{document}
+
+\setlength{\parskip}{0.5em}
+\begin{frontmatter}
+\runtitle{Model Repair}
+\title{Model Repair: Robust Recovery of Over-Parameterized Statistical Models}
+%\affil[**]{Department of Statistics and Data Science, Yale University}
+\begin{aug}
+\vskip15pt
+\address{
+\begin{tabular}{ccc}
+{\normalsize\rm\bfseries Chao Gao} && {\normalsize\rm\bfseries John Lafferty}\\[5pt]
+Department of Statistics && Department of Statistics and Data Science\\
+University of Chicago && Yale University\\[10pt]
+\end{tabular}
+\\[10pt]
+\today
+\vskip10pt
+}
+\end{aug}
+\input{abstract}
+\end{frontmatter}
+
+\input{introduction}
+\input{overview}
+\input{convergence}
+\input{alignment}
+\input{simulations}
+\input{discussion}
+\input{acknowledge}
+
+\setlength{\bibsep}{8pt plus 0.3ex}
+\bibliographystyle{apalike}
+\bibliography{feedback_alignment}
+
+\clearpage
+\appendix
+\input{proof_conv}
+\input{proof_align}
+\input{lemmas}
+
+
+%\end{document}
+\newpage
+
+
+\end{document}

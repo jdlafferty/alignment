@@ -1,0 +1,16 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Problem Statement and Overview of Results}{}% 2
+\BOOKMARK [1][-]{section.3}{Convergence with Random Backpropagation Weights}{}% 3
+\BOOKMARK [1][-]{section.4}{Alignment with Random Backpropagation Weights}{}% 4
+\BOOKMARK [2][-]{subsection.4.1}{Regularized feedback alignment}{section.4}% 5
+\BOOKMARK [2][-]{subsection.4.2}{Alignment analysis for linear networks}{section.4}% 6
+\BOOKMARK [1][-]{section.5}{Simulations}{}% 7
+\BOOKMARK [1][-]{section.6}{Discussion}{}% 8
+\BOOKMARK [1][-]{section*.8}{Acknowledgments}{}% 9
+\BOOKMARK [1][-]{section*.10}{References}{}% 10
+\BOOKMARK [1][-]{appendix.A}{Convergence on Two-Layer Nonlinear Networks}{}% 11
+\BOOKMARK [2][-]{subsection.A.1}{Concentration Results}{appendix.A}% 12
+\BOOKMARK [2][-]{subsection.A.2}{Proof of Theorem 3.1}{appendix.A}% 13
+\BOOKMARK [2][-]{subsection.A.3}{Proof of Theorem 4.1}{appendix.A}% 14
+\BOOKMARK [1][-]{appendix.B}{Alignment on Two-Layer Linear Networks}{}% 15
+\BOOKMARK [1][-]{appendix.C}{Technical Lemmas}{}% 16

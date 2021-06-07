@@ -1,0 +1,143 @@
+\begin{thebibliography}{}
+
+\bibitem[Akrout et~al., 2019]{akrout}
+Akrout, M., Wilson, C., Humphreys, P., Lillicrap, T., and Tweed, D.~B. (2019).
+\newblock Deep learning without weight transport.
+\newblock In Wallach, H., Larochelle, H., Beygelzimer, A., d\textquotesingle
+  Alch\'{e}-Buc, F., Fox, E., and Garnett, R., editors, {\em Advances in Neural
+  Information Processing Systems}, volume~32. Curran Associates, Inc.
+
+\bibitem[Bartunov et~al., 2018]{bartunov}
+Bartunov, S., Santoro, A., Richards, B., Marris, L., Hinton, G.~E., and
+  Lillicrap, T. (2018).
+\newblock Assessing the scalability of biologically-motivated deep learning
+  algorithms and architectures.
+\newblock In {\em Advances in Neural Information Processing Systems}, pages
+  9368--9378.
+
+\bibitem[Bellec et~al., 2019]{bellec}
+Bellec, G., Scherr, F., Hajek, E., Salaj, D., Legenstein, R., and Maass, W.
+  (2019).
+\newblock Biologically inspired alternatives to backpropagation through time
+  for learning in recurrent neural nets.
+
+\bibitem[Deng, 2012]{deng2012mnist}
+Deng, L. (2012).
+\newblock The {MNIST} database of handwritten digit images for machine learning
+  research.
+\newblock {\em IEEE Signal Processing Magazine}, 29(6):141--142.
+
+\bibitem[Du et~al., 2019]{du2019gradient}
+Du, S., Lee, J., Li, H., Wang, L., and Zhai, X. (2019).
+\newblock Gradient descent finds global minima of deep neural networks.
+\newblock In {\em International Conference on Machine Learning}, pages
+  1675--1685. PMLR.
+
+\bibitem[Du et~al., 2018]{du2018gradient}
+Du, S.~S., Zhai, X., Poczos, B., and Singh, A. (2018).
+\newblock Gradient descent provably optimizes over-parameterized neural
+  networks.
+\newblock {\em arXiv preprint arXiv:1810.02054}.
+
+\bibitem[Elman et~al., 1996]{elman}
+Elman, J.~L., Bates, E.~A., Johnson, M.~H., Annette Karmiloff-Smith, D.~P., and
+  Plunkett, K. (1996).
+\newblock {\em Rethinking Innateness: A connectionist perspective on
+  development}.
+\newblock Cambridge MA: MIT Press.
+
+\bibitem[Gao and Lafferty, 2020]{gao2020model}
+Gao, C. and Lafferty, J. (2020).
+\newblock Model repair: Robust recovery of over-parameterized statistical
+  models.
+\newblock {\em arXiv preprint arXiv:2005.09912}.
+
+\bibitem[Hand and Voroninski, 2018]{hand2018global}
+Hand, P. and Voroninski, V. (2018).
+\newblock Global guarantees for enforcing deep generative priors by empirical
+  risk.
+\newblock In {\em Conference On Learning Theory}, pages 970--978. PMLR.
+
+\bibitem[Hebb, 1961]{hebb1}
+Hebb, D.~O. (1961).
+\newblock Distinctive features of learning in the higher animal.
+\newblock In Delafresnaye, J.~F., editor, {\em Brain Mechanisms and Learning}.
+  London: Oxford University Press.
+
+\bibitem[Jacot et~al., 2018]{jacot2018neural}
+Jacot, A., Gabriel, F., and Hongler, C. (2018).
+\newblock Neural tangent kernel: Convergence and generalization in neural
+  networks.
+\newblock {\em arXiv preprint arXiv:1806.07572}.
+
+\bibitem[Laurent and Massart, 2000]{laurent2000adaptive}
+Laurent, B. and Massart, P. (2000).
+\newblock Adaptive estimation of a quadratic functional by model selection.
+\newblock {\em Annals of Statistics}, pages 1302--1338.
+
+\bibitem[Lillicrap et~al., 2016]{lillicrap2016random}
+Lillicrap, T.~P., Cownden, D., Tweed, D.~B., and Akerman, C.~J. (2016).
+\newblock Random synaptic feedback weights support error backpropagation for
+  deep learning.
+\newblock {\em Nature communications}, 7(1):1--10.
+
+\bibitem[Lillicrap et~al., 2020]{lillicrap2020backpropagation}
+Lillicrap, T.~P., Santoro, A., Marris, L., Akerman, C.~J., and Hinton, G.
+  (2020).
+\newblock Backpropagation and the brain.
+\newblock {\em Nature Reviews Neuroscience}, 21(6):335--346.
+
+\bibitem[Medler, 1998]{medler}
+Medler, D.~A. (1998).
+\newblock A brief history of connectionism.
+\newblock {\em Neural Computing Surveys}, 1:61--101.
+
+\bibitem[Oja, 1982]{oja}
+Oja, E. (1982).
+\newblock A simplified neuron model as a principal component analyzer.
+\newblock {\em J. Mathematical Biology}, 15:267--273.
+
+\bibitem[Paulsen and Sejnowski, 2000]{paulsen}
+Paulsen, O. and Sejnowski, T.~J. (2000).
+\newblock Natural patterns of activity and long-term synaptic plasticity.
+\newblock {\em Current Opinion in Neurobiology}, 10(2):172--179.
+
+\bibitem[Rumelhart et~al., 1986a]{pdp}
+Rumelhart, D., McClelland, J., and the PDP Research~Group (1986a).
+\newblock {\em Parallel Distributed Processing: Explorations in the
+  Microstructure of Cognition}, volume 2: Psychologcal and Biological Models.
+\newblock Cambridge, Massachusetts: MIT Press.
+
+\bibitem[Rumelhart et~al., 1986b]{rumelhart:86}
+Rumelhart, D.~E., Hinton, G.~E., and Williams, R.~J. (1986b).
+\newblock Learning representations by back-propagating errors.
+\newblock {\em Nature}, 323(6088):533--536.
+
+\bibitem[Sejnowski, 1999]{sejnowski2}
+Sejnowski, T.~J. (1999).
+\newblock The book of {Hebb}.
+\newblock {\em Neuron}, 24:773--776.
+
+\bibitem[Sejnowski and Tesauro, 1989]{sejnowski1}
+Sejnowski, T.~J. and Tesauro, G. (1989).
+\newblock The hebb rule for synaptic plasticity: {A}lgorithms and
+  implementations.
+\newblock In Byrne, J.~H. and Berry, W.~O., editors, {\em Neural Models of
+  Plasticity}, pages 94--103.
+
+\bibitem[Wager et~al., 2013]{wager2013dropout}
+Wager, S., Wang, S., and Liang, P. (2013).
+\newblock Dropout training as adaptive regularization.
+\newblock {\em arXiv preprint arXiv:1307.1493}.
+
+\bibitem[Yamins and DiCarlo, 2016]{yamins2}
+Yamins, D. and DiCarlo, J. (2016).
+\newblock Using goal-driven deep learning models to understand sensory cortex.
+\newblock {\em Nature Neuroscience}, 19(3):356--365.
+
+\bibitem[Yildirim et~al., 2019]{ilker1}
+Yildirim, I., Wu, J., Kanwisher, N., and Tenenbaum, J. (2019).
+\newblock An integrative computational architecture for object-driven cortex.
+\newblock {\em J.B. Current Opinion in Neurobiology}.
+
+\end{thebibliography}

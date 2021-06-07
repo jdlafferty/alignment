@@ -1,0 +1,105 @@
+\documentclass[12pt,pdftex,noinfoline]{imsart}
+
+\RequirePackage[OT1]{fontenc}
+\usepackage{amsthm,amsbsy,amsmath,amsfonts,natbib,mathtools,amssymb}
+\usepackage{mathrsfs}
+\RequirePackage{hypernat}
+%\usepackage[ruled, vlined, lined, commentsnumbered]{algorithm2e}
+%\usepackage[ruled,section]{algorithm}
+%\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{times}
+\usepackage{hyperref}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\hypersetup{citecolor=MidnightBlue}
+\hypersetup{linkcolor=MidnightBlue}
+\hypersetup{urlcolor=MidnightBlue}
+\usepackage{enumerate}
+\usepackage{fullpage}
+\usepackage[margin=1in,footskip=.40in]{geometry}
+\usepackage{dsfont}
+
+
+
+%\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+%\DeclareMathOperator*{\argmin}{\arg\min}
+%\DeclareMathOperator*{\argmax}{\arg\max}
+
+\numberwithin{equation}{section}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{proposition}{Proposition}[section]
+\theoremstyle{remark}
+\newtheorem{example}{Example}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{assumption}{Assumption}[section]
+\newtheorem{remark}{Remark}[section]
+
+\newtheorem*{thm1}{Claim A}
+\newtheorem*{thm2}{Claim B}
+\newtheorem*{thm3}{Claim C}
+\newtheorem*{thm4}{Claim D}
+\def\conditionA{Condition $A$}
+\def\conditionAp{Condition $\tilde A$}
+\def\conditionB{Condition $B$}
+\newtheorem*{con0}{\conditionA}
+\newtheorem*{con1}{\conditionAp}
+\newtheorem*{con2}{\conditionB}
+
+\let\hat\widehat
+\let\what\widehat
+\let\tilde\widetilde
+
+\input{macros}
+\renewcommand{\baselinestretch}{1.05}
+
+\begin{document}
+
+\setlength{\parskip}{0.5em}
+\begin{frontmatter}
+\runtitle{Convergence and Alignment}
+\title{Convergence and Alignment of Gradient Descent\\ with Random Backpropagation Weights}
+%\affil[**]{Department of Statistics and Data Science, Yale University}
+\begin{aug}
+\vskip15pt
+\address{
+\begin{tabular}{c}
+{\normalsize\rm\bfseries Ganlin Song, Chris Xu, and John Lafferty}\\[5pt]
+Department of Statistics and Data Science\\
+Yale University\\[10pt]
+\end{tabular}
+\\[10pt]
+\today
+\vskip10pt
+}
+\end{aug}
+\input{abstract}
+\end{frontmatter}
+
+\input{introduction}
+\input{overview}
+\input{convergence}
+\input{alignment}
+\input{simulations}
+\input{discussion}
+\input{acknowledge}
+
+\setlength{\bibsep}{8pt plus 0.3ex}
+\bibliographystyle{apalike}
+\bibliography{feedback_alignment}
+
+\clearpage
+\appendix
+\input{proof_conv}
+\input{proof_align}
+\input{lemmas}
+
+
+%\end{document}
+\newpage
+
+
+\end{document}

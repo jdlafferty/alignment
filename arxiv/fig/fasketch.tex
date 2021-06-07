@@ -1,0 +1,59 @@
+
+\documentclass[pdftex]{standalone}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{amsmath,amssymb}
+\pgfplotsset{compat=1.16}
+\usetikzlibrary{shapes}
+\usetikzlibrary{arrows,decorations.markings}
+
+\begin{document}
+
+
+\tikzset{circ/.style={circle, draw, fill=none, scale=1.00}}
+\begin{tikzpicture}[xscale=1.00,yscale=1.00]
+
+\node (L21) at (4,-1.5) [circ]{$x_d$};
+\node (L20) at (4,-.65) {$\vdots$};
+\node (L20) at (4,.85) {$\vdots$};
+\node (L20) at (4,0) [circ]{$x_i$};
+\node (L24) at (4,1.5) [circ]{$x_1$};
+
+\node (L30) at (8,0) [circ]{$h_r$};
+\node (L31) at (8,-.9) {$\vdots$};
+\node (L34) at (8,1.1) {$\vdots$};
+\node (L37) at (8,-2) [circ]{$h_p$};
+\node (L38) at (8,2) [circ]{$h_1$};
+
+\draw[->, >=latex', shorten >=2pt,color=black,thick] (L20) to node [auto] {} (L30);
+\draw[->, >=latex', shorten >=2pt,color=lightgray,thick] (L20) to node [auto] {} (L37);
+\draw[->, >=latex', shorten >=2pt,color=lightgray,thick] (L20) to node [auto] {} (L38);
+
+\draw[->, >=latex', shorten >=2pt,color=black,thick] (L21) to node [auto] {} (L30);
+\draw[->, >=latex', shorten >=2pt,color=lightgray,thick] (L21) to node [auto] {} (L37);
+\draw[->, >=latex', shorten >=2pt,color=lightgray,thick] (L21) to node [auto] {} (L38);
+
+
+\draw[->, >=latex', shorten >=2pt,color=black,thick] (L24) to node [auto] {} (L30);
+\draw[->, >=latex', shorten >=2pt,color=lightgray,thick] (L24) to node [auto] {} (L37);
+\draw[->, >=latex', shorten >=2pt,color=lightgray,thick] (L24) to node [auto] {} (L38);
+
+%\node at (2.75,0) {$x\in{\mathbb R}^d$};
+\node at (5.5,-2.0) {$W$};
+
+\node (L40) at (12,0) [circ]{};
+
+\draw[->, >=latex', shorten >=2pt,color=black,thick] (L30) to node [auto] {$\beta_r$} (L40);
+\draw[->, >=latex', shorten >=2pt,color=lightgray,thick] (L37) to node [auto] {} (L40);
+\draw[->, >=latex', shorten >=2pt,color=lightgray,thick] (L38) to node [auto] {} (L40);
+
+\draw[<-, >=latex', shorten >=2pt, shorten <=2pt, bend right=50, dashed, color=red, thick] 
+    (L30) to node[auto, swap] {$b_r$}(L40);
+
+%\node at (10.0,-3.0) {$\beta$};
+\node at (12.75,0) {$f(x)$};
+
+
+\end{tikzpicture}
+
+\end{document}

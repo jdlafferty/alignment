@@ -1,0 +1,46 @@
+%!TEX root=./main.tex
+
+\section{Convergence with Random Backpropagation Weights}
+
+Due to the replacement of backward weights with the random backpropagation weights, there is no guarantee \emph{a priori} that the algorithm will reduce the squared error loss $\Loss$. \citet{lillicrap2020backpropagation} study the convergence on two-layer linear networks in a continuous time setting. Through the analysis of a system of differential equations on the network parameters, convergence to the true linear target function is shown, in the population setting of  arbitrarily large training data.
+Among recent studies of over-parametrized networks under backpropagation, the neural tangent kernel (NTK) is heavily utilized to describe the evolution of the network during training \citep{jacot2018neural}. For any neural network $f(x,\theta)$ with parameter $\theta$, the NTK is defined as
+\begin{equation*}
+	K_f(x,y) = \Big\langle \frac{\partial f (x,\theta)}{\partial \theta},\frac{\partial f (y,\theta)}{\partial \theta}\Big\rangle.
+\end{equation*}
+Given a dataset $\{(x_i,y_i)\}_{i=1}^n$, we can also consider its corresponding Gram matrix $K = (K_f(x_i,x_j))_{n\times n}$. \citet{jacot2018neural} show that in the infinite width limit, $K_f$ converges to a constant at initialization and does not drift away from initialization throughout training. In the over-parameterized setting, if the Gram matrix $K$ is positive definite, then $K$ will remain close to its initialization during training, resulting in linear convergence of the squared error loss \citep{du2018gradient,du2019gradient,gao2020model}.
+% However, after replacing the feed-forward weights $\beta$ with a random backpropagation weights $b$, feedback alignment algorithm no longer follows a strict gradient descent on the squared error loss and the previous argument cannot be applied directly to our case.
+For the two-layer network $f(x, \theta)$ defined in \eqref{eqn:nonlinear-network} with $\theta = (\beta,W)$, the kernel $K_f$ can be written in two parts, $G_f$ and $H_f$, which correspond to $\beta$ and $W$ respectively:
+\begin{equation*}
+K_f(x,y) = G_f(x, y) + H_f(x,y) \defeq \Big\langle \frac{\partial f (x,\theta)}{\partial \beta},\frac{\partial f (y,\theta)}{\partial \beta}\Big\rangle + \sum_{r=1}^p\Big\langle \frac{\partial f (x,\theta)}{\partial w_r},\frac{\partial f (y,\theta)}{\partial w_r}\Big\rangle.
+\end{equation*}
+Under the feedback alignment scheme with random backward weights $b$, $G_f$ remains the same as for standard backpropagation, while one of the gradient terms $\frac{\partial f}{\partial w_r}$ in $H_f$ changes to
+$\widetilde{\frac{\partial f(x, \theta)}{\partial w_r}}   = \frac{1}{\sqrt{p}} b_r \psi'(w_r\transpose x)x,
+$
+with $H_f$ replaced by $H_f = \sum_{r=1}^p\Big\langle \widetilde{\frac{\partial f (x,\theta)}{\partial w_r}},\frac{\partial f (y,\theta)}{\partial w_r}\Big\rangle$.
+As a result, $H_f$ is no longer positive semi-definite and close to $0$ at initialization if the network is over-parameterized. However, if $G = (G_f(x_i,x_j))_{n\times n}$ is positive definite and $H = (H_f(x_i,x_j))_{n\times n}$ remains small during training, we are still able to show that the loss $\Loss$ will converge to zero exponentially fast.
+
+\begin{assumption}\label{assump:G}
+Define the matrix $\overline{G} \in \R^{n\times n}$ with entries
+$\overline{G}_{i,j} = \E_{w\sim \calN(0,I_p)}\psi(w\transpose x_i) \psi(w\transpose  x_j)$.
+Then we assume that the minimum eigenvalue satisfies $\lambda_{\min}(\overline{G}) \geq \gamma$, where $\gamma$ is a positive constant.
+\end{assumption}
+\vskip5pt
+
+\begin{theorem}\label{thm:nonliner_conv}
+Let $W(0)$, $\beta(0)$ and $b$ have \iid standard Gaussian entries. Assume \textnormal{(1)} \cref{assump:G} holds, \textnormal{(2)} $\psi$ is smooth, $\psi$, $\psi'$ and $\psi''$ are bounded and \textnormal{(3)} $|y_i|$ and $\|x_i\|$ are bounded for all $i\in[n]$. Then there exists positive constants $c_1$, $c_2$, $C_1$ and $C_2$, such that for any $\delta\in(0,1)$, if $p \geq \max\left(C_1\frac{n^2}{\delta\gamma^2}, C_2\frac{n^4\log p}{\gamma^4}\right)$, then with probability at least $1-\delta$ we have that
+\begin{equation}\label{eq:conv}
+    \|e(t+1)\| \leq (1-\frac{\eta\gamma}{4})\|e(t)\|
+\end{equation}
+and
+\begin{equation}
+\label{eq:weights}
+    \|w_r(t)-w_r(0)\| \leq c_1\frac{n\sqrt{\log p}}{\gamma\sqrt p}, \quad |\beta_r(t)-\beta_r(0)| \leq c_2\frac{n}{\gamma\sqrt p}
+\end{equation}
+for all $r\in[p]$ and $t>0$.
+\end{theorem}
+
+We note that the matrix $\overline{G}$ in \cref{assump:G} is the expectation of $G$ with respect to the random initialization, and is thus close to $\overline{G}$ due to concentration. To justify the assumption, we provide the following proposition, which states that \cref{assump:G} holds when the inputs $x_i$ are drawn independently from a Gaussian distribution. The proofs of \cref{thm:nonliner_conv,prop:positive-definiteness} are deferred to \cref{sec:appendix-convergence}.
+
+\begin{proposition}\label{prop:positive-definiteness}
+Suppose $x_1,...,x_n \overset{\iid}{\sim} \calN(0,I_d/d)$ and the activation function $\psi$ is sigmoid or tanh. If $d=\Omega(n)$, then \cref{assump:G} holds with high probability.
+\end{proposition}

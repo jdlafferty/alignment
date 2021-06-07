@@ -1,0 +1,28 @@
+\def\comb{
+  \foreach \j in {0,...,7}{%
+    \pgfmathsetmacro\end{7+\j} 
+    \foreach \i in {0,...,\end}{%
+    \pgfmathsetmacro\cnum{7*\j+\i}
+      \node[hexb] (h\i;\j) at ({(\i-\j/2)*sin(60)},{\j*0.75}) {};} 
+  }
+  \foreach \j in {1,...,8}{%
+    \pgfmathsetmacro\end{13-\j} 
+    \foreach \i in {-2,...,\end}{%
+      \pgfmathtruncatemacro\k{\j+6}  
+     \pgfmathsetmacro\cnum{7*\j+\i}
+      \node[hexb] (h\i;\k) at ({(\i+\j/2-2)*sin(60)},{4.5+\j*0.75}) {};}  
+  }
+}
+\def\honey#1#2{
+  \node[hexa] (h#1;#2) at ({(#1-#2/2)*sin(60)},{#2*0.75}) {}; 
+}
+
+\newenvironment{honeycomb}{
+    \begin{tikzpicture} [hexa/.style={shape=regular polygon,
+    regular polygon sides=6,minimum size=1cm, draw,inner sep=0,anchor=south,fill=lightgray,rotate=30},
+    hexb/.style= {shape=regular polygon,regular polygon sides=6,minimum size=1cm, draw,inner sep=0,
+    anchor=south,fill=white,rotate=30}]\comb{}}
+   {\end{tikzpicture}
+}
+
+
