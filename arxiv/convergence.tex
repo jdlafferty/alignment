@@ -27,7 +27,7 @@ Then we assume that the minimum eigenvalue satisfies $\lambda_{\min}(\overline{G
 \vskip5pt
 
 \begin{theorem}\label{thm:nonliner_conv}
-Let $W(0)$, $\beta(0)$ and $b$ have \iid standard Gaussian entries. Assume \textnormal{(1)} \cref{assump:G} holds, \textnormal{(2)} $\psi$ is smooth, $\psi$, $\psi'$ and $\psi''$ are bounded and \textnormal{(3)} $|y_i|$ and $\|x_i\|$ are bounded for all $i\in[n]$. Then there exists positive constants $c_1$, $c_2$, $C_1$ and $C_2$, such that for any $\delta\in(0,1)$, if $p \geq \max\left(C_1\frac{n^2}{\delta\gamma^2}, C_2\frac{n^4\log p}{\gamma^4}\right)$, then with probability at least $1-\delta$ we have that
+Let $W(0)$, $\beta(0)$ and $b$ have \iid standard Gaussian entries. Assume \textnormal{(1)} Assumption \ref{assump:G} holds, \textnormal{(2)} $\psi$ is smooth, $\psi$, $\psi'$ and $\psi''$ are bounded and \textnormal{(3)} $|y_i|$ and $\|x_i\|$ are bounded for all $i\in[n]$. Then there exists positive constants $c_1$, $c_2$, $C_1$ and $C_2$, such that for any $\delta\in(0,1)$, if $p \geq \max\left(C_1\frac{n^2}{\delta\gamma^2}, C_2\frac{n^4\log p}{\gamma^4}\right)$, then with probability at least $1-\delta$ we have that
 \begin{equation}\label{eq:conv}
     \|e(t+1)\| \leq (1-\frac{\eta\gamma}{4})\|e(t)\|
 \end{equation}
@@ -39,8 +39,11 @@ and
 for all $r\in[p]$ and $t>0$.
 \end{theorem}
 
-We note that the matrix $\overline{G}$ in \cref{assump:G} is the expectation of $G$ with respect to the random initialization, and is thus close to $\overline{G}$ due to concentration. To justify the assumption, we provide the following proposition, which states that \cref{assump:G} holds when the inputs $x_i$ are drawn independently from a Gaussian distribution. The proofs of \cref{thm:nonliner_conv,prop:positive-definiteness} are deferred to \cref{sec:appendix-convergence}.
+We note that the matrix $\overline{G}$ in Assumption \ref{assump:G} is the expectation of $G$ with respect to the random initialization, and is thus close to $\overline{G}$ due to concentration. To justify the assumption, we provide the following proposition 
 
 \begin{proposition}\label{prop:positive-definiteness}
-Suppose $x_1,...,x_n \overset{\iid}{\sim} \calN(0,I_d/d)$ and the activation function $\psi$ is sigmoid or tanh. If $d=\Omega(n)$, then \cref{assump:G} holds with high probability.
+Suppose $x_1,...,x_n \overset{\iid}{\sim} \calN(0,I_d/d)$ and the activation function $\psi$ is sigmoid or tanh. If $d=\Omega(n)$, then Assumption \ref{assump:G} holds with high probability.
 \end{proposition}
+
+\noindent
+The proofs of Theorem \ref{thm:nonliner_conv} and Proposition \ref{prop:positive-definiteness} are deferred to \cref{sec:appendix-convergence}.
