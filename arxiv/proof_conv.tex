@@ -33,12 +33,12 @@ where $Z\sim \calN(0,1)$. If $d = \Omega(\log n)$, then with high probability, w
 \end{lemma}
 
 
-\begin{proof}[Proof of \cref{prop:positive-definiteness}]
+\begin{proof}[Proof of Proposition \ref{prop:positive-definiteness}]
 If $\psi$ is sigmoid or tanh, for a standard Gaussian random variable $Z$, we have
 \begin{equation*}
     \gamma\defeq \frac{1}{2}(\E|\psi(Z)|^2-|\E\psi'(Z)|^2) >0.
 \end{equation*}
-From \cref{lma:G}, we know that with high probability $\lambda_{\min}(\overline{G}) \geq \lambda_{\min}(\widetilde{G})-\|\overline{G}-\widetilde{G}\|\geq 2\gamma - C(\sqrt{\frac{\log n}{d}} + \frac{n}{d}) \geq \gamma$.
+From Lemma \ref{lma:G}, we know that with high probability $\lambda_{\min}(\overline{G}) \geq \lambda_{\min}(\widetilde{G})-\|\overline{G}-\widetilde{G}\|\geq 2\gamma - C(\sqrt{\frac{\log n}{d}} + \frac{n}{d}) \geq \gamma$.
 \end{proof}
 
 \begin{lemma}
@@ -78,7 +78,7 @@ where we require $p=\Omega(n/\delta)$. With a union bound argument, we can show 
 
 \begin{lemma}
 \label{lma:GH}
-Under the conditions of \cref{thm:nonliner_conv}, we define matrices $G(0),H(0)\in\R^{n\times n}$ with entries
+Under the conditions of Theorem \ref{thm:nonliner_conv}, we define matrices $G(0),H(0)\in\R^{n\times n}$ with entries
 \begin{equation}
 \label{eq:def_G0}
 G_{ij}(0) = \frac{1}{p}\psi(W(0)x_i)\transpose \psi(W(0)x_j) = \frac{1}{p}\sum_{r=1}^p\psi(w_r(0)\transpose x_i)\psi(w_r(0)\transpose x_j)
@@ -106,7 +106,7 @@ Similarly we have $\prob(\|H(0)\|>\frac{\gamma}{4})\leq\frac{\delta}{2}$, since 
 
 \begin{lemma}
 \label{lma:weights}
-Assume all the inequalities from \cref{lma:inqs} hold. Under the conditions of \cref{thm:nonliner_conv}, if the error bound \eqref{eq:conv} holds for all $t=1,2,...,t'-1$, then the bounds \eqref{eq:weights} hold for all $t\leq t'$.
+Assume all the inequalities from Lemma \ref{lma:inqs} hold. Under the conditions of Theorem \ref{thm:nonliner_conv}, if the error bound \eqref{eq:conv} holds for all $t=1,2,...,t'-1$, then the bounds \eqref{eq:weights} hold for all $t\leq t'$.
 \end{lemma}
 
 \begin{proof}
@@ -136,7 +136,7 @@ where we use that $\psi'$ is bounded, \eqref{eq:e0_bd} and \eqref{eq:maxb_bd}.
 
 \begin{lemma}
 \label{lma:induction}
-Assume all the inequalities from \cref{lma:inqs} hold. Under the conditions of \cref{thm:nonliner_conv}, if the bound for the weights difference \eqref{eq:weights} holds for all $t\leq t'$ and error bound \eqref{eq:conv} holds for all $t\leq t'-1$, then \eqref{eq:conv} holds for $t=t'$.
+Assume all the inequalities from Lemma \ref{lma:inqs} hold. Under the conditions of Theorem \ref{thm:nonliner_conv}, if the bound for the weights difference \eqref{eq:weights} holds for all $t\leq t'$ and error bound \eqref{eq:conv} holds for all $t\leq t'-1$, then \eqref{eq:conv} holds for $t=t'$.
 \end{lemma}
 \begin{proof}
 We start with analyzing the error $e(t)$ according to
@@ -225,18 +225,18 @@ Combining \cref{eq:et_iter,eq:bound_Gt,eq:bound_Ht,eq:bound_vt}, we have
 &\leq(1-\frac{\eta\gamma}{4})\|e(t)\|
 \end{aligned}
 \end{equation*}
-where we use \cref{lma:GH} and $p=\Omega(\frac{n^4\log p}{\gamma^4})$.
+where we use Lemma \ref{lma:GH} and $p=\Omega(\frac{n^4\log p}{\gamma^4})$.
 \end{proof}
 
-\begin{proof}[Proof of \cref{thm:nonliner_conv}]
-We prove the inequality \eqref{eq:conv} by induction. Suppose \eqref{eq:conv} and \eqref{eq:weights} hold for all $t=1,2,...,t'-1$, by \cref{lma:weights} and \cref{lma:induction} we know \eqref{eq:conv} and \eqref{eq:weights} hold for $t=t'$, which completes the proof.
+\begin{proof}[Proof of Theorem \ref{thm:nonliner_conv}]
+We prove the inequality \eqref{eq:conv} by induction. Suppose \eqref{eq:conv} and \eqref{eq:weights} hold for all $t=1,2,...,t'-1$, by Lemma \ref{lma:weights} and Lemma \ref{lma:induction} we know \eqref{eq:conv} and \eqref{eq:weights} hold for $t=t'$, which completes the proof.
 \end{proof}
 
 \subsection{Proof of Theorem \ref{thm:nonlinear_conv_reg}}
 
 \begin{lemma}
 \label{lma:weights_reg}
-Assume all the inequalities from \cref{lma:inqs} hold. Under the conditions of \cref{thm:nonlinear_conv_reg}, if the error bound \eqref{eq:conv_reg} holds for all $t=1,2,...,t'-1$, then
+Assume all the inequalities from Lemma \ref{lma:inqs} hold. Under the conditions of Theorem \ref{thm:nonlinear_conv_reg}, if the error bound \eqref{eq:conv_reg} holds for all $t=1,2,...,t'-1$, then
 \begin{equation}
 \label{eq:weights_reg}
 \begin{aligned}
@@ -290,7 +290,7 @@ where we use the fact that $\psi'$ is bounded, \eqref{eq:e0_bd} and \eqref{eq:ma
 
 \begin{lemma}
 \label{lma:induction_reg}
-Assume all the inequalities from \cref{lma:inqs} hold. Under the conditions of \cref{thm:nonlinear_conv_reg}, if the bound for weights difference \eqref{eq:weights_reg} holds for all $t\leq t'$ and error bound \eqref{eq:conv_reg} holds for all $t\leq t'-1$, then \eqref{eq:conv_reg} holds for $t=t'$.
+Assume all the inequalities from Lemma \ref{lma:inqs} hold. Under the conditions of Theorem \ref{thm:nonlinear_conv_reg}, if the bound for weights difference \eqref{eq:weights_reg} holds for all $t\leq t'$ and error bound \eqref{eq:conv_reg} holds for all $t\leq t'-1$, then \eqref{eq:conv_reg} holds for $t=t'$.
 \end{lemma}
 \begin{proof}
 We start by analyzing the error $e(t)$ according to 
@@ -320,7 +320,7 @@ with $\xi_{ri}(t)$ between $w_r(t)\transpose x_i$ and $w_r(t+1)\transpose x_i$. 
 \begin{equation}\label{eq:et_iter_reg}
      e(t+1) = (1-\lambda(t))e(t) - \eta(G(t)+H(t))e(t) + v(t) -\eta\lambda(t)y.
 \end{equation}
-Now for $t=t'-1$, we show that both $G(t)$ and $H(t)$ are close to their initialization. Using the argument in \cref{lma:induction}, we can obtain following bounds
+Now for $t=t'-1$, we show that both $G(t)$ and $H(t)$ are close to their initialization. Using the argument in Lemma \ref{lma:induction}, we can obtain following bounds
 \begin{equation}\label{eq:bound_Gt_reg}
     \|G(t)-G(0)\| \leq c_1 \frac{n^2\sqrt{\log p}}{\gamma\sqrt p}(1+\eta \tilde{S}_\lambda)
 \end{equation}
@@ -342,9 +342,9 @@ Combining \cref{eq:et_iter_reg,eq:bound_Gt_reg,eq:bound_Ht_reg,eq:bound_vt_reg},
 &\leq(1-\eta\lambda(t)-\frac{\eta\gamma}{4})\|e(t)\|
 \end{aligned}
 \end{equation*}
-where we use \cref{lma:GH}, $p=\Omega(\frac{n^4\log p}{\gamma^4})$ and $\tilde{S}_\lambda = O(\frac{\gamma^2\sqrt{p}}{\eta n^2\sqrt{\log p}})$.
+where we use Lemma \ref{lma:GH}, $p=\Omega(\frac{n^4\log p}{\gamma^4})$ and $\tilde{S}_\lambda = O(\frac{\gamma^2\sqrt{p}}{\eta n^2\sqrt{\log p}})$.
 \end{proof}
 
-\begin{proof}[Proof of \cref{thm:nonlinear_conv_reg}]
-We prove the inequality \eqref{eq:conv_reg} by induction. Suppose \eqref{eq:conv_reg} holds for all $t=1,2,...,t'-1$. Then by \cref{lma:weights_reg} and \cref{lma:induction_reg} we know \eqref{eq:conv_reg} holds for $t=t'$, which completes the proof.
+\begin{proof}[Proof of Theorem \ref{thm:nonlinear_conv_reg}]
+We prove the inequality \eqref{eq:conv_reg} by induction. Suppose \eqref{eq:conv_reg} holds for all $t=1,2,...,t'-1$. Then by Lemma \ref{lma:weights_reg} and Lemma \ref{lma:induction_reg} we know \eqref{eq:conv_reg} holds for $t=t'$, which completes the proof.
 \end{proof}

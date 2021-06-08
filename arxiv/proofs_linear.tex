@@ -185,14 +185,14 @@ Combine \cref{ineqn:theta-upper-bound,ineqn:bound-delta-ordinary,ineqn:bound-uS-
 \end{proof}
 
 \begin{corollary}\label{cor:convergence}
-    If we assume all the conditions from \cref{thm:convergence}, the prediction error $\|e(t)\|^2$ under feedback alignment based on loss function \eqref{eqn:loss-with-reg} achieves an $O(1/t)$ convergence rate. In particular, with probability at least $1-5\delta$ that 
+    If we assume all the conditions from Theorem \ref{thm:convergence}, the prediction error $\|e(t)\|^2$ under feedback alignment based on loss function \eqref{eqn:loss-with-reg} achieves an $O(1/t)$ convergence rate. In particular, with probability at least $1-5\delta$ that 
     \begin{align*}
         \min_{t\leq T}\|\theta(t)\| \leq \frac{2(1+\eps)\sqrt{d}}{(T+1)\eta} \Big( \Big(1 + \sqrt{8\log\frac{2d}{\delta}}\Big) + \frac{1}{\sqrt{d}}\sqrt{p} \Big).
     \end{align*}
 \end{corollary}
 
 \begin{proof}
-    From \cref{thm:convergence}, we have $\|\theta(t+1)\| \leq (1-\frac{n\eta}{2d}-\tlam(t))\|\theta(t)\| + \tlam(t)\|\theta_\ast\|$ for all $t\geq 0$. Sum up both sides of the inequality from $0$ to $T$ and rearrange the terms to get
+    From Theorem \ref{thm:convergence}, we have $\|\theta(t+1)\| \leq (1-\frac{n\eta}{2d}-\tlam(t))\|\theta(t)\| + \tlam(t)\|\theta_\ast\|$ for all $t\geq 0$. Sum up both sides of the inequality from $0$ to $T$ and rearrange the terms to get
     \begin{align*}
         \min_{t\leq T} \|\theta(t)\|\sum_{t=0}^T \Big(\frac{n\eta}{2d}+\tlam(t)\Big) \leq \sum_{t=0}^T \Big(\frac{n\eta}{2d}+\tlam(t)\Big)\|\theta(t)\| \leq \sum_{t=0}^T (\|\theta(t)\|- \|\theta(t+1)\|) + \sum_{t=0}^T \tlam(t)\|\theta_\ast\|.
     \end{align*}
@@ -203,11 +203,11 @@ Combine \cref{ineqn:theta-upper-bound,ineqn:bound-delta-ordinary,ineqn:bound-uS-
         & \leq \frac{2d\|\theta(0)\|}{(T+1)n\eta} + \frac{2d S_\lambda\|\theta_\ast\|}{(T+1)n} \\
         & \leq \frac{2(1+\eps)\sqrt{d}}{(T+1)\eta} \Big( \Big(1 + \sqrt{8\log\frac{2d}{\delta}}\Big) + \frac{1}{\sqrt{d}}\sqrt{p} \Big),
     \end{align*}
-    where the second inequality is due to $\|\theta(0)\| - \|\theta(t+1)\| \leq \|\theta(0)\|$ and $(T+1)\frac{n\eta}{2d} \leq \sum_{t=0}^T (\frac{n\eta}{2d}+\tlam(t))$, and the second inequality is due to $\eta S_\lambda = \sum_{t=0}^T \tlam(t)$, and the last inequality is due to the conditions from \cref{thm:convergence}.
+    where the second inequality is due to $\|\theta(0)\| - \|\theta(t+1)\| \leq \|\theta(0)\|$ and $(T+1)\frac{n\eta}{2d} \leq \sum_{t=0}^T (\frac{n\eta}{2d}+\tlam(t))$, and the second inequality is due to $\eta S_\lambda = \sum_{t=0}^T \tlam(t)$, and the last inequality is due to the conditions from Theorem \ref{thm:convergence}.
 \end{proof}
 
 \begin{corollary}\label{cor:convergence-without-reg}
-    If we assume all conditions from \cref{thm:convergence}, the prediction error $\|e(t)\|$ under feedback alignment on \eqref{eqn:loss-with-reg} without regularization, \ie, $\lambda(t) = 0$, achieves linear convergence rate. In particular, $\|e(t)\| \leq \frac{1+\eps}{1-\eps}(1-\frac{n\eta}{2d})^t \|e_0\|$.
+    If we assume all conditions from Theorem \ref{thm:convergence}, the prediction error $\|e(t)\|$ under feedback alignment on \eqref{eqn:loss-with-reg} without regularization, \ie, $\lambda(t) = 0$, achieves linear convergence rate. In particular, $\|e(t)\| \leq \frac{1+\eps}{1-\eps}(1-\frac{n\eta}{2d})^t \|e_0\|$.
 \end{corollary}
 
 \begin{proof}
@@ -219,11 +219,11 @@ Combine \cref{ineqn:theta-upper-bound,ineqn:bound-delta-ordinary,ineqn:bound-uS-
 \end{proof}
 
 \begin{corollary}\label{cor:convergence-with-decreasing-reg}
-    If we assume all conditions from \cref{thm:convergence}, the prediction error $\|e(t)\|$ under feedback alignment on \eqref{eqn:loss-with-reg} with regularization $\lambda(t) = \left(1-\frac{\eta\sqrt{d}}{\sqrt{p}}\right)^t$ and $p \geq \frac{8d^2\sqrt{d}}{n^2\eta}$ achieves linear convergence rate. In particular, for $t\geq \icomment{TODO}$, $\|e(t)\| \leq \icomment{TODO}$.
+    If we assume all conditions from Theorem \ref{thm:convergence}, the prediction error $\|e(t)\|$ under feedback alignment on \eqref{eqn:loss-with-reg} with regularization $\lambda(t) = \left(1-\frac{\eta\sqrt{d}}{\sqrt{p}}\right)^t$ and $p \geq \frac{8d^2\sqrt{d}}{n^2\eta}$ achieves linear convergence rate. In particular, for $t\geq \icomment{TODO}$, $\|e(t)\| \leq \icomment{TODO}$.
 \end{corollary}
 
 \begin{proof}
-    Recall from \cref{thm:convergence} that 
+    Recall from Theorem \ref{thm:convergence} that 
     \begin{align*}
         \|\theta(t+1)\| \leq \Big(1-\frac{n\eta}{2d}- \lambda(t)\eta \Big)\|\theta(t)\| + \lambda(t)\eta\|\theta_\ast\| \leq \Big(1-\frac{n\eta}{2d} \Big)\|\theta(t)\| + \lambda(t)\eta\|\theta_\ast\|,
     \end{align*}
@@ -315,7 +315,7 @@ Combine \cref{ineqn:theta-upper-bound,ineqn:bound-delta-ordinary,ineqn:bound-uS-
             \|\xi_{t+1}\| \leq (1-(\lambda+\frac{n}{2d})\eta)\|\Xi(t)\| + \frac{n\eta}{2d} |a(t)|.
         \end{cases}
     \end{align*}
-    Recall that from \cref{thm:convergence} we have $\|\theta(t+1)\| \leq (1-(\lambda + \frac{n}{2d})\eta )\|\theta(t)\| + \lambda\eta\|\theta_\ast\|$, and we rearrange the terms to get
+    Recall that from Theorem \ref{thm:convergence} we have $\|\theta(t+1)\| \leq (1-(\lambda + \frac{n}{2d})\eta )\|\theta(t)\| + \lambda\eta\|\theta_\ast\|$, and we rearrange the terms to get
     \begin{align*}
         \Big(\|\theta(t+1)\| - \frac{\lambda\|\theta_*\|}{\lambda + \frac{n}{2d}}\Big) \leq \Big(1-\Big(\lambda + \frac{n}{2d}\Big)\eta \Big) \Big(\|\theta(t)\|  - \frac{\lambda\|\theta_*\|}{\lambda + \frac{n}{2d}}\Big),
     \end{align*}
@@ -810,7 +810,7 @@ For two independent random Gaussian vectors, their inner product can be controll
     \end{align*}
 \end{theorem}
 
-% From \cref{thm:bernstein}, we can establish a tail bound for random Gaussian vectors $b$ and $\beta(0)$.
+% From Theorem \ref{thm:bernstein}, we can establish a tail bound for random Gaussian vectors $b$ and $\beta(0)$.
 \begin{lemma}\label{lem:inner-product-tail}
     Let $b,\beta(0)\in\Rp$ be independent random Gaussian vectors with $b_r\sim\calN(0,1)$ and $(\beta(0))_r\sim\calN(0,1)$ independently for all $r\in[p]$, then for any $p \geq 2\log\frac{2}{\delta}$ it holds with probability at least $1-\delta$ that
     \begin{align*}
@@ -838,5 +838,5 @@ For two independent random Gaussian vectors, their inner product can be controll
         \|\theta(0)\| & \leq \frac{1}{\sqrt{p}}\|X\transpose X\|\|W(0) \beta(0)\| + \|\theta_*\| \\
         & \leq (1+\eps)\left(1 + \sqrt{8\log\frac{2d}{\delta}}\right)\frac{n}{\sqrt{d}},
     \end{align*}
-    where the first inequality is due to Cauchy-Schwarz and triangular inequality, and the second inequality is due to \cref{cor:RIP,cor:W0-b-tail}.
+    where the first inequality is due to Cauchy-Schwarz and triangular inequality, and the second inequality is due to Corollary \ref{cor:RIP,cor:W0-b-tail}.
 \end{proof}
