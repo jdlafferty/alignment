@@ -29,14 +29,15 @@
 
 \numberwithin{equation}{section}
 \newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}{Lemma}[section]
-\newtheorem{corollary}{Corollary}[section]
-\newtheorem{proposition}{Proposition}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
 \theoremstyle{remark}
-\newtheorem{example}{Example}[section]
-\newtheorem{definition}{Definition}[section]
-\newtheorem{assumption}{Assumption}[section]
-\newtheorem{remark}{Remark}[section]
+\theoremstyle{definition}
+\theoremstyle{assumption}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
 
 \newtheorem*{thm1}{Claim A}
 \newtheorem*{thm2}{Claim B}
