@@ -1,0 +1,34 @@
+%!TEX root=./rebuttal.tex
+
+{\bf Response to Reviewer pXMq}
+
+We are grateful for your time and effort to review of our work.
+
+The statement in the review that
+``The authors [...] find a surprising and novel result that regularization is required to produce convergence in over-parameterized settings'' is not accurate.
+We show that regularization is needed for alignment, not convergence. We prove (under suitable conditions) that the algorithm converges in the sense that the error goes to zero exponentially fast---irrespective of alignment.
+
+This is repeated later in the review, when it is stated that
+``The main result of showing that regularization is required for convergence is an interesting result, but there is no theoretical basis as to why this is happening.'' In fact, we prove in the linear case that regularization is sufficient for alignment.
+Specifically, we show that the cosine of the angle between the random weights and the actual second layer weights will be bounded away from zero.
+
+Regarding the experiments, the reviewer comments that ``in figure 3 there is no discussion on why the classification performance on MNIST is best with lambda of 0.1 rather than 0.3. How does the alignment relate to classification performance? Why might the performance drop when alignment clearly increases?"
+The fact that the accuracy is the worst with no regularization simply means that the model is overfitting. With too much penalization ($\lambda = 0.3$), the accuracy also suffers. This is just the usual bias-variance tradeoff. But the first plot of Figure 3 shows that, consistent with our analysis, the alignment {increases} with increasing regularization.
+
+
+\clearpage
+
+
+%Summary:
+%This paper builds upon the work of Lillicrap et al 2016 of attempting to find biologically plausible methods for implementing backpropagation. They thoroughly describe the issues with non-local information and why there are limits to using backprop-based learning to understand more about biological neural systems. They describe the algorithm of feedback alignment using random back-propagated weights. The authors go on to confirm some of the results of the Lillicrap paper, and find a surprising and novel result that regularization is required to produce convergence in over-parameterized settings. The experimental section of the paper shows some work on a more standard ML benchmark task of MNIST classification. They show the results that regularization is required to get good performance on the task.
+%
+%Main Review:
+%Overall, I believe this area of research, finding biologically plausible mechanisms, is an important direction for the field. This will not only help us understand biological systems better, but also aid in the development of technologies that are more scalable and efficient. The Lillicrap work was the introduction of a new concept, and this paper attempts to explain why and when the concept of random BP weights applies. However, I don’t feel the authors really did enough in this paper to cross the threshold of a minimum publishable unit of work. The main result of showing that regularization is required for convergence is an interesting result, but there is no theoretical basis as to why this is happening. I’m ok with empirical results, but they haven’t demonstrated that this technique can really work on larger problems either. Most of the paper is devoted to explaining the Lillicrap work and providing a notation. In my view, either more empirical results or more well-motivated concepts are required to publish this work.
+%
+%The quality of the writing is excellent, and the background provides a good platform to build from. The explanations are clear and concise. The experimental work is a bit sparse. For instance, in figure 3 there is no discussion on why the classification performance on MNIST is best with lambda of 0.1 rather than 0.3. How does the alignment relate to classification performance? Why might the performance drop when alignment clearly increases?
+%
+%The significance of the work is the main issue I have. If the significance of the concepts presented were of much great magnitude, I would be ok with the level of rigor in the paper. However, with an extension/clarification of a concept, there must an explanation of what new questions the work opens up.
+%
+%Limitations And Societal Impact:
+%The authors have not addressed this issue directly. They highlighted that a better understanding of biologically plausible algorithms will lead to a better understanding of the brain. I don't believe there are immediate negative consequences of this work, but the authors could choose to include a statement making this explicit.
+%

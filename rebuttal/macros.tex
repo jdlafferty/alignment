@@ -1,0 +1,182 @@
+% Macros
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{authblk}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{bm}
+\usepackage{bbm}
+\usepackage{mathtools}
+\usepackage{fancyhdr}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[frak=esstix]{mathalfa}
+\usepackage{xspace}
+\usepackage{xfrac}
+\usepackage{afterpage}
+\usepackage{framed}
+\usepackage[inline]{enumitem}
+\usepackage[colorlinks]{hyperref}
+	\hypersetup{linkcolor=[RGB]{200,40,41}}
+	\hypersetup{citecolor=[RGB]{66,113,174}}
+	\hypersetup{urlcolor=[RGB]{231,197,71}}
+\usepackage[acronym,smallcaps,nowarn]{glossaries}
+\usepackage{lmodern}
+
+\usepackage{natbib}
+\usepackage{upgreek}
+\usepackage{booktabs}
+\usepackage{subcaption}
+
+\usepackage[svgnames]{xcolor}
+    \definecolor{notecolor}{RGB}{137,89,168}
+    \definecolor{quotecolor}{RGB}{66,113,174}
+    \definecolor{warningcolor}{RGB}{249,145,87}
+    \definecolor{YaleBlue}{RGB}{0, 53, 107}
+    \definecolor{YaleBlueLight}{RGB}{40,109,192}
+    \definecolor{YaleBlueLighter}{RGB}{99,170,255}
+    \definecolor{YaleGreen}{RGB}{95, 113, 45}
+    \definecolor{YaleOrange}{RGB}{189, 83, 25}
+\usepackage[all]{hypcap}
+%\usepackage[color]{showkeys}
+%    \definecolor{refkey}{RGB}{137,89,168}
+%    \definecolor{labelkey}{RGB}{137,89,168}
+\usepackage{seqsplit}
+%\usepackage{showkeys}
+\usepackage{xstring}
+
+%\renewcommand*\showkeyslabelformat[1]{%
+%\noexpandarg%
+%% instead of \textvisiblespace you can also put in ~
+%% if you want to keep a plain space at space characters
+%\StrSubstitute{\(\)#1\(\)}{ }{\textvisiblespace}[\TEMP]%
+%\fbox{\parbox[t]{.80\marginparwidth}{\raggedright\normalfont\small\ttfamily\expandafter\seqsplit\%expandafter{\TEMP}}}}
+
+\usepackage{graphicx}
+
+\usepackage[capitalize]{cleveref}
+\crefname{ineqn}{Ineq.}{Ineqs.}
+\creflabelformat{ineqn}{(#2{\upshape#1}#3)}
+
+%\makeatletter
+%  \SK@def\CK@\SK@@ref{#1}\SK@Cref{#1}}%
+%\makeatother
+%
+%\makeatletter
+%\SK@def\cref#1{\SK@\SK@@ref{#1}\SK@cref{#1}}%
+%\makeatother
+
+\newcommand{\cf}{\emph{cf.}\!\xspace}
+\newcommand{\ie}{\emph{i.e.}\xspace}
+\newcommand{\eg}{\emph{e.g.}\xspace}
+\newcommand{\iid}{i.i.d.\!\xspace}
+
+\newcommand{\mmin}{\mathrm{min}}
+\newcommand{\mmax}{\mathrm{max}}
+\newcommand\transpose{^{\mathpalette\raiseT{\scriptstyle\intercal}}}
+\newcommand\raiseT[2]{\raisebox{0.2ex}{$#1#2$}}
+\DeclarePairedDelimiterX{\innerDelim}[2]{\langle}{\rangle}{#1, #2}
+\newcommand{\inner}[3][]{\innerDelim[#1]{#2}{#3}}
+
+\newcommand{\reals}{{\mathbb{R}}}
+\newcommand{\complex}{{\mathbb{C}}}
+\newcommand{\Rm}{{\mathbb{R}^m}}
+
+\DeclareMathOperator{\range}{\mathrm{range}}
+
+\newcommand{\eps}{\varepsilon}
+\newcommand{\lambdamax}{\lambda_\mathrm{max}}
+\newcommand{\lambdamin}{\lambda_\mathrm{min}}
+
+\newcommand{\ith}{$i$-th }
+\newcommand{\jth}{$j$-th }
+\newcommand{\kth}{$k$-th }
+\newcommand{\rth}{$r$-th }
+\newcommand{\ellth}{$\ell$-th}
+\newcommand{\ii}{\mathrm{i}}
+
+\newcommand{\suchthat}{\mathrm{s.t.}}
+\DeclareMathOperator*{\st}{\,:\,}
+\DeclareMathOperator*{\given}{\,|\,}
+
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\Rnn}{{\mathbb{R}^{n\times n}}}
+\newcommand{\Rnp}{{\mathbb{R}^{n\times p}}}
+\newcommand{\Rdp}{{\mathbb{R}^{d\times p}}}
+\newcommand{\Rpd}{{\mathbb{R}^{p\times d}}}
+\newcommand{\Rmn}{{\mathbb{R}^{m\times n}}}
+\newcommand{\Rnm}{\mathbb{R}^{n\times m}}
+\newcommand{\Rnr}{\mathbb{R}^{n\times r}}
+\newcommand{\Rrr}{\mathbb{R}^{r\times r}}
+\newcommand{\Rpp}{\mathbb{R}^{p\times p}}
+\newcommand{\Rmm}{{\mathbb{R}^{m\times m}}}
+\newcommand{\Rmr}{\mathbb{R}^{m\times r}}
+\newcommand{\Rrn}{{\mathbb{R}^{r\times n}}}
+\newcommand{\Rd}{{\mathbb{R}^{d}}}
+\newcommand{\Rp}{{\mathbb{R}^{p}}}
+\newcommand{\Rk}{{\mathbb{R}^{k}}}
+\newcommand{\Rdd}{{\mathbb{R}^{d\times d}}}
+\newcommand{\RNN}{{\mathbb{R}^{N\times N}}}
+\newcommand{\Rn}{{\mathbb{R}^n}}
+\newcommand{\Rnd}{{\mathbb{R}^{n\times d}}}
+
+\DeclareMathOperator{\expect}{\mathbb{E}}
+\DeclareMathOperator{\prob}{\mathbb{P}}
+
+\makeatletter
+\@tfor\next:=ABCDEFGHIJKLMNOPQRSTUVWXYZ\do{%
+  \def\command@factory#1{%
+    \expandafter\def\csname cal#1\endcsname{{\mathcal{#1}}}
+  }
+ \expandafter\command@factory\next
+}
+\makeatother
+
+\makeatletter
+\@tfor\next:=ABCDEFGHIJKLMNOPQRSTUVWXYZ\do{%
+  \def\command@factory#1{%
+    \expandafter\def\csname #1#1\endcsname{{\mathbb{#1}}}
+  }
+ \expandafter\command@factory\next
+}
+\makeatother
+
+\def\icomment#1{{\color{notecolor} [\textrm{#1}]}}
+\def\wcomment#1{{\color{warningcolor} [#1]}}
+
+\newcommand{\expp}[1]{{\exp\!\big({#1}\big)}}
+\newcommand{\defeq}{\coloneqq}
+\newcommand{\eqdef}{\eqqcolon}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+\numberwithin{equation}{section}
+
+\newcommand{\Var}{\mathbb{V}\mathrm{ar}}
+\newcommand{\dif}{\,d}
+\newcommand{\dmid}{\,\|\,}
+\newcommand*\diff{\mathop{}\! d}
+
+\newcommand{\T}{{\mathpalette\raiseT{\scriptstyle\intercal}}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\thetat}{\tilde{\theta}}
+\newcommand{\thetab}{\bar{\theta}}
+\newcommand{\tlam}{\tilde{\lambda}}
+\newcommand\Loss{\mathcal{L}}
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+\def\chris#1{{\color{YaleBlueLight} [\textrm{Chris: #1}]}}
+\def\ganlin#1{{\color{YaleGreen} [\textrm{Ganlin: #1}]}}
+\def\john#1{{\color{YaleOrange} [\textrm{John: #1}]}}
+
+\newcommand{\dfa}{\delta_\mathrm{FA}}
+\newcommand{\dbp}{\delta_\mathrm{BP}}

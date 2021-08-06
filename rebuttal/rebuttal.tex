@@ -1,0 +1,71 @@
+%!TEX root=./rebuttal.tex 
+
+\documentclass[12pt,pdftex,noinfoline]{imsart}
+
+\RequirePackage[OT1]{fontenc}
+\usepackage{amsthm,amsbsy,amsmath,amsfonts,natbib,mathtools,amssymb}
+\usepackage{mathrsfs}
+\RequirePackage{hypernat}
+%\usepackage[ruled, vlined, lined, commentsnumbered]{algorithm2e}
+%\usepackage[ruled,section]{algorithm}
+%\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{times}
+\usepackage{hyperref}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\hypersetup{citecolor=MidnightBlue}
+\hypersetup{linkcolor=MidnightBlue}
+\hypersetup{urlcolor=MidnightBlue}
+\usepackage{enumerate}
+\usepackage{fullpage}
+\usepackage[margin=1in,footskip=.40in]{geometry}
+\usepackage{dsfont}
+
+
+
+%\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+%\DeclareMathOperator*{\argmin}{\arg\min}
+%\DeclareMathOperator*{\argmax}{\arg\max}
+
+\numberwithin{equation}{section}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{remark}
+\theoremstyle{definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newtheorem*{thm1}{Claim A}
+\newtheorem*{thm2}{Claim B}
+\newtheorem*{thm3}{Claim C}
+\newtheorem*{thm4}{Claim D}
+\def\conditionA{Condition $A$}
+\def\conditionAp{Condition $\tilde A$}
+\def\conditionB{Condition $B$}
+\newtheorem*{con0}{\conditionA}
+\newtheorem*{con1}{\conditionAp}
+\newtheorem*{con2}{\conditionB}
+
+\let\hat\widehat
+\let\what\widehat
+\let\tilde\widetilde
+
+\input{macros}
+\renewcommand{\baselinestretch}{1.05}
+\parskip12pt
+\parindent0pt
+
+\begin{document}
+
+\input{review_4iby}
+\input{review_9xDE}
+\input{review_B3Jb}
+\input{review_giv6}
+\input{review_pXMq}
+
+\end{document}

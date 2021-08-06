@@ -1,0 +1,47 @@
+%!TEX root=./rebuttal.tex
+
+{\bf Response to Reviewer giv6}
+
+Thank you for your review and thoughtful comments on our work. You ask for two improvements to the paper (1) more discussion of related work and (2) further discussion of our finding about alignment and regularization. Both are fair points.
+
+{\it Discussion of related work}
+
+{\it Disentangling penalization and alignment}
+
+In the review, the question ``Could the higher alignment values be an artifact of the weights being pushed closer to zero?" is raised. As we suggest in the discussion section, the shrinkage of the initial weights is proposed to be the main reason why regularization improves alignment. To investigate this further, your suggestion for ``disentangling the components of alignment due to L2 regularization, and the `true alignment` of the raw gradients" is really good. We have generated the following plot:...
+
+
+
+
+\clearpage
+
+%NeurIPS 2021 Conference Paper10585 Reviewer giv6
+%Official Review 19 Jul 2021  Program Chairs, Paper10585 Senior Area Chairs,
+%Paper10585 Area Chairs, Paper10585 Reviewers Submitted, Paper10585 Authors
+%Summary:
+%This paper studies the convergence of Feedback Alignment, and proves that in the over-parameterized setting the error converges to zero exponentially fast. This is made possible by taking inspirations from recent work on the NTK, albeit with specific challenges as some quantities are not obviously positive semi-definite. Furthermore, it makes the somewhat surprising finding that regularization helps alignment, proving this in linear networks, and confirming this finding in simulations on Gaussian data and MNIST.
+%Main Review:
+%For ease of answering, I have annotated my various points with O.1/Q.1/etc...
+%This is a solid and very well written paper, with a clear contribution to the field of alternative training methods.
+%The paper could be better positioned in the existing literature, in particular by mentioning all the works that has been done around Direct Feedback Alignment, such as Refinetti et al., 2020. Moreover, I think the surprising finding around regularization & alignment should be discussed more in depth.
+%Accordingly, this paper currently stands marginally above the acceptance threshold (6) . If the two points above were to be addressed, I would be willing to increase my score to a clear accept (8).
+%Originality
+%The paper is an interesting application of NTK methods to an open-problem in alternative training methods, the convergence of Feedback Alignment. It is well placed in the immediate literature, but misses a number of important papers on the theory of such methods.
+%O.1 : Notably, the authors completely ignore the large body of literature around Direct Feedback Alignment (Nøkland, 2016). DFA is an extension of FA, where the random projection of the error is directly sent to each layer, enabling parallelization of weight updates after the loss is calculated. In particular, Refinetti et al., 2020 have done an extensive analysis of the dynamics of convergence & alignment in DFA. This analysis brings a number of important findings around alignment, which it would be interesting to see discussed and compared with the work here done. Furthermore, Frenkel et al. 2019 have also provided a theoretical analysis for a variant of DFA, Direct Random Target Projection. To go a bit further, this could also lead to bridging the gap between some of the theoretical findings made here and the real- world behaviors of FA/DFA: open questions remain, such as FA/DFA failing on convolutions (Bartunov et al., 2018) but working in many other architectures (Launay et al., 2020). A discussion of the impacts of the findings made in this paper in terms of our general understanding of FA/DFA would be very valuable.
+%Quality
+%The theoretical contributions are sound and well backed. The experiments to confirm the findings around regularization are interesting, although I think the authors do not go in depth enough in their analysis.
+%Q.1 : In results both on synthetic data and MNIST (Figure 2 & Figure 3), it is interesting to see that despite lower alignment in non-regularized nets, end-task performance is not necessarily improved by higher alignment values (the lambda = 0.0 of Figure 3 probably overfits). This warrants a more in depth discussion. Could the higher alignment values be an artifact of the weights being pushed closer to zero? (This is noted by the authors l185.) This would motivate disentangling the components of alignment due to L2 regularization, and the "true alignment" of the raw gradients. This would be really interesting to measure and plot, and could provide further elements to understand this "surprise" of regularization helping alignment. The authors also briefly mention experiments with dropout, highlighting that a study of other regularization methods (dropout, etc.) could also prove interesting.
+%Clarity
+%The paper is well written and the mathematical notations clear. The structure is also good, making it an enjoyable paper to read.
+%Significance
+%The findings of the authors are interesting, and contribute to a broader understanding of feedback alignment methods.
+%https://openreview.net/forum?id=1QhRTsqYPB&noteId=Fsb5hg2ctdL&referrer=%5BAuthor Console%5D(%2Fgroup%3Fid%3DNeurIPS.cc%2F2021%2FConferen... 2/7
+%8/6/2021 Convergence and Alignment of Gradient Descent with Random Backpropagation Weights | OpenReview
+%I do feel that the addition of a discussion of the potential impacts of these findings on the current understand of FA/DFA, as well as a more in depth discussion around the "surprising" regularization finding would help make this paper more impactful for the community.
+%Limitations And Societal Impact:
+%Yes, the authors accurately describe the limitations and potential impact of their work.
+%Needs Ethics Review: No
+%Time Spent Reviewing: 3
+%Rating: 6: Marginally above the acceptance threshold
+%Confidence: 4: You are confident in your assessment, but not absolutely certain. It is unlikely, but not impossible, that you did not understand some parts of the submission or that you are unfamiliar with some pieces of related work. Code Of Conduct: While performing my duties as a reviewer (including writing reviews and participating in discussions), I have and will continue to abide by the NeurIPS code of conduct.
+%
