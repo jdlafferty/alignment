@@ -10,26 +10,11 @@ A wide range of approaches have been explored as a potential basis for learning 
 repeated stimulation by a presynaptic neuron that results in the subsequent
 firing of the postsynapic neuron will result in an increased strength in the connection
 between the two cells \citep{hebb1,paulsen}. Several variants of Hebbian learning, some making connections to principal components analysis, have been proposed
-\citep{oja,sejnowski1,sejnowski2}. 
-\sout{In this paper, our focus is on a formulation of \mbox{\cite{lillicrap2016random}} based on random backpropagation weights that are fixed during the learning process.}
-{\color{red}
-\cite{lillicrap2016random} proposes "feedback alignment" algorithm (FA) that uses a set of random and fixed backward weights in place of forward weights of the network during backpropagation. It is shown that the model can still learn from data, and they also observe an interesting phenomenon that the error signals propagated with the forward weights align with those propagated with fixed random backward weights during training. Direct feedback alignment (DFA) \citep{nokland2016direct} extends FA by adding skip connections to send error signal directly each hidden layer, allowing parallelization of weight updates. Empirical studies given by \citet{launay2020direct} shows that DFA can be successfully applied to train a number of modern deep learning models, including transformers. Based on DFA, \citet{frenkel2021learning} proposes direct random target projection (DRTP) algorithm that trains the network weights with a random projection of the target vector instead of the error, and shows alignment for linear networks. Other
-}
-\sout{Related} 
-proposals, including methods based on the use of differences of neuron activities, have been made in a series of recent papers \citep{akrout,bellec,lillicrap2020backpropagation}. A comparison of some of these methods is made by \cite{bartunov}.
+\citep{oja,sejnowski1,sejnowski2}.
+In this paper, our focus is on a formulation of \cite{lillicrap2016random} based on random backpropagation weights that are fixed during the learning process, called the ``feedback alignment" (FA) algorithm.
+\cite{lillicrap2016random} show that the model can still learn from data, and observe the interesting phenomenon that the error signals propagated with the forward weights align with those propagated with fixed random backward weights during training. Direct feedback alignment (DFA) \citep{nokland2016direct} extends FA by adding skip connections to send the error signals directly to each hidden layer, allowing parallelization of weight updates. Empirical studies given by \citet{launay2020direct} show that DFA can be successfully applied to train a number of modern deep learning models, including transformers. Based on DFA, \citet{frenkel2021learning} proposes direct the random target projection (DRTP) algorithm that trains the network weights with a random projection of the target vector instead of the error, and shows alignment for linear networks.
+Related proposals, including methods based on the use of differences of neuron activities, have been made in a series of recent papers \citep{akrout,bellec,lillicrap2020backpropagation}. A comparison of some of these methods is made by \cite{bartunov}.
 
-
-{\color{red} 
-In this paper, we focus on the FA formulation by \cite{lillicrap2016random}.
-} 
-The use of random feedback weights, which are not directly tied to the forward weights, removes issues of non-locality. However, it is not clear under what conditions optimization of error and learning can be successful. 
-\sout{While \mbox{\citet{lillicrap2016random}} give suggestive simulations and some analysis for the linear case, it has been an open problem to explain the behavior of this algorithm for training the weights of a neural network.}
-{\color{red}
-Notably, \citet{refinetti2021align} provide insightful study on the dynamics of FA and DFA, while their analysis mostly focus on networks with limited number of neurons and lacks formal theory.
-}
-In this paper, we 
-{\color{red}
-rigorously
-}
-study the mathematical properties of the feedback alignment procedure by analyzing convergence and alignment for two-layer networks under squared error loss. In the overparameterized setting, we prove that the error converges to zero exponentially fast. We also show, unexpectedly, that the parameters become aligned with the random backpropagation weights only when regularization is used. Simulations are given that are consistent with this analysis and suggest further generalizations. The following section gives further background and an overview of our results.
-
+The use of random feedback weights, which are not directly tied to the forward weights, removes issues of non-locality. However, it is not clear under what conditions optimization of error and learning can be successful.
+While \mbox{\citet{lillicrap2016random}} give suggestive simulations and some analysis for the linear case, it has been an open problem to explain the behavior of this algorithm for training the weights of a neural network.
+In this paper, we study the mathematical properties of the feedback alignment procedure by analyzing convergence and alignment for two-layer networks under squared error loss. In the overparameterized setting, we prove that the error converges to zero exponentially fast. We also show, unexpectedly, that the parameters become aligned with the random backpropagation weights only when regularization is used. Simulations are given that are consistent with this analysis and suggest further generalizations. The following section gives further background and an overview of our results.
