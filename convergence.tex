@@ -3,7 +3,7 @@
 \section{Convergence with Random Backpropagation Weights}
 
 Due to the replacement of backward weights with the random backpropagation weights, there is no guarantee \emph{a priori} that the algorithm will reduce the squared error loss $\Loss$. \citet{lillicrap2020backpropagation} study the convergence on two-layer linear networks in a continuous time setting. Through the analysis of a system of differential equations on the network parameters, convergence to the true linear target function is shown, in the population setting of  arbitrarily large training data.
-Among recent studies of over-parametrized networks under backpropagation, the neural tangent kernel (NTK) is heavily utilized to describe the evolution of the network during training \citep{jacot2018neural}. For any neural network $f(x,\theta)$ with parameter $\theta$, the NTK is defined as
+Among recent studies of over-parametrized networks under backpropagation, the neural tangent kernel (NTK) is heavily utilized to describe the evolution of the network during training \citep{jacot2018neural,chen2020deep}. For any neural network $f(x,\theta)$ with parameter $\theta$, the NTK is defined as
 \begin{equation*}
 	K_f(x,y) = \Big\langle \frac{\partial f (x,\theta)}{\partial \theta},\frac{\partial f (y,\theta)}{\partial \theta}\Big\rangle.
 \end{equation*}
